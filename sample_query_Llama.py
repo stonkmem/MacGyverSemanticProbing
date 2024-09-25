@@ -1,5 +1,12 @@
 from transformers import pipeline
-from loginscript import hf_login
+from loginscript import hf_login    #create a script called loginscript.py and set it up as follows:
+
+'''
+from huggingface_hub import login
+def hf_login():
+    login(token='')   <--CHANGE THIS!!!
+'''
+
 
 hf_login()
 
