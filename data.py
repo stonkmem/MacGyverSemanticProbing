@@ -44,6 +44,7 @@ def format_macgyver_prompt(examples): # Note that {n} steps have already been gi
     Do not include explanation in your response.
     Do not generate step {step_num + 1}, etc.
     Do NOT generate anything extra other than the one step, and limit the length of the one step you generate to one sentence maximum.
+    Make your response creative and innovative.
 
     Respond STRICTLY in this format:
     Step {step_num}: <generate version of step {step_num} here>
