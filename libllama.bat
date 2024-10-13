@@ -1,0 +1,1 @@
+!export LLAMA_CPP_LIB=/yourminicondapath/miniconda3/lib/python3.10/site-packages/llama_cpp_cuda/libllama.so
