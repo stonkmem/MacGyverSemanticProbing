@@ -77,14 +77,14 @@ def convert_openai_to_llama_prompt(ls):
     pmpt += '<|start_header_id|>assistant<|end_header_id|>\n\n'
     return pmpt
 
-def gen_C(x, ls):
-    C = [[ls[0]]]
-    for i in ls:
-        cl = False
-        if i != ls[0]:
-            for c in C:
-                if get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment':
-                    c.append(i);cl=True;break;
-        if cl==False:
-            C.append([i])
-    return C
+# def gen_C(x, ls):
+#     C = [[ls[0]]]
+#     for i in ls:
+#         cl = False
+#         if i != ls[0]:
+#             for c in C:
+#                 if get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment':
+#                     c.append(i);cl=True;break;
+#         if cl==False:
+#             C.append([i])
+#     return C
