@@ -83,8 +83,26 @@ def gen_C(x, ls):
         cl = False
         if i != ls[0]:
             for c in C:
-                if get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment':
+                if get_entailment_llama(x, c[0], i) == 'entailment' and get_entailment_llama(x, i, c[0]) == 'entailment':
                     c.append(i);cl=True;break;
         if cl==False:
             C.append([i])
     return C
+
+def gen_prob(x="How are you doing?"):
+    llm = Llama.from_pretrained(
+        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+        logits_all = True,
+        n_gpu_layers=-1
+    )
+    llm.reset()
+    tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
+    llm.eval()
+    token_y=[]
+    y=[]
+    token_next = llm.sample()
+    while token_next!=llm.token_eos():
+        token_y.append(token_next)
+        y.append(llm.detokenize)
+        llm.eval()
