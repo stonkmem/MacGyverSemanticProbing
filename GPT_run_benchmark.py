@@ -11,9 +11,10 @@ fullscale_classifiedproblist = []
 
 max_stepnum = 10
 min_steps = 3
+num_problems = 5
 
 # responses = []
-for i in range(5): # handles multiple problems.
+for i in range(num_problems): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
