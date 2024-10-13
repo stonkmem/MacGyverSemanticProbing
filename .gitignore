@@ -1,4 +1,5 @@
 env/
 env-1/
 loginscript.py
+openai_key.py
 __pycache__/
