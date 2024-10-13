@@ -60,7 +60,7 @@ def get_P(x, y):
         logits.append(llm.eval_logits[-1][token])
         llm.eval([token])
 
-    return (y, logprobs, logits)
+    return (x, token_x, y, token_y logprobs, logits)
 
 def convert_openai_to_llama_prompt(ls):
     pmpt = '<|begin_of_text|>'
