@@ -1,5 +1,5 @@
 # need to modify for multi step usage / multi problem usage
-fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
+# fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
 fullscale_problist = [] # stores probabilities of tokens, where one element is a list of probabilities for each token in a seq
 fullscale_promptlist = [] # list of overall probs for eqch sequence
 fullscale_responselist = []
@@ -12,12 +12,13 @@ fullscale_classifiedproblist = []
 max_stepnum = 10
 min_steps = 3
 num_problems = 5
+num_stepvers = 11
 
 # responses = []
 for i in range(num_problems): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
-  problemscale_tokenlist = []
+  # problemscale_tokenlist = []
   problemscale_subresponselist = []
   problemscale_stepprobs = []
   problemscale_responselist = []
@@ -118,7 +119,7 @@ for i in range(num_problems): # handles multiple problems.
         ]
         , return_tensors = "pt").to("cuda")
 
-    stepscale_tokenlist = []
+    # stepscale_tokenlist = []
     stepscale_problist = []
     stepscale_subresponselist = []
     stepscale_stepprobs = []
@@ -174,7 +175,7 @@ for i in range(num_problems): # handles multiple problems.
         print(f"Overall Probability for step {step_num}: {overall_probability}")
 
         # appending to step scale, a bit redundant.
-        stepscale_tokenlist.append(tokenlist[n])
+        # stepscale_tokenlist.append(tokenlist[n])
         stepscale_problist.append(problist[n])
 
       print("SUBRESPONSE: ", subresponses[n])
@@ -185,7 +186,7 @@ for i in range(num_problems): # handles multiple problems.
       problem_break = True
       break
 
-    problemscale_tokenlist.append(stepscale_tokenlist)
+    # problemscale_tokenlist.append(stepscale_tokenlist)
     problemscale_problist.append(stepscale_problist)
     problemscale_subresponselist.append(stepscale_subresponselist)
     problemscale_stepprobs.append(stepscale_stepprobs)
@@ -200,7 +201,7 @@ for i in range(num_problems): # handles multiple problems.
     prompt = prompt[:problem_index]
     print("PROMPT: ", prompt)
     # shift classification outside of the main generation loop? 
-    classified_response, classified_token, classified_prob = gen_C(prompt, stepscale_subresponselist, stepscale_tokenlist, stepscale_problist)
+    classified_response, classified_token, classified_prob = gen_C(prompt, stepscale_subresponselist, stepscale_problist, stepscale_problist)
     print("CLASSIFIED RESPONSE: ")
     for m in range(len(classified_response)):
       print(classified_response[m])
@@ -239,7 +240,7 @@ for i in range(num_problems): # handles multiple problems.
  # tokenlist is quad nested:
  # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]
 print(problemscale_responselist)
-print(problemscale_tokenlist)
+# print(problemscale_tokenlist)
 print(problemscale_problist)
 print(problemscale_subresponselist)
 print(problemscale_stepprobs)
