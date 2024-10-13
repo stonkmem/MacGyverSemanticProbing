@@ -1,5 +1,9 @@
 from llama_cpp import Llama
 
+import os
+import transformers
+
+
 def get_entailment_llama(question, a, b):
     entailment_llm = Llama.from_pretrained(
         repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",

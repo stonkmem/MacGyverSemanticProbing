@@ -306,9 +306,9 @@ for i in range(len(SE)): # for each problem
         if efficient == True:
             step_efficiency += 1
     problem_factuality.append(step_factuality)
-    if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.5:
+    if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
         problem_feasibility += 1
-    if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.5:
+    if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
         problem_efficiency += 1
     print(step_feasibility, step_efficiency)
 
