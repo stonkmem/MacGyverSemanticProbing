@@ -1,6 +1,6 @@
 from llama_cpp import Llama
 
-def get_entailment(question, a, b):
+def get_entailment_llama(question, a, b):
     entailment_llm = Llama.from_pretrained(
         repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
         filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
@@ -14,7 +14,7 @@ def get_entailment(question, a, b):
         ]
     )
 
-def get_corr_feas_eff(fraege, antworten):
+def get_corr_feas_eff_llama(fraege, antworten):
     llm_fact = Llama.from_pretrained(
         repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
         filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
@@ -38,3 +38,53 @@ After providing your explanation, please state whether the response is or is not
             ]['choices'][0]['message']['content']
         ))
     return ratings
+
+def get_P(x, y):
+    llm = Llama.from_pretrained(
+        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+        logits_all = True,
+        n_gpu_layers=-1
+    )
+    token_x = llm.tokenize(x.encode('utf-8'), special=True)
+    token_y = llm.tokenize(y.encode('utf-8'), special=True, add_bos=False)
+
+    logprobs=[]
+    logits=[]
+    curr = token_x[:]
+
+    llm.eval(curr)
+    for token in token_y:
+        curr.append(token)
+        logprobs.append(llm.logits_to_logprobs(llm.eval_logits)[-1][token])
+        logits.append(llm.eval_logits[-1][token])
+        llm.eval([token])
+
+    return (y, logprobs, logits)
+
+def convert_openai_to_llama_prompt(ls):
+    pmpt = '<|begin_of_text|>'
+    for msg in ls:
+        if msg['role'] == 'user':
+            pmpt += '<|start_header_id|>user<|end_header_id|>\n\n'
+            pmpt += msg['content'] + '<|eot_id|>'
+        elif msg['role'] == 'assistant':
+            pmpt += '<|start_header_id|>assistant<|end_header_id|>\n\n'
+            pmpt += msg['content'] + '<|eot_id|>'
+        elif msg['role'] == 'system':
+            pmpt += '<|start_header_id|>system<|end_header_id|>\n\n'
+            pmpt += msg['content'] + '<|eot_id|>'
+    pmpt += '<|start_header_id|>assistant<|end_header_id|>\n\n'
+    return pmpt
+
+def gen_C(x, ls):
+    C = [[ls[0]]]
+    for i in ls:
+        cl = False
+        if i != ls[0]:
+            for c in C:
+                if get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment':
+                    c.append(i);cl=True;break;
+        if cl==False:
+            C.append([i])
+    return C
