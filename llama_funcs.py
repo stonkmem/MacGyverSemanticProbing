@@ -104,8 +104,14 @@ def gen_prob(x="How are you doing?"):
     llm.eval()
     token_y=[]
     y=[]
+    string_y = ''
     token_next = llm.sample()
     while token_next!=llm.token_eos():
         token_y.append(token_next)
-        y.append(llm.detokenize)
-        llm.eval()
+        y.append(llm.detokenize([token_next]))
+        string_y+=y[-1]
+        llm.eval([token_next])
+        token_next = llm.sample()
+    logitz = llm.eval_logits[:]
+    
+    return (y, token_y, string_y, logitz)
