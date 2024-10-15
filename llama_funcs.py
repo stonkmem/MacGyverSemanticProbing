@@ -103,7 +103,7 @@ def convert_openai_to_llama_prompt(ls):
 def gen_prob(x="How are you doing?"):
     llm.reset()
     tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
-    llm.eval()
+    llm.eval(tokens_x)
     token_y=[]
     y=[]
     string_y = ''
