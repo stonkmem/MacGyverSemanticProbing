@@ -152,20 +152,38 @@ def convert_openai_to_llama_prompt(ls):
 #             C.append([i])
 # #    return C
 
-def gen_prob(x="How are you doing?"):
-    llm.reset()
-    tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
-    llm.eval(tokens_x)
-    token_y=[]
-    y=[]
-    string_y = ''
-    token_next = llm.sample()
-    while token_next!=llm.token_eos():
-        token_y.append(token_next)
-        y.append(llm.detokenize([token_next]))
-        string_y+=y[-1]
-        llm.eval([token_next])
+def gen_prob(x="Calculate 1 + 1", num=1):
+    responses = []
+    tokenlist = []
+    problist = []
+    
+    for i in range(num):
+        llm.reset()
+        tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
+        llm.eval(tokens_x)
+        token_y=[]
+        y=[]
+        logitz = []
+        string_y = ''
         token_next = llm.sample()
-    logitz = llm.eval_logits[:]
+        while token_next!=llm.token_eos():
+            token_y.append(token_next)
+            y.append(llm.detokenize([token_next]).decode("utf-8"))
+#             print(y[-1])
+            string_y+=y[-1]
+            llm.eval([token_next])
+            token_next = llm.sample()
+        cnt=len(tokens_x) - 1
+        print(cnt)
+        cookery = llm.logits_to_logprobs(llm.eval_logits)
+        for token in token_y:
+            print(max(cookery[cnt]), token)
+            logitz.append(cookery[cnt][token])
+#             print(logitz[-1])
+            cnt+=1
+        print(logitz)
+        problist.append(logitz)
+        tokenlist.append(y)
+        responses.append(string_y)
     
     return responses, tokenlist, problist
