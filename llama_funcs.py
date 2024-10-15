@@ -3,14 +3,32 @@ from llama_cpp import Llama
 import os
 import transformers
 
+llm = Llama.from_pretrained(
+    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    logits_all = True,
+    n_gpu_layers=-1
+)
+wipe_llm = llm.save_state()
+
+entailment_llm = Llama.from_pretrained(
+    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    logits_all = True,
+    n_gpu_layers=-1
+)
+wipe_entailment_llm = entailment_llm.save_state()
+
+llm_fact = Llama.from_pretrained(
+    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    logits_all = True,
+    n_gpu_layers=-1
+)
+llm_fact = llm_fact.save_state()
 
 def get_entailment_llama(question, a, b):
-    entailment_llm = Llama.from_pretrained(
-        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        logits_all = True,
-        n_gpu_layers=-1
-    )
+    entailment_llm.reset()
     return entailment_llm.create_chat_completion(
         messages=[
             {'role': 'system', 'content': 'You are a skilled linguist studying semantic entailment. As a task, you will have to determine whether one sentence semantically entails another.'},
@@ -19,15 +37,9 @@ def get_entailment_llama(question, a, b):
     )
 
 def get_corr_feas_eff_llama(fraege, antworten):
-    llm_fact = Llama.from_pretrained(
-        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        logits_all = True,
-        n_gpu_layers=-1
-    )
+    llm_fact.reset()
     ratings = []
     for i in range(len(fraege)):
-        
         ratings.append(llm_fact.create_chat_completion(messages=[
                 {'role':'system', 'content':'Please act as an impartial judge and evaluate the quality\
 of the solution provided by an AI assistant to the user problem displayed below. \
@@ -44,12 +56,7 @@ After providing your explanation, please state whether the response is or is not
     return ratings
 
 def get_P(x, y):
-    llm = Llama.from_pretrained(
-        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        logits_all = True,
-        n_gpu_layers=-1
-    )
+    llm.reset()
     token_x = llm.tokenize(x.encode('utf-8'), special=True)
     token_y = llm.tokenize(y.encode('utf-8'), special=True, add_bos=False)
 
@@ -92,13 +99,8 @@ def convert_openai_to_llama_prompt(ls):
 #         if cl==False:
 #             C.append([i])
 # #    return C
+
 def gen_prob(x="How are you doing?"):
-    llm = Llama.from_pretrained(
-        repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        logits_all = True,
-        n_gpu_layers=-1
-    )
     llm.reset()
     tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
     llm.eval()
