@@ -1,31 +1,83 @@
 from llama_cpp import Llama
-
+import sys
 import os
 import transformers
 
-llm = Llama.from_pretrained(
-    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    logits_all = True,
-    n_gpu_layers=-1
-)
-wipe_llm = llm.save_state()
+if __name__ == '__main__':
+    if sys.argv[1] == 'llama':
+        llm = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm = llm.save_state()
 
-entailment_llm = Llama.from_pretrained(
-    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    logits_all = True,
-    n_gpu_layers=-1
-)
-wipe_entailment_llm = entailment_llm.save_state()
+        entailment_llm = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_entailment_llm = entailment_llm.save_state()
 
-llm_fact = Llama.from_pretrained(
-    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    logits_all = True,
-    n_gpu_layers=-1
-)
-llm_fact = llm_fact.save_state()
+        llm_fact = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm_fact = llm_fact.save_state()
+
+    elif sys.argv[1] == 'vicuna':
+        llm = Llama.from_pretrained(
+            repo_id="TheBloke/stable-vicuna-13B-GGUF",
+            filename = 'stable-vicuna-13B.Q6_K.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm = llm.save_state()
+
+        entailment_llm = Llama.from_pretrained(
+            repo_id="TheBloke/stable-vicuna-13B-GGUF",
+            filename = 'stable-vicuna-13B.Q6_K.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_entailment_llm = entailment_llm.save_state()
+
+        llm_fact = Llama.from_pretrained(
+            repo_id="TheBloke/stable-vicuna-13B-GGUF",
+            filename = 'stable-vicuna-13B.Q6_K.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm_fact = llm_fact.save_state()
+
+    else:
+        llm = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm = llm.save_state()
+
+        entailment_llm = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_entailment_llm = entailment_llm.save_state()
+
+        llm_fact = Llama.from_pretrained(
+            repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+            filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+            logits_all = True,
+            n_gpu_layers=-1
+        )
+        wipe_llm_fact = llm_fact.save_state()
 
 def get_entailment_llama(question, a, b):
     entailment_llm.reset()
@@ -109,7 +161,7 @@ def gen_prob(x="How are you doing?"):
     logitz=[]
     string_y = ''
     token_next = llm.sample()
-    
+
     while token_next!=llm.token_eos():
         token_y.append(token_next)
         y.append(llm.detokenize([token_next]))
