@@ -158,22 +158,14 @@ def gen_prob(x="How are you doing?"):
     llm.eval(tokens_x)
     token_y=[]
     y=[]
-    logitz=[]
     string_y = ''
     token_next = llm.sample()
-
     while token_next!=llm.token_eos():
         token_y.append(token_next)
         y.append(llm.detokenize([token_next]))
         string_y+=y[-1]
         llm.eval([token_next])
         token_next = llm.sample()
+    logitz = llm.eval_logits[:]
     
-    cnt=0
-    for token in token_y:
-        logitz.append(llm.eval_logits[cnt][token])
-        cnt+=1
-    # logitz = llm.eval_logits[:]
-    
-    return (y, token_y, string_y, logitz)
-
+    return responses, tokenlist, problist
