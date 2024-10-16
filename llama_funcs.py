@@ -53,7 +53,30 @@ if __name__ == '__main__':
             n_gpu_layers=-1
         )
         wipe_llm_fact = llm_fact.save_state()
+    elif sys.argv[1] == 'mistral':
+        llm = Llama.from_pretrained(
+            repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+            filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+            logits_all = True,
+            n_gpu_layers = -1
+        )
+        wipe_llm = llm.save_state()
 
+        entailment_llm = Llama.from_pretrained(
+            repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+            filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+            logits_all = True,
+            n_gpu_layers = -1
+        )
+        wipe_entailment_llm = entailment_llm.save_state()
+
+        llm_fact = Llama.from_pretrained(
+            repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+            filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+            logits_all = True,
+            n_gpu_layers = -1
+        )
+        wipe_llm_fact = llm_fact.save_state()
     else:
         llm = Llama.from_pretrained(
             repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
