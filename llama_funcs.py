@@ -165,7 +165,7 @@ def gen_prob(x="Calculate 1 + 1", num=1):
         # score 30 samples with humans to check correlation. 
         sample = llm.create_chat_completion(
             messages=[
-#             {'role': 'system', 'content': 'You are a skilled linguist studying semantic entailment. As a task, you will have to determine whether one sentence entails another.'},
+            {"role": "system", "content": "You are a helpful assistant."},
             {'role': 'user', 'content': x},
         ],
             logprobs=True,

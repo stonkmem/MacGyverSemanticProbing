@@ -339,3 +339,10 @@ for i in range(len(total_scores)):
   print(generate_problem_score_simple(total_scores[i]))
 # print(generate_problem_score_simple(total_scores[0]))
 
+lambda_scores = []
+for i in range(len(total_scores)):
+  problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
+  lambda_scores.append(problem_lambda_score)
+print(lambda_scores)
+
+print(check_feasibility(), check_efficiency())
