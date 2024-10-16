@@ -1,12 +1,12 @@
 
 
-llm = Llama.from_pretrained(
-    repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    filename = 'Llama-3.2-3B-Instruct-IQ3_M.gguf',
-    logits_all = True,
-    n_gpu_layers = -1,
-    n_ctx=8192,
-)
+# llm = Llama.from_pretrained(
+#     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+#     filename = 'Llama-3.2-3B-Instruct-IQ3_M.gguf',
+#     logits_all = True,
+#     n_gpu_layers = -1,
+#     n_ctx=8192,
+# )
 # FastLanguageModel.for_inference(model) # Enable native 2x faster inferenc
 # need to modify for multi step usage / multi problem usage
 fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
