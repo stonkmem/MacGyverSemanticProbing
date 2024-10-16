@@ -95,16 +95,15 @@ def get_corr_feas_eff_llama(fraege, antworten):
         ratings.append(llm_fact.create_chat_completion(messages=[
                 {'role':'system', 'content':'Please act as an impartial judge and evaluate the quality\
 of the solution provided by an AI assistant to the user problem displayed below. \
-Your evaluation should rate the feasability and efficiency of the response. Be as objective as possible. \
+Your evaluation should rate the feasability and efficiency of the response. Be as objective as possible. \n\
 After providing your explanation, please state whether the response is or is not effective or feasible by strictly following this format: "Feasibility: [[YES/NO]], Efficiency: [[YES/NO]]", for example: "Feasibility: [[YES]], Efficiency: [[NO]]".'},
                 {'role':'user','content':f"""[Question]
-    {fraege[i]}
+{fraege[i]}
     
-    [The Start of Assistant’s Answer]
-    {antworten[i]}
-    [The End of Assistant's Answer]"""}
-            ]['choices'][0]['message']['content']
-        ))
+[The Start of Assistant’s Answer]
+{antworten[i]}
+[The End of Assistant's Answer]"""}
+            ])['choices'][0]['message']['content'])
     return ratings
 
 def get_P(x, y):
@@ -175,10 +174,10 @@ def gen_prob(x="Calculate 1 + 1", num=1):
             token_next = llm.sample()
         cnt=len(tokens_x) - 1
         print(cnt)
-        cookery = llm.logits_to_logprobs(llm.eval_logits)
+        logprobz = llm.logits_to_logprobs(llm.eval_logits)
         for token in token_y:
-            print(max(cookery[cnt]), token)
-            logitz.append(cookery[cnt][token])
+            print(max(logprobz[cnt]), token)
+            logitz.append(logprobz[cnt][token])
 #             print(logitz[-1])
             cnt+=1
         print(logitz)

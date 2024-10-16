@@ -88,6 +88,7 @@ print(get_entailment("Which country is New York in?", "USA", "New York is locate
 # print(get_factuality(""))
 
 def get_factuality_likert(question, ans, criteria):
+    client=openai.OpenAI()
     completion = client.chat.completions.create(
     model="gpt-4o",
         messages=[
