@@ -155,34 +155,38 @@ def gen_prob(x="Calculate 1 + 1", num=1):
     responses = []
     tokenlist = []
     problist = []
+    llm.reset()
     
     for i in range(num):
         llm.reset()
-        tokens_x = llm.tokenize(x.encode('utf-8'), special=True)
-        llm.eval(tokens_x)
-        token_y=[]
-        y=[]
+#         token_y=[]
         logitz = []
         string_y = ''
-        token_next = llm.sample()
-        while token_next!=llm.token_eos():
-            token_y.append(token_next)
-            y.append(llm.detokenize([token_next]).decode("utf-8"))
-#             print(y[-1])
-            string_y+=y[-1]
-            llm.eval([token_next])
-            token_next = llm.sample()
-        cnt=len(tokens_x) - 1
-        print(cnt)
-        logprobz = llm.logits_to_logprobs(llm.eval_logits)
-        for token in token_y:
-            print(max(logprobz[cnt]), token)
-            logitz.append(logprobz[cnt][token])
-#             print(logitz[-1])
-            cnt+=1
-        print(logitz)
+        # score 30 samples with humans to check correlation. 
+        sample = llm.create_chat_completion(
+            messages=[
+#             {'role': 'system', 'content': 'You are a skilled linguist studying semantic entailment. As a task, you will have to determine whether one sentence entails another.'},
+            {'role': 'user', 'content': x},
+        ],
+            logprobs=True,
+            top_logprobs = 1,
+
+        )
+        
+#         for i in sample['choices'][0]['logprobs']['token_logprobs']:
+#             print(i)
+            
+#         for i in sample['choices'][0]['logprobs']['top_logprobs']:
+#             print(i)
+        
+        # assume we alr have the chat completion object. string response = string_y. sample is chat completion object
+        tokens = sample['choices'][0]['logprobs']['tokens']
+        
+        string_y = sample['choices'][0]['message']['content']
+        
+        logitz = sample['choices'][0]['logprobs']['token_logprobs']
+        
         problist.append(logitz)
-        tokenlist.append(y)
+        tokenlist.append(tokens)
         responses.append(string_y)
-    
     return responses, tokenlist, problist
