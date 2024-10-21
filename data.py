@@ -31,7 +31,7 @@ num_stepvers = 11
 step_num = 1
 max_steps = "ten"
 
-EOS_TOKEN = tokenizer.eos_token # Must add EOS_TOKEN
+EOS_TOKEN = "<|eot_id|>" # Must add EOS_TOKEN
 
 def format_macgyver_prompt(examples): # Note that {n} steps have already been given beneath the problem, and are required to generate the new step when those steps have been completed. Change first into {n}?
     # and try to use the items in creative and innovative ways while

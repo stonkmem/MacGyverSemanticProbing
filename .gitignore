@@ -1,5 +1,7 @@
 env/
 env-1/
+jobs/
+
 loginscript.py
 keys.py
 __pycache__/

@@ -1,9 +1,15 @@
-nvidia-smi && nvcc --version
+git clone https://github.com/stonkmem/MacGyverSemanticProbing.git
+
+cd MacGyverSemanticProbing
 set CMAKE_ARGS="-DGGML-CUDA=ON"
 set FORCE_CMAKE=1
 pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 pip install numpy tenacity pandas matplotlib seaborn huggingface-hub tranformers openai datasets torch 
+pip install -r requirements.txt
 echo $CUDA_HOME
+nvidia-smi && nvcc --version
+
+echo "Done installing dependencies"
 
 @REM pip install llama-cpp-python
 @REM CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python

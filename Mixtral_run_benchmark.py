@@ -1,9 +1,11 @@
+
+
 from llama_funcs import *
 from helper_funcs import *
 from data import *
 from openai_funcs import *
 
-
+# FastLanguageModel.for_inference(model) # Enable native 2x faster inferenc
 # need to modify for multi step usage / multi problem usage
 fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
 fullscale_problist = [] # stores probabilities of tokens, where one element is a list of probabilities for each token in a seq
@@ -16,10 +18,10 @@ fullscale_classifiedsubresponselist = []
 fullscale_classifiedproblist = []
 
 max_stepnum = 10
-min_steps = 3
+min_stepnum = 3
 
 # responses = []
-for i in range(10): # handles multiple problems.
+for i in range(1): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
@@ -41,20 +43,24 @@ for i in range(10): # handles multiple problems.
 
     Be clear, specific and concise, and try to use the items in creative and innovative ways while maintaining practicality.
     Ensure that each step you generate brings you significantly closer to solving the problem fully.
-    Do not include explanation in your response.
+    Do NOT include explanation or examples or code in your response.
 
     Respond STRICTLY in this format, and do not generate anything extra:
     "Step {1}: <generate step {1} here>"
     "Step {2}: <generate step {2} here>"
     ...
 
-    The complete solution cannot have more than {max_steps} steps.
+    The complete solution cannot have more than {max_stepnum} steps.
   ''' + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
-
+    
   response, token, prob = gen_prob(inputstring, 1)
+  
+  while response[0].count('\n') >= 20:
+      response, token, prob = gen_prob(inputstring, 1)
+      print("REGENERATING")
   response = response[0]
   try:
       response_index = response.index("<|eot_id|>")
@@ -67,23 +73,24 @@ for i in range(10): # handles multiple problems.
   num_steps = len(steps)
   # print("NUM_STEPVERS: ", num_steps)
 
-  max_stepnum = max(min(max_stepnum, num_steps), min_steps)
-  max_stepnum = min(10, max_stepnum)
-  print("MAX_STEPNUM: ", max_stepnum)
+  num_steps = max(min(max_stepnum, num_steps), min_stepnum)
+#   num_steps = min(10, max_stepnum)
+  print("MAX_STEPNUM: ", num_steps)
 
   if num_steps <= 10:
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
 
-  for j in range(max_stepnum): # handles multiple steps for a problem.
+  for j in range(num_steps): # handles multiple steps for a problem.
     problem_break = False
     step_num = 1 + j
 
     if step_num == 1:
-      inputs = tokenizer(
-        [
-        macgyver[i]["text"] + "\n ### Response: "
-        ], return_tensors = "pt").to("cuda")
+      # inputs = tokenizer(
+      #   [
+      #   macgyver[i]["text"] + "\n ### Response: "
+      #   ], return_tensors = "pt").to("cuda")
+        print()
     else: # handles further steps
       dictionary = {
           f"Step {2},": f"Step {step_num + 1},",
@@ -102,7 +109,7 @@ for i in range(10): # handles multiple problems.
       prev_steps.append(f"\n Step {step_num - 1} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":")[selected_step_index].replace("Step " + str(step_num - 1) + ":", ""))
       for k in range(len(prev_steps)):
         finalstring += prev_steps[k]
-      if step_num >= max_stepnum:
+      if step_num >= num_steps:
         finalstring += "\n This step must make the solution complete and solve the problem. "
       finalstring += f"\n ### Response: "
       print("INPUT: ", finalstring)
@@ -128,6 +135,7 @@ for i in range(10): # handles multiple problems.
           subresponses[n] = subresponses[n][subresponse_index:]
       except:
         print()
+      
 
       if "STOP" in subresponses[n]:
         num_stops += 1
@@ -137,6 +145,21 @@ for i in range(10): # handles multiple problems.
         try:
           subresponse_index = subresponses[n].index("Step " + str(step_num) + ":")
           subresponses[n] = subresponses[n][subresponse_index:]
+          subresponses[n] = subresponses[n].split('\n')[0] # only first line
+          # processing token and prob lists
+          
+          start_index = tokenlist[n].index('Step')
+          tokenlist[n] = tokenlist[n][start_index:]
+          problist[n] = problist[n][start_index:]
+
+          try:
+              line_index = tokenlist[n].index('\n')
+              tokenlist[n] = tokenlist[n][:line_index]
+              problist[n] = problist[n][:line_index]
+          except:
+              print()
+          print(tokenlist[n])
+          print(problist[n])
         except:
           try:
             subresponse_index = subresponses[n].index(str(step_num) + ":")
@@ -147,6 +170,7 @@ for i in range(10): # handles multiple problems.
               subresponses[n] = "Step " + str(step_num) + ": " + subresponses[n][subresponse_index:]
             except:
               print("ERROR: ", subresponses[n])
+              continue
         subresponses[n] = subresponses[n].replace("<|eot_id|>", "")
         subresponses[n] = subresponses[n].replace("Response:", "")
         try:
@@ -154,6 +178,7 @@ for i in range(10): # handles multiple problems.
           subresponses[n] = subresponses[n][:next_step_index]
         except:
           print()
+          # continue
         if subresponses[n].count("Step " + str(step_num) + ":") > 1:
             subresponses[n] = remove_duplicates(subresponses[n], "Step " + str(step_num) + ":")
 
@@ -165,7 +190,7 @@ for i in range(10): # handles multiple problems.
         stepscale_stepprobs.append(overall_probability)
         print(f"Overall Probability for step {step_num}: {overall_probability}")
 
-        # appending to step scale, a bit redundant.
+        # appending to step scale
         stepscale_tokenlist.append(tokenlist[n])
         stepscale_problist.append(problist[n])
 
@@ -217,8 +242,6 @@ for i in range(10): # handles multiple problems.
 
   selected_step_index = max(problemscale_stepprobs[step_num - 1])
   selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
-  # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-  # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
   prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
   
   fullscale_prev_steps.append(prev_steps) # for each problem
@@ -229,107 +252,9 @@ for i in range(10): # handles multiple problems.
 
  # tokenlist is quad nested:
  # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]
-# print(problemscale_responselist)
-# print(problemscale_tokenlist)
-# print(problemscale_problist)
-# print(problemscale_subresponselist)
-# print(problemscale_stepprobs)
-# print(problemscale_classifiedsubresponselist)
-# print(fullscale_prev_steps)
 
-# classprobabilities = [] # currently for one problem.
-# # print(fullscale_classifiedproblist)
-# for j in range(len(fullscale_classifiedproblist)): # full scale
-#   problemscale_classprobabilities = []
-#   for k in range(len(fullscale_classifiedproblist[j])): # problem scale
-#     subresponsescale_classprobs = []
-#     # for each subresponse, there should be an array of class probs.
-#     for i in range(len(fullscale_classifiedproblist[j][k])): # subresponse scale
-#       # print(len(fullscale_classifiedproblist[j][k][1])) # should return a nested array containing arrays of probs for each seq in a class.
-#       classprob = calculate_prob_of_class_logprobs(fullscale_classifiedproblist[j][k][i], fullscale_classifiedproblist[j][k][i])
-#       # print(classprob)
-#       # currently configured such that 1 class is 1 problem.
-#       subresponsescale_classprobs.append(classprob)
-#     problemscale_classprobabilities.append(subresponsescale_classprobs)
-
-#   classprobabilities.append(problemscale_classprobabilities)
-# print(classprobabilities)
-
-# SE = []
-# for i in range(len(classprobabilities)):
-#   problem_SE = []
-#   for j in range(len(classprobabilities[i])):
-#     problem_SE.append(calculate_SE_simple(classprobabilities[i][j]))
-#   print(problem_SE)
-#   SE.append(problem_SE)
-# print(SE)
-
-# for i in range(len(classprobabilities)):
-#   problem_SE = []
-#   for j in range(len(classprobabilities[i])):
-#     problem_SE.append(calculate_SE_complex(classprobabilities[i][j]))
-#   SE.append(problem_SE)
-# print(SE)
-
-# # factuality score generation
-# factuality = []
-# efficiency = []
-# feasibility = []
-# criterialist = ["feasible", "safe", "resource-efficient", "effective"] # add constraint fitting? 
-# for i in range(len(SE)): # for each problem
-#   problem_factuality = []
-#   problem_feasibility = 0
-#   problem_efficiency = 0
-#   for j in range(len(SE[i])): # for each step
-#     step_factuality = []
-#     step_feasibility = 0
-#     step_efficiency = 0
-#     for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
-#         factual, feasible, efficient = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
-#         step_factuality.append(factual)
-#         if feasible == True:
-#             step_feasibility += 1
-#         if efficient == True:
-#             step_efficiency += 1
-#     problem_factuality.append(step_factuality)
-#     if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
-#         problem_feasibility += 1
-#     if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
-#         problem_efficiency += 1
-#     print(step_feasibility, step_efficiency)
-
-#   # aggregates the feasibility and efficiency scores for each problem. 
-#   factuality.append(problem_factuality)
-#   if problem_feasibility / len(SE[i]) > 0.6:
-#     feasibility.append(1)
-#   else:
-#     feasibility.append(0)
-#   if problem_efficiency / len(SE[i]) > 0.6:
-#     efficiency.append(1)
-#   else:
-#     efficiency.append(0)
-    
-# print(factuality)
-# print(feasibility)
-# print(efficiency)
-
-# total_scores = []
-# for i in range(len(SE)):
-#   problem_scores = []
-#   for j in range(len(SE[i])):
-#     print(compute_total_score(SE[i][j], factuality[i][j]))
-#     problem_scores.append(compute_total_score(SE[i][j], factuality[i][j])) # here factuality is a list of scores while SE is a single value
-#   total_scores.append(problem_scores)
-# print(total_scores)
-# for i in range(len(total_scores)):
-#   print(generate_problem_score_simple(total_scores[i]))
-
-# lambda_scores = []
-# for i in range(len(total_scores)):
-#   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
-#   lambda_scores.append(problem_lambda_score)
-# print(lambda_scores)
 
 
 
 # print(check_feasibility(), check_efficiency())
+
