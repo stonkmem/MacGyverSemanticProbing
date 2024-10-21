@@ -80,10 +80,11 @@ for i in range(10): # handles multiple problems.
     step_num = 1 + j
 
     if step_num == 1:
-      inputs = tokenizer(
-        [
-        macgyver[i]["text"] + "\n ### Response: "
-        ], return_tensors = "pt").to("cuda")
+      # inputs = tokenizer(
+      #   [
+      #   macgyver[i]["text"] + "\n ### Response: "
+      #   ], return_tensors = "pt").to("cuda")
+      print()
     else: # handles further steps
       dictionary = {
           f"Step {2},": f"Step {step_num + 1},",

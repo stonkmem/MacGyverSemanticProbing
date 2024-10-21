@@ -1,4 +1,10 @@
 # %%
+
+from openai_funcs import *
+from llama_funcs import *
+import torch
+from data import *
+
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
     # inp/uts = tokenizer(prompt, return_tensors="pt").to(device)
@@ -595,3 +601,12 @@ def check_efficiency():
     if num_inefficients == 0:
         return -1
     return num_agreements / num_inefficients
+
+
+def calc_seq_probability_LOGPROB(probabilities, return_logprob = False):
+    print(probabilities)
+    logprob = sum(probabilities)
+    if return_logprob == False:
+        return math.exp(logprob)
+    else:
+        return logprob
