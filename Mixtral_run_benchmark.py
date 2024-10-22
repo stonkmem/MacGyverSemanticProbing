@@ -125,7 +125,7 @@ for i in range(1): # handles multiple problems.
         inputstring = macgyver[i]["text"] + "\n ### Response: "
     else:
         inputstring = finalstring
-    subresponses, tokenlist, problist = gen_prob(inputstring, num_stepvers)
+    subresponses, tokenlist, problist = gen_prob(inputstring, num_stepvers, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
 

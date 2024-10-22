@@ -174,42 +174,55 @@ def convert_openai_to_llama_prompt(ls):
 #             C.append([i])
 # #    return C
 
-def gen_prob(x="Calculate 1 + 1", num=1):
+def gen_prob(x="Calculate 1 + 1", num=1, verify=False):
     responses = []
     tokenlist = []
     problist = []
     llm.reset()
     
     for i in range(num):
-        llm.reset()
-#         token_y=[]
-        logitz = []
+        ans_valid = False
         string_y = ''
-        # score 30 samples with humans to check correlation. 
-        sample = llm.create_chat_completion(
-            messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {'role': 'user', 'content': x},
-        ],
-            logprobs=True,
-            top_logprobs = 1,
-
-        )
+        while not ans_valid:
         
-#         for i in sample['choices'][0]['logprobs']['token_logprobs']:
-#             print(i)
+            llm.reset()
+    #         token_y=[]
+            logitz = []
+            # string_y = ''
+            # score 30 samples with humans to check correlation. 
+            sample = llm.create_chat_completion(
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                {'role': 'user', 'content': x},
+            ],
+                logprobs=True,
+                top_logprobs = 1,
+    
+            )
             
-#         for i in sample['choices'][0]['logprobs']['top_logprobs']:
-#             print(i)
+    #         for i in sample['choices'][0]['logprobs']['token_logprobs']:
+    #             print(i)
+                
+    #         for i in sample['choices'][0]['logprobs']['top_logprobs']:
+    #             print(i)
+    #         print(sample['choices'][0]['token_logprobs'])
+            
+            # assume we alr have the chat completion object. string response = string_y. sample is chat completion object
+            tokens = sample['choices'][0]['logprobs']['tokens']
+            
+            string_y = sample['choices'][0]['message']['content']
+            # output_index - string_y.index("Output:")
+            # string_y = string_y[output_index]
+            print(string_y)
+
+            if string_y.count("Step") == 1 or verify == False:
+                ans_valid = True
         
-        # assume we alr have the chat completion object. string response = string_y. sample is chat completion object
-        tokens = sample['choices'][0]['logprobs']['tokens']
-        
-        string_y = sample['choices'][0]['message']['content']
-        
-        logitz = sample['choices'][0]['logprobs']['token_logprobs']
+            logitz = sample['choices'][0]['logprobs']['token_logprobs']
+        # print(sample)
         
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+    # print(responses)
     return responses, tokenlist, problist
