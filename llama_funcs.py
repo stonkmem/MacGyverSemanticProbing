@@ -58,7 +58,8 @@ if __name__ == '__main__':
             repo_id="bartowski/Mistral-22B-v0.2-GGUF",
             filename="Mistral-22B-v0.2-Q5_K_M.gguf",
             logits_all = True,
-            n_gpu_layers = -1
+            n_gpu_layers = -1,
+            n_ctx = 1024
         )
         wipe_llm = llm.save_state()
 
@@ -66,7 +67,8 @@ if __name__ == '__main__':
             repo_id="bartowski/Mistral-22B-v0.2-GGUF",
             filename="Mistral-22B-v0.2-Q5_K_M.gguf",
             logits_all = True,
-            n_gpu_layers = -1
+            n_gpu_layers = -1,
+            n_ctx = 1024
         )
         wipe_entailment_llm = entailment_llm.save_state()
 
@@ -74,7 +76,8 @@ if __name__ == '__main__':
             repo_id="bartowski/Mistral-22B-v0.2-GGUF",
             filename="Mistral-22B-v0.2-Q5_K_M.gguf",
             logits_all = True,
-            n_gpu_layers = -1
+            n_gpu_layers = -1,
+            n_ctx = 1024
         )
         wipe_llm_fact = llm_fact.save_state()
     else:
