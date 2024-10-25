@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Clone the repository
-git clone https://github.com/stonkmem/MacGyverSemanticProbing.git
+# git clone https://github.com/stonkmem/MacGyverSemanticProbing.git
 
-# Change directory to the repository
-cd MacGyverSemanticProbing
+# # Change directory to the repository
+# cd MacGyverSemanticProbing
 
 # scp .env <aspire_user>@jumphost.ntu.edu.sg:/path/on/jumphost/.env /home/<your_username>/macgyversemanticprobing/.env
 
