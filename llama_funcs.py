@@ -255,6 +255,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         tokenlist.append(tokens)
         responses.append(string_y)
     # print(responses)
+    # print(responses)
     return responses, tokenlist, problist
     
 # output = gen_prob(macgyver[0]['Problem'], prompt=prompt, num=5)
