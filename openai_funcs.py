@@ -2,6 +2,7 @@
 from openai import OpenAI
 import os
 # import openai
+from helper_funcs import gen_chat_object
 
 from dotenv import load_dotenv
 
@@ -26,7 +27,7 @@ def get_entailment_openai(question, a, b):
 
 def get_corr_feas_eff_openai(fraege, antworten):
     ratings = []
-    llm_fact_openai = openai.OpenAI()
+    llm_fact_openai = client
     for i in range(len(fraege)):
         
         ratings.append(llm_fact_openai.chat.completions.create(messages=[
@@ -99,7 +100,7 @@ print(get_entailment("Which country is New York in?", "USA", "New York is locate
 # print(get_factuality(""))
 
 def get_factuality_likert(question, ans, criteria):
-    client=openai.OpenAI()
+    # client=openai.OpenAI()
     completion = client.chat.completions.create(
     model="gpt-4o",
         messages=[
@@ -122,44 +123,44 @@ def get_factuality_likert(question, ans, criteria):
     return completion.choices[0].message.content
 
 # %%
-def gen_factuality_score(question, ans, criterialist):
-    score = 0
-    scores = get_factuality(question, ans, criteria)
-    scores.split("[[")
-    for i in len(scores):
-        if i >= 1:
-            if scores[i][0] == Y:
-                score += 1
-    if len(criterialist > 0):
-        score /= len(criterialist)
-        # finds avg
-    else:
-        score = -1
-    return score
+# def gen_factuality_score(question, ans, criterialist):
+#     score = 0
+#     scores = get_factuality(question, ans, criterialist)
+#     scores.split("[[")
+#     for i in len(scores):
+#         if i >= 1:
+#             if scores[i][0] == Y:
+#                 score += 1
+#     if len(criterialist > 0):
+#         score /= len(criterialist)
+#         # finds avg
+#     else:
+#         score = -1
+#     return score
 
-def gen_factuality_score_likert(question, ans, criterialist):
-    score = 0
-    scores = get_factuality_likert(question, ans, criteria)
-    scores.split("[[")
-    for i in len(scores):
-        if i >= 1:
-            try:
-                if scores[i][1] == "0":
-                    score += 1 # 10
-                else:
-                    score += int(scores[i][0]) / 10
-            except:
-                print("FORMAT ISSUE")
-#     for criteria in criterialist:
-#         factual = int(get_factuality(question, ans, criteria))
-#         if factual > 0:
-#             score += factual
-    if len(criterialist)> 0:
-        score /= len(criterialist) # normalise
-        # finds avg
-    else:
-        score = -1
-    return score
+# def gen_factuality_score_likert(question, ans, criterialist):
+#     score = 0
+#     scores = get_factuality_likert(question, ans, criterialist)
+#     scores.split("[[")
+#     for i in len(scores):
+#         if i >= 1:
+#             try:
+#                 if scores[i][1] == "0":
+#                     score += 1 # 10
+#                 else:
+#                     score += int(scores[i][0]) / 10
+#             except:
+#                 print("FORMAT ISSUE")
+# #     for criteria in criterialist:
+# #         factual = int(get_factuality(question, ans, criteria))
+# #         if factual > 0:
+# #             score += factual
+#     if len(criterialist)> 0:
+#         score /= len(criterialist) # normalise
+#         # finds avg
+#     else:
+#         score = -1
+#     return score
 
 # def gen_C(x, ls, tokenseq, probsq):
 #     C = [[ls[0]]]

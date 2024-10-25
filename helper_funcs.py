@@ -4,6 +4,8 @@ from openai_funcs import *
 from llama_funcs import *
 import torch
 from data import *
+from process_data import *
+import numpy as np
 
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
@@ -234,35 +236,35 @@ def generate_data(num_responses, inputs):
 
 
 # %%
-def generate_data_from_LlamaCPP(num_responses, inputs):
-    responses = []
-    problist = []
-    tokenlist = []
-    for i in range(num_responses):
-        completion = entailment_llm.create_chat_completion(
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {
-                    "role": "user",
-                    "content": inputs,
-                }
-            ],
-            logprobs=True,
-        )
-        print(completion['choices'][0][''])
-        # responses.append(completion.choices[0].message.content)
-        # tokens = []
-        # probs = []
-        # # print(len(completion.choices[0].logprobs.content))
-        # for j in range(len(completion.choices[0].logprobs.content)):
-        #     tokens.append(completion.choices[0].logprobs.content[j].token)
-        #     probs.append(completion.choices[0].logprobs.content[j].logprob)
-        #     # NOTE THAT IT IS ALREADY IN LOGPROB FORM
-        # tokenlist.append(tokens)
-        # problist.append(probs)
-    return responses, tokenlist, problist
+# def generate_data_from_LlamaCPP(num_responses, inputs):
+#     responses = []
+#     problist = []
+#     tokenlist = []
+#     for i in range(num_responses):
+#         completion = entailment_llm.create_chat_completion(
+#             messages=[
+#                 {"role": "system", "content": "You are a helpful assistant."},
+#                 {
+#                     "role": "user",
+#                     "content": inputs,
+#                 }
+#             ],
+#             logprobs=True,
+#         )
+#         print(completion['choices'][0][''])
+#         # responses.append(completion.choices[0].message.content)
+#         # tokens = []
+#         # probs = []
+#         # # print(len(completion.choices[0].logprobs.content))
+#         # for j in range(len(completion.choices[0].logprobs.content)):
+#         #     tokens.append(completion.choices[0].logprobs.content[j].token)
+#         #     probs.append(completion.choices[0].logprobs.content[j].logprob)
+#         #     # NOTE THAT IT IS ALREADY IN LOGPROB FORM
+#         # tokenlist.append(tokens)
+#         # problist.append(probs)
+#     return responses, tokenlist, problist
 
-print(generate_data_from_LlamaCPP(1, "Write a haiku about recursion in programming."))
+# print(generate_data_from_LlamaCPP(1, "Write a haiku about recursion in programming."))
 
 # %%
 import math
@@ -530,7 +532,7 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
         # finds avg
     return score, feasibility, efficiency
 
-import numpy as np
+
 
 def lambda_return(scores, gamma, lambda_):
     """
