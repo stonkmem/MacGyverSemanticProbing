@@ -6,6 +6,7 @@ import torch
 from helper_funcs import *
 from data import *
 from helper_funcs import gen_chat_object
+import torch
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         # wipe_llm_fact = llm_fact.save_state()
 
     elif sys.argv[1] == 'vicuna':
-        modelpath = "lmsys/vicuna-7b-v1.5"
+        modelpath = "lmsys/vicuna-13b-v1.5"
         # llm = Llama.from_pretrained(
         #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
         #     filename = 'stable-vicuna-13B.Q6_K.gguf',
@@ -70,7 +71,7 @@ if __name__ == '__main__':
         # )
         # wipe_llm_fact = llm_fact.save_state()
     elif sys.argv[1] == 'mistral':
-        modelpath = "mistralai/Mixtral-8x22B-Instruct-v0.1"
+        modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
         # llm = Llama.from_pretrained(
         #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
         #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
@@ -121,8 +122,8 @@ if __name__ == '__main__':
         # wipe_llm_fact = llm_fact.save_state()
     tokenizer = AutoTokenizer.from_pretrained(modelpath) 
  
-    model = AutoModelForCausalLM.from_pretrained(modelpath)
-    model.to("cuda")
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+    # model.to("cuda")
 
 
     # hfclient = InferenceClient(api_key=huggingface_token)
