@@ -610,3 +610,78 @@ def calc_seq_probability_LOGPROB(probabilities, return_logprob = False):
         return math.exp(logprob)
     else:
         return logprob
+    
+# prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
+#     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
+#     Solve the problem in the fewest steps possible.
+#     Arrive at the complete solution by step {max_steps}, such that it can solve the problem.
+#     Be clear, specific and concise, maintaining practicality.
+#     Ensure that the step you generate brings you significantly closer to solving the problem fully.
+    
+#     Do not generate step {step_num + 1}, etc.
+#     Do NOT include explanation, examples or any python (or other) code in your response.
+#     Do NOT generate anything extra, and limit the length of the one step you generate to one sentence maximum.  
+#     Make your response as creative and innovative as possible.
+
+#     Respond STRICTLY in this format:
+#     Step {step_num}: <generate version of step {step_num} here>
+
+#     If a new step does not need to be generated to solve the problem, respond strictly with "STOP"
+#     """
+
+# prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
+#     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
+#     Solve the problem in the fewest steps possible.
+#     Arrive at the complete solution by step {max_steps}, such that it can solve the problem.
+#     Be clear, specific and concise, maintaining practicality.
+#     Ensure that the step you generate brings you significantly closer to solving the problem fully.
+#     Make your response as creative and innovative as possible.
+    
+#     Do not generate step {step_num + 1}, etc.
+#     Do NOT include explanation, examples or any python (or other) code in your response.
+#     Do NOT generate anything extra, and limit the length of the one step you generate to one sentence maximum.  
+#     If the existing steps can already solve the problem effectively, respond strictly with "STOP"
+
+#     Respond STRICTLY in this format:
+#     Step {step_num}: <generate version of step {step_num} here>
+#     """
+
+# def gen_chat_object(prompt, problem, include_eg = True):
+#     example_problem = """Problem: You need to remove the pit from an avocado for your salad, but your utility knife is blunt. In your drawer, you find a stainless steel egg whisk, a wooden rolling pin, a wine bottle filled with Merlot, a heavy-duty garlic crusher, small plastic spoons, and a fork with prongs bent slightly inwards. Unfortunately, the only spoon available isn't sufficient for the task. How should you proceed to remove the pit?
+#     Existing steps, if any: 
+#     Response: """
+#     example_step = "Step 1: Take the fork with the bent prongs and pierce the avocado in an outline around the pit."
+#     if include_eg:
+#         messages = [
+#             {'role': 'system', 'content': prompt},
+#                 {'role': 'user', 'content': prompt + example_problem},
+#                 {'role': 'assistant', 'content': example_step}, # must add \n\n for end of assistant for LLAMA
+#                 {'role': 'user', 'content': problem}
+#         ]
+#     else:
+#         messages = [
+#             {'role': 'system', 'content': prompt},
+#             {'role': 'user', 'content': problem}
+#         ]
+#     return messages
+
+def gen_chat_object(prompt, problem, include_eg = True):
+    example_problem = """Problem: You need to remove the pit from an avocado for your salad, but your utility knife is blunt. In your drawer, you find a stainless steel egg whisk, a wooden rolling pin, a wine bottle filled with Merlot, a heavy-duty garlic crusher, small plastic spoons, and a fork with prongs bent slightly inwards. Unfortunately, the only spoon available isn't sufficient for the task. How should you proceed to remove the pit?
+    Existing steps, if any: 
+    Response: """
+    example_step = "Step 1: Take the fork with the bent prongs and pierce the avocado in an outline around the pit."
+    if include_eg:
+        messages = prompt + '\n For example, an example problem and step could be: \n' + example_problem + '\n' + example_step + '\n\n Now, here is the problem you are given: \n Problem: \n' + problem 
+        # [
+        #     {'role': 'system', 'content': prompt},
+        #         {'role': 'user', 'content': prompt + example_problem},
+        #         {'role': 'assistant', 'content': example_step}, # must add \n\n for end of assistant for LLAMA
+        #         {'role': 'user', 'content': problem}
+        # ]
+    else:
+        messages = prompt + '\n### Problem: \n' + problem
+        # = [
+        #     {'role': 'system', 'content': prompt},
+        #     {'role': 'user', 'content': problem}
+        # ]
+    return messages

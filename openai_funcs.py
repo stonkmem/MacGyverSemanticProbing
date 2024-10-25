@@ -161,12 +161,48 @@ def gen_factuality_score_likert(question, ans, criterialist):
         score = -1
     return score
 
+# def gen_C(x, ls, tokenseq, probsq):
+#     C = [[ls[0]]]
+#     T = [[tokenseq[0]]]
+#     P = [[probsq[0]]]
+#     for i in ls:
+#         cl = False
+#         if i != ls[0]:
+#             for c in C:
+#               # break
+# #                 print(c[0], i)
+# #                 print(get_entailment(x, c[0], i))
+#                 if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
+#                     c.append(i);
+#                     c_index = C.index(c)
+#                     T[c_index].append(tokenseq[ls.index(i)])
+#                     P[c_index].append(probsq[ls.index(i)])
+#                     print("c: ", c)
+#                     cl=True;break;
+#         if cl==False and i != ls[0]:
+#             C.append([i])
+#             T.append([tokenseq[ls.index(i)]])
+#             P.append([probsq[ls.index(i)]])
+#     return C, T, P
+
 def gen_C(x, ls, tokenseq, probsq):
     C = [[ls[0]]]
     T = [[tokenseq[0]]]
     P = [[probsq[0]]]
+    # print(x, ls, probsq)
     for i in ls:
         cl = False
+        index = ls.index(i)
+        classindex = 0
+        callstop = False
+        for k in C:
+            for j in k:
+                if j == i:
+                    callstop = True
+                    break
+            if not callstop:
+                classindex += 1
+        # classindex = C.index([i])
         if i != ls[0]:
             for c in C:
               # break
@@ -179,29 +215,44 @@ def gen_C(x, ls, tokenseq, probsq):
                     P[c_index].append(probsq[ls.index(i)])
                     print("c: ", c)
                     cl=True;break;
+        elif index != 0 or ls.count(i) > 1:
+            C[classindex].append(i);
+            # c_index = C.index(c)
+            T[classindex].append(tokenseq[ls.index(i)])
+            P[classindex].append(probsq[ls.index(i)])
+            # print("c: ", c)
         if cl==False and i != ls[0]:
             C.append([i])
             T.append([tokenseq[ls.index(i)]])
             P.append([probsq[ls.index(i)]])
     return C, T, P
 
-# %%
-def generate_data_from_GPT(num_responses, inputs):
+
+def generate_data_from_GPT(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     problist = []
     tokenlist = []
-    for i in range(num_responses):
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {
-                    "role": "user",
-                    "content": inputs,
-                }
-            ],
-            logprobs=True
-        )
+    max_tokens = 1024
+    for i in range(num):
+        ans_valid = False
+        string_y = ''
+        logitz = []
+        tokens = []
+        while not ans_valid:
+            msg = gen_chat_object(prompt, problem, include_eg = include_eg)
+            completion = client.chat.completions.create(
+                model="gpt-4o",
+                messages=msg,
+                logprobs=True
+            )
+            string_y = completion.choices[0].message.content
+            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+                ans_valid = True
+            elif "STOP" in string_y:
+                ans_valid = True
+            else:
+                print("REGENERATING, STEP ERROR")
+        
         responses.append(completion.choices[0].message.content)
         tokens = []
         probs = []
@@ -213,5 +264,32 @@ def generate_data_from_GPT(num_responses, inputs):
         tokenlist.append(tokens)
         problist.append(probs)
     return responses, tokenlist, problist
+# def generate_data_from_GPT(num_responses, inputs):
+#     responses = []
+#     problist = []
+#     tokenlist = []
+#     for i in range(num_responses):
+#         completion = client.chat.completions.create(
+#             model="gpt-4o",
+#             messages=[
+#                 {"role": "system", "content": "You are a helpful assistant."},
+#                 {
+#                     "role": "user",
+#                     "content": inputs,
+#                 }
+#             ],
+#             logprobs=True
+#         )
+#         responses.append(completion.choices[0].message.content)
+#         tokens = []
+#         probs = []
+#         # print(len(completion.choices[0].logprobs.content))
+#         for j in range(len(completion.choices[0].logprobs.content)):
+#             tokens.append(completion.choices[0].logprobs.content[j].token)
+#             probs.append(completion.choices[0].logprobs.content[j].logprob)
+#             # NOTE THAT IT IS ALREADY IN LOGPROB FORM
+#         tokenlist.append(tokens)
+#         problist.append(probs)
+#     return responses, tokenlist, problist
 
-print(generate_data_from_GPT(1, "Write a haiku about recursion in programming."))
+# print(generate_data_from_GPT(1, "Write a haiku about recursion in programming."))

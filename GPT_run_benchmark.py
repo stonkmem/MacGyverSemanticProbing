@@ -4,9 +4,26 @@ from helper_funcs import *
 from data import *
 from openai_funcs import *
 
+step_num = 1
+prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
+    Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
+    Solve the problem in the fewest steps possible.
+    Arrive at the complete solution by step {max_steps}, such that it can solve the problem.
+    Be clear, specific and concise, maintaining practicality.
+    Ensure that the step you generate brings you significantly closer to solving the problem fully.
+    
+    Do not generate step {step_num + 1}, etc., or include explanation, examples or any python (or other) code in your response.
+    Limit the length of the one step you generate to one sentence maximum.  
+    Make your response as creative and innovative as possible.
+    If the problem can already be solved with the existing steps, respond strictly with "STOP"
+
+    Respond STRICTLY in this format:
+    Step {step_num}: <generate version of step {step_num} here>
+
+    """
 
 # need to modify for multi step usage / multi problem usage
-# fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
+fullscale_tokenlist = [] # stores lists of tokens one for each subsequence
 fullscale_problist = [] # stores probabilities of tokens, where one element is a list of probabilities for each token in a seq
 fullscale_promptlist = [] # list of overall probs for eqch sequence
 fullscale_responselist = []
@@ -17,15 +34,13 @@ fullscale_classifiedsubresponselist = []
 fullscale_classifiedproblist = []
 
 max_stepnum = 10
-min_steps = 3
-num_problems = 5
-num_stepvers = 11
+min_stepnum = 2
 
 # responses = []
-for i in range(num_problems): # handles multiple problems.
+for i in range(1): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
-  # problemscale_tokenlist = []
+  problemscale_tokenlist = []
   problemscale_subresponselist = []
   problemscale_stepprobs = []
   problemscale_responselist = []
@@ -41,60 +56,52 @@ for i in range(num_problems): # handles multiple problems.
     Given the problem below, generate a multi-step solution considering all the constraints.
     Solve the problem in the fewest steps possible.
 
-
     Be clear, specific and concise, and try to use the items in creative and innovative ways while maintaining practicality.
     Ensure that each step you generate brings you significantly closer to solving the problem fully.
-    Do not include explanation in your response.
 
     Respond STRICTLY in this format, and do not generate anything extra:
     "Step {1}: <generate step {1} here>"
     "Step {2}: <generate step {2} here>"
     ...
 
-    The complete solution cannot have more than {max_steps} steps.
+    The complete solution cannot have more than {max_stepnum} steps.
+    Do NOT include explanation or examples or code in your response.
   ''' + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
 
-  inputs = tokenizer(
-    [
-    inputstring
-    ]
-    , return_tensors = "pt").to("cuda")
-
   # generates an initial solution to extract step count.
-
-  response, token, prob = generate_data_from_GPT(1, inputstring) # generate_tokens_and_probabilities(inputs)
+    
+  response, token, prob = generate_data_from_GPT(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  
+  while response[0].count('\n') >= 20 or response.count("Step") >= 15:
+      response, token, prob = generate_data_from_GPT(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+      print("REGENERATING")
   response = response[0]
-  token = token[0]
-  prob = prob[0]
   try:
       response_index = response.index("<|eot_id|>")
       response = response[response_index:]
   except:
-      print(response)
+    print('INIT:', response)
 
   steps = split_by_sequence(response, "Step ")
-  print("STEPS: ", steps)
+#   print("STEPS: ", steps)
   num_steps = len(steps)
   # print("NUM_STEPVERS: ", num_steps)
 
-  max_stepnum = max(min(max_stepnum, num_steps), min_steps)
-  max_stepnum = min(10, max_stepnum)
-  print("MAX_STEPNUM: ", max_stepnum)
+  num_steps = max(min(max_stepnum, num_steps), min_stepnum)
+#   num_steps = min(10, max_stepnum)
+#   print("MAX_STEPNUM: ", num_steps)
 
   if num_steps <= 10:
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
 
-  for j in range(max_stepnum): # handles multiple steps for a problem.
+  for j in range(num_steps): # handles multiple steps for a problem.
     problem_break = False
     step_num = 1 + j
-
+    promptstring = prompt
     if step_num == 1:
-      inputs = tokenizer(
-        [
-        macgyver[i]["text"] + "\n ### Response: "
-        ], return_tensors = "pt").to("cuda")
+        print()
     else: # handles further steps
       dictionary = {
           f"Step {2},": f"Step {step_num + 1},",
@@ -103,48 +110,45 @@ for i in range(num_problems): # handles multiple problems.
           f"step {2 - 1}": f"step {step_num}"
       }
 
-      finalstring = replace_all(macgyver[i]["text"], dictionary) # updating prompt
+      problemstring = ''
+      
+      promptstring = replace_all(promptstring, dictionary) # updating prompt
 
       # updating prompt by appending to prev step list.
 
       # Currently using greedy decoding
       selected_step_index = max(problemscale_stepprobs[step_num - 2])
       selected_step_index = problemscale_stepprobs[step_num - 2].index(selected_step_index)
-      # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-      # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
-      prev_steps.append(f"\n Step {step_num - 1} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":")[selected_step_index].replace("Step " + str(step_num - 1) + ":", ""))
+      prev_steps.append(f"Step {step_num - 1} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":")[selected_step_index].replace("Step " + str(step_num - 1) + ":", ""))
+      problemstring = macgyver[i]['Problem'] + '\n' + "Existing steps, if any:\n "
       for k in range(len(prev_steps)):
-        finalstring += prev_steps[k]
-      if step_num >= max_stepnum:
-        finalstring += "\n This step must make the solution complete and solve the problem. "
+        problemstring += prev_steps[k]
+      if step_num >= num_steps:
+        problemstring += "\n This step must make the solution complete and solve the problem. "
+      problemstring += f"\n### Response: "
 
-      finalstring += f"\n ### Response: "
-      print("INPUT: ", finalstring)
-      inputs = tokenizer(
-        [
-            finalstring
-        ]
-        , return_tensors = "pt").to("cuda")
-
-    # stepscale_tokenlist = []
+    stepscale_tokenlist = []
     stepscale_problist = []
     stepscale_subresponselist = []
     stepscale_stepprobs = []
 
     # gets output from LLM
+    
     if step_num == 1:
-        finalstring = macgyver[i]["text"] + "\n ### Response: "
-    subresponses, tokenlist, problist = generate_data_from_GPT(num_stepvers, finalstring)
+        problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + "### Response: "
+#     problemstring += EOS_TOKEN
+    print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
+    
+    subresponses, tokenlist, problist = generate_data_from_GPT(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
-
       # removing the prompt from the response
       try:
           subresponse_index = subresponses[n].index("<|eot_id|>")
           subresponses[n] = subresponses[n][subresponse_index:]
       except:
-          print("GPT_RESPONSE")
-
+        print()
+      
       if "STOP" in subresponses[n]:
         num_stops += 1
         print("STOP FOUND")
@@ -153,6 +157,20 @@ for i in range(num_problems): # handles multiple problems.
         try:
           subresponse_index = subresponses[n].index("Step " + str(step_num) + ":")
           subresponses[n] = subresponses[n][subresponse_index:]
+          subresponses[n] = subresponses[n].split('\n')[0] # only first line
+          # processing token and prob lists
+          
+          start_index = tokenlist[n].index('Step')
+          tokenlist[n] = tokenlist[n][start_index:]
+          problist[n] = problist[n][start_index:]
+          try:
+              line_index = tokenlist[n].index('\n')
+              tokenlist[n] = tokenlist[n][:line_index]
+              problist[n] = problist[n][:line_index]
+          except:
+              print()
+#           print(tokenlist[n])
+#           print(problist[n])
         except:
           try:
             subresponse_index = subresponses[n].index(str(step_num) + ":")
@@ -163,6 +181,7 @@ for i in range(num_problems): # handles multiple problems.
               subresponses[n] = "Step " + str(step_num) + ": " + subresponses[n][subresponse_index:]
             except:
               print("ERROR: ", subresponses[n])
+              continue
         subresponses[n] = subresponses[n].replace("<|eot_id|>", "")
         subresponses[n] = subresponses[n].replace("Response:", "")
         try:
@@ -170,6 +189,7 @@ for i in range(num_problems): # handles multiple problems.
           subresponses[n] = subresponses[n][:next_step_index]
         except:
           print()
+          # continue
         if subresponses[n].count("Step " + str(step_num) + ":") > 1:
             subresponses[n] = remove_duplicates(subresponses[n], "Step " + str(step_num) + ":")
 
@@ -181,46 +201,41 @@ for i in range(num_problems): # handles multiple problems.
         stepscale_stepprobs.append(overall_probability)
         print(f"Overall Probability for step {step_num}: {overall_probability}")
 
-        # appending to step scale, a bit redundant.
-        # stepscale_tokenlist.append(tokenlist[n])
+        # appending to step scale
+        stepscale_tokenlist.append(tokenlist[n])
         stepscale_problist.append(problist[n])
 
       print("SUBRESPONSE: ", subresponses[n])
-      print()
 
     print("NUM_STOPS: ", num_stops)
     if num_stops >= num_stepvers / 2:
       problem_break = True
       break
 
-    # problemscale_tokenlist.append(stepscale_tokenlist)
+    problemscale_tokenlist.append(stepscale_tokenlist)
     problemscale_problist.append(stepscale_problist)
     problemscale_subresponselist.append(stepscale_subresponselist)
     problemscale_stepprobs.append(stepscale_stepprobs)
 
     # classifying responses for SE
 
-    prompt = macgyver[i]["text"]
-    if step_num != 1:
-      prompt = finalstring
+    prompter = problemstring
 
-    problem_index = prompt.index("Problem:")
-    prompt = prompt[:problem_index]
-    print("PROMPT: ", prompt)
-    # shift classification outside of the main generation loop? 
-    classified_response, classified_token, classified_prob = gen_C(prompt, stepscale_subresponselist, stepscale_problist, stepscale_problist)
+#     problem_index = prompter.index("Problem:")
+#     prompter = prompter[:problem_index]
+#     print("PROMPT: ", prompter, "____")
+    classified_response, classified_token, classified_prob = gen_C(prompter, stepscale_subresponselist, stepscale_tokenlist, stepscale_problist)
     print("CLASSIFIED RESPONSE: ")
     for m in range(len(classified_response)):
       print(classified_response[m])
     problemscale_classifiedsubresponselist.append(classified_response)
     problemscale_classifiedproblist.append(classified_prob)
-    problemscale_promptlist.append(prompt)
+    problemscale_promptlist.append(prompter)
 
     # constructs the full response
     response = ""
     for m in range(len(stepscale_subresponselist)):
-      response += stepscale_subresponselist[m]
-    print("INDEXED RESPONSE: ", response)
+      response += stepscale_subresponselist[m] + '\n'
     # appends the response to the list for the particular problem.
     problemscale_responselist.append(response)
 
@@ -231,12 +246,12 @@ for i in range(num_problems): # handles multiple problems.
   fullscale_subresponselist.append(problemscale_subresponselist)
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-
-  selected_step_index = max(problemscale_stepprobs[step_num - 1])
-  selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
-  # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-  # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
-  prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
+  if num_stops < num_stepvers:
+      selected_step_index = max(problemscale_stepprobs[step_num - 1])
+      selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
+      # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
+      # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
+      prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
   
   fullscale_prev_steps.append(prev_steps) # for each problem
   fullscale_promptlist.append(problemscale_promptlist) # needed 
