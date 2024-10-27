@@ -267,7 +267,7 @@ import torch
 
 import torch 
 
-def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
+def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
     problist = []
@@ -306,23 +306,27 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             
 #             print("????", token_text)
             # creates token list 
-            for i in range(len(outputs.sequences[0]) - 2): # leave out EOS token and INST token
-                item = outputs.sequences[0][i + 1]
+            for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
+                item = outputs.sequences[0][i]
                 tokens.append(tokenizer.decode(item))
             # removes prompt 
             tokens = tokens[-len(output_logits):]
+            
             # creates string 
-            str_index = token_text.index("[INST]")
+            str_index = token_text.index("[/INST]") + 7
             string_y = token_text[str_index:]
-            print("STRING: ", string_y)
-            print("TOKENS: ", tokens)
+            
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             
-            for i in range(len(tokens) - 2):
+            for i in range(len(tokens) - 1):
                 probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
 #                 print(probs[0][logitindices[i].item()])
-                logitz.append(probs[0][logitindices[i+ 1].item()].item())
+                logitz.append(probs[0][logitindices[i].item()].item())
+            tokens = tokens[1:]
+            logitz = logitz[1:]
+            print("STRING: ", string_y)
+            print("TOKENS: ", tokens)
             if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
                 ans_valid = True
             elif "STOP" in string_y:
@@ -335,4 +339,3 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         responses.append(string_y)
     # print(responses)
     return responses, tokenlist, problist
-    
