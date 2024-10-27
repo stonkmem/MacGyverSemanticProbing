@@ -396,12 +396,12 @@ def remove_duplicates(main_string, substring):
     # Slice the string up to just before the second occurrence and return the result
     return main_string[:second_occurrence_index]
 
-# Example usage
-main_string = "Step 1: Do this. Step 1: Do that. Step 1: Finish up."
-substring = "Step 1:"
+# # Example usage
+# main_string = "Step 1: Do this. Step 1: Do that. Step 1: Finish up."
+# substring = "Step 1:"
 
-result = remove_duplicates(main_string, substring)
-print(result)
+# result = remove_duplicates(main_string, substring)
+# print(result)
 
 def calculate_prob_of_class(class_sequences, sequence_probs): # list of list of probabilities of each token in a sequence given x
   # for each sequence there is an element (multiple sequences mean the diff versions of a step)
