@@ -3,21 +3,18 @@ import sys
 import os
 import transformers
 import torch
-from helper_funcs import *
-from data import *
-from helper_funcs import gen_chat_object
-import torch
-
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
+
+from helper_funcs import *
+from data import *
+from helper_funcs import gen_chat_object
+
 load_dotenv()
 
 huggingface_token = os.getenv("HF_TOKEN")
-
-
-
 if __name__ == '__main__':
     if sys.argv[1] == 'llama':
         modelpath = "meta-llama/Llama-3.1-8B-Instruct"
@@ -326,8 +323,6 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         responses.append(string_y)
     # print(responses)
     return responses, tokenlist, problist
-
-import torch 
 
 def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []

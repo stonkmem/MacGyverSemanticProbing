@@ -2,11 +2,10 @@
 
 from openai_funcs import *
 from llama_funcs import *
-import torch
 from data import *
 from process_data import *
 import numpy as np
-
+import torch
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
     # inp/uts = tokenizer(prompt, return_tensors="pt").to(device)

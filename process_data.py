@@ -1,11 +1,11 @@
 # calculates the probabilities of each class for each subresponse
+
+import numpy as np
 from llama_funcs import *
 from helper_funcs import *
 from data import *
 from openai_funcs import *
 from Llama_run_benchmark import *
-import numpy as np
-
 fullscale_classifiedproblist = []
 classprobabilities = [] 
 for j in range(len(fullscale_classifiedproblist)): # full scale
@@ -43,11 +43,11 @@ factuality = []
 efficiency = []
 feasibility = []
 criterialist = ["feasible", "safe", "resource-efficient", "effective"] # add constraint fitting? 
-for i in range(len(SE)): # for each problem
+for i in range(len(SE_complex)): # for each problem
   problem_factuality = []
   problem_feasibility = 0
   problem_efficiency = 0
-  for j in range(len(SE[i])): # for each step
+  for j in range(len(SE_complex[i])): # for each step
     step_factuality = []
     step_feasibility = 0
     step_efficiency = 0
@@ -67,11 +67,11 @@ for i in range(len(SE)): # for each problem
 
   # aggregates the feasibility and efficiency scores for each problem. 
   factuality.append(problem_factuality)
-  if problem_feasibility / len(SE[i]) > 0.6:
+  if problem_feasibility / len(SE_complex[i]) > 0.6:
     feasibility.append(1)
   else:
     feasibility.append(0)
-  if problem_efficiency / len(SE[i]) > 0.6:
+  if problem_efficiency / len(SE_complex[i]) > 0.6:
     efficiency.append(1)
   else:
     efficiency.append(0)
@@ -88,7 +88,8 @@ for i in range(len(SE_complex)):
 # print(total_scores)
 for i in range(len(total_scores)):
   print(generate_problem_score_simple(total_scores[i]))
-
+gamma = 0.9  # Discount factor
+lambda_ = 0.8  # Lambda parameter
 lambda_scores = []
 for i in range(len(total_scores)):
   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
