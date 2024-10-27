@@ -6,7 +6,7 @@ from openai_funcs import *
 from Llama_run_benchmark import *
 import numpy as np
 
-
+fullscale_classifiedproblist = []
 classprobabilities = [] 
 for j in range(len(fullscale_classifiedproblist)): # full scale
   problemscale_classprobabilities = []
@@ -15,7 +15,7 @@ for j in range(len(fullscale_classifiedproblist)): # full scale
     # for each subresponse, there should be an array of class probs.
     for i in range(len(fullscale_classifiedproblist[j][k])): # subresponse scale
       # print(len(fullscale_classifiedproblist[j][k][1])) # should return a nested array containing arrays of probs for each seq in a class.
-      classprob = calculate_prob_of_class_logprobs(fullscale_classifiedproblist[j][k][i], fullscale_classifiedproblist[j][k][i])
+      classprob = calculate_prob_of_class_logprobs(fullscale_classifiedproblist[j][k][i])
       # currently configured such that 1 class is 1 problem.
       subresponsescale_classprobs.append(classprob)
     problemscale_classprobabilities.append(subresponsescale_classprobs)

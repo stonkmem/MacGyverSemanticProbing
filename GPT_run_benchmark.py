@@ -66,7 +66,8 @@ for i in range(1): # handles multiple problems.
 
     The complete solution cannot have more than {max_stepnum} steps.
     Do NOT include explanation or examples or code in your response.
-  ''' + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
+  ''' 
+  # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
@@ -219,7 +220,7 @@ for i in range(1): # handles multiple problems.
 
     # classifying responses for SE
 
-    prompter = problemstring
+    prompter = promptstring + 'Problem:\n' + problemstring
 
 #     problem_index = prompter.index("Problem:")
 #     prompter = prompter[:problem_index]

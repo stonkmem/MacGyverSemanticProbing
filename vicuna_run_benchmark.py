@@ -4,6 +4,8 @@ from data import *
 from openai_funcs import *
 
 
+
+
 step_num = 1
 prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
@@ -69,15 +71,15 @@ for i in range(1): # handles multiple problems.
     The complete solution cannot have more than {max_stepnum} steps.
     Do NOT include explanation or examples or code in your response.
   ''' 
-  # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
+#     + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
     
-  response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  response, token, prob = gen_prob_vicuna(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
   
-  while response[0].count('\n') >= 20 or response.count("Step") >= 15:
-      response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  while response[0].count('\n') >= 40 or response.count("Step") >= 15:
+      response, token, prob = gen_prob_vicuna(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
       print("REGENERATING")
   response = response[0]
   try:
@@ -87,16 +89,11 @@ for i in range(1): # handles multiple problems.
     print('INIT:', response)
 
   steps = split_by_sequence(response, "Step ")
-#   print("STEPS: ", steps)
   num_steps = len(steps)
-  # print("NUM_STEPVERS: ", num_steps)
-
   num_steps = max(min(max_stepnum, num_steps), min_stepnum)
-#   num_steps = min(10, max_stepnum)
-#   print("MAX_STEPNUM: ", num_steps)
 
   if num_steps <= 10:
-    max_steps = num_to_string[num_steps]
+    max_steps = num_to_string[num_steps] # string 
     print("MAX_STEPS: ", max_steps)
 
   for j in range(num_steps): # handles multiple steps for a problem.
@@ -142,7 +139,7 @@ for i in range(1): # handles multiple problems.
 #     problemstring += EOS_TOKEN
     print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
-    subresponses, tokenlist, problist = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
+    subresponses, tokenlist, problist = gen_prob_vicuna(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
       # removing the prompt from the response
@@ -172,8 +169,6 @@ for i in range(1): # handles multiple problems.
               problist[n] = problist[n][:line_index]
           except:
               print()
-#           print(tokenlist[n])
-#           print(problist[n])
         except:
           try:
             subresponse_index = subresponses[n].index(str(step_num) + ":")
@@ -265,107 +260,3 @@ for i in range(1): # handles multiple problems.
 
  # tokenlist is quad nested:
  # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]
-# print(problemscale_responselist)
-# print(problemscale_tokenlist)
-# print(problemscale_problist)
-# print(problemscale_subresponselist)
-# print(problemscale_stepprobs)
-# print(problemscale_classifiedsubresponselist)
-# print(fullscale_prev_steps)
-
-# classprobabilities = [] # currently for one problem.
-# # print(fullscale_classifiedproblist)
-# for j in range(len(fullscale_classifiedproblist)): # full scale
-#   problemscale_classprobabilities = []
-#   for k in range(len(fullscale_classifiedproblist[j])): # problem scale
-#     subresponsescale_classprobs = []
-#     # for each subresponse, there should be an array of class probs.
-#     for i in range(len(fullscale_classifiedproblist[j][k])): # subresponse scale
-#       # print(len(fullscale_classifiedproblist[j][k][1])) # should return a nested array containing arrays of probs for each seq in a class.
-#       classprob = calculate_prob_of_class_logprobs(fullscale_classifiedproblist[j][k][i], fullscale_classifiedproblist[j][k][i])
-#       # print(classprob)
-#       # currently configured such that 1 class is 1 problem.
-#       subresponsescale_classprobs.append(classprob)
-#     problemscale_classprobabilities.append(subresponsescale_classprobs)
-
-#   classprobabilities.append(problemscale_classprobabilities)
-# print(classprobabilities)
-
-# SE = []
-# for i in range(len(classprobabilities)):
-#   problem_SE = []
-#   for j in range(len(classprobabilities[i])):
-#     problem_SE.append(calculate_SE_simple(classprobabilities[i][j]))
-#   print(problem_SE)
-#   SE.append(problem_SE)
-# print(SE)
-
-# for i in range(len(classprobabilities)):
-#   problem_SE = []
-#   for j in range(len(classprobabilities[i])):
-#     problem_SE.append(calculate_SE_complex(classprobabilities[i][j]))
-#   SE.append(problem_SE)
-# print(SE)
-
-# # factuality score generation
-# factuality = []
-# efficiency = []
-# feasibility = []
-# criterialist = ["feasible", "safe", "resource-efficient", "effective"] # add constraint fitting? 
-# for i in range(len(SE)): # for each problem
-#   problem_factuality = []
-#   problem_feasibility = 0
-#   problem_efficiency = 0
-#   for j in range(len(SE[i])): # for each step
-#     step_factuality = []
-#     step_feasibility = 0
-#     step_efficiency = 0
-#     for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
-#         factual, feasible, efficient = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
-#         step_factuality.append(factual)
-#         if feasible == True:
-#             step_feasibility += 1
-#         if efficient == True:
-#             step_efficiency += 1
-#     problem_factuality.append(step_factuality)
-#     if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
-#         problem_feasibility += 1
-#     if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
-#         problem_efficiency += 1
-#     print(step_feasibility, step_efficiency)
-
-#   # aggregates the feasibility and efficiency scores for each problem. 
-#   factuality.append(problem_factuality)
-#   if problem_feasibility / len(SE[i]) > 0.6:
-#     feasibility.append(1)
-#   else:
-#     feasibility.append(0)
-#   if problem_efficiency / len(SE[i]) > 0.6:
-#     efficiency.append(1)
-#   else:
-#     efficiency.append(0)
-    
-# print(factuality)
-# print(feasibility)
-# print(efficiency)
-
-# total_scores = []
-# for i in range(len(SE)):
-#   problem_scores = []
-#   for j in range(len(SE[i])):
-#     print(compute_total_score(SE[i][j], factuality[i][j]))
-#     problem_scores.append(compute_total_score(SE[i][j], factuality[i][j])) # here factuality is a list of scores while SE is a single value
-#   total_scores.append(problem_scores)
-# print(total_scores)
-# for i in range(len(total_scores)):
-#   print(generate_problem_score_simple(total_scores[i]))
-
-# lambda_scores = []
-# for i in range(len(total_scores)):
-#   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
-#   lambda_scores.append(problem_lambda_score)
-# print(lambda_scores)
-
-
-
-# print(check_feasibility(), check_efficiency())

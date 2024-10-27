@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import datasets
 # import matplotlib.pyplot as plt
 # import seaborn as sns
 
@@ -9,7 +10,7 @@ df.to_csv('MacGyver.csv')
 df_extra.info()
 
 
-# %%
+ 
 # import pandas as pd
 # import numpy as np
 # import seaborn as sns
@@ -68,7 +69,7 @@ pass
 
 
 
-# %%
+ 
 from datasets import load_dataset
 macgyver = load_dataset("csv", data_files="problem_solution_pair.csv", split="train")
 macgyver = macgyver.map(format_macgyver_prompt, batched = True,)

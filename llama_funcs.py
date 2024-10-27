@@ -1,4 +1,4 @@
-from llama_cpp import Llama
+# from llama_cpp import Llama
 import sys
 import os
 import transformers
@@ -263,10 +263,6 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
 # output = gen_prob(macgyver[0]['Problem'], prompt=prompt, num=5)
 # print(output)
 
-import torch 
-
-import torch 
-
 def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
@@ -280,23 +276,80 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         string_y = ''
         logitz = []
         tokens = []
+        msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
+
+        encodeds = tokenizer.apply_chat_template(msg, tokenize=False, )# add_generation_prompt=True
+        tokenizer.pad_token = tokenizer.eos_token
+        inputs = tokenizer(encodeds, return_tensors="pt", padding=True).to('cuda')
+
         while not ans_valid:
             logitz = []
             tokens = []
             string_y = ''
             # score 30 samples with humans to check correlation.
             
-            msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
-#             print("MSG: " + msg)
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            output_logits = outputs.logits
+            tokens_previous = outputs.sequences[0]
+            token_text = tokenizer.decode(tokens_previous)
+            # creates token list 
+            for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
+                item = outputs.sequences[0][i]
+                tokens.append(tokenizer.decode(item))
+            # removes prompt 
+            tokens = tokens[-len(output_logits):]
+            
+            # creates string 
+            str_index = token_text.index("[/INST]") + 7
+            string_y = token_text[str_index:]
+            
+            # gets logits index
+            logitindices = outputs.sequences[0][-len(output_logits):]
+            
+            for i in range(len(tokens)):
+                probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
+#                 print(probs[0][logitindices[i].item()])
+                logitz.append(probs[0][logitindices[i].item()].item())
+            tokens = tokens[1:]
+            logitz = logitz[1:]
+            print("STRING: ", string_y)
+            print("TOKENS: ", tokens)
+            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+                ans_valid = True
+            elif "STOP" in string_y:
+                ans_valid = True
+            else:
+                print("REGENERATING, STEP ERROR")
+        
+        problist.append(logitz)
+        tokenlist.append(tokens)
+        responses.append(string_y)
+    # print(responses)
+    return responses, tokenlist, problist
 
-            encodeds = tokenizer.apply_chat_template(msg, tokenize=False, )# add_generation_prompt=True
-            tokenizer.pad_token = tokenizer.eos_token
-            inputs = tokenizer(encodeds, return_tensors="pt", padding=False).to('cuda')
-#             inputs = encodeds.to('cuda')
-#             inputs = tokenizer(
-#                 [
-#                 msg
-#                 ], return_tensors = "pt").to("cuda")
+import torch 
+
+def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
+    responses = []
+    tokenlist = []
+    problist = []
+    max_tokens = 1024
+
+    # print(prompt, problem, )
+    
+    for i in range(num):
+        ans_valid = False
+        string_y = ''
+        logitz = []
+        tokens = []
+        msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
+        tokenizer.pad_token = tokenizer.eos_token
+        inputs = tokenizer([msg], return_tensors="pt", padding=True).to('cuda')
+        while not ans_valid:
+            logitz = []
+            tokens = []
+            string_y = ''
+            # score 30 samples with humans to check correlation.
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
             output_logits = outputs.logits
             tokens_previous = outputs.sequences[0]
@@ -313,13 +366,13 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             tokens = tokens[-len(output_logits):]
             
             # creates string 
-            str_index = token_text.index("[/INST]") + 7
+            str_index = token_text.index("Response: ") + 11
             string_y = token_text[str_index:]
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             
-            for i in range(len(tokens) - 1):
+            for i in range(len(tokens)):
                 probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
 #                 print(probs[0][logitindices[i].item()])
                 logitz.append(probs[0][logitindices[i].item()].item())
@@ -327,6 +380,8 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = logitz[1:]
             print("STRING: ", string_y)
             print("TOKENS: ", tokens)
+            # print(len(tokens), len(logitz))
+            # check if len of tokens and logitz is same
             if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
                 ans_valid = True
             elif "STOP" in string_y:

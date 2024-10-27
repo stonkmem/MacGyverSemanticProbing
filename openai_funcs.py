@@ -122,7 +122,7 @@ def get_factuality_likert(question, ans, criteria):
     )
     return completion.choices[0].message.content
 
-# %%
+ 
 # def gen_factuality_score(question, ans, criterialist):
 #     score = 0
 #     scores = get_factuality(question, ans, criterialist)

@@ -1,4 +1,4 @@
-# %%
+ 
 
 from openai_funcs import *
 from llama_funcs import *
@@ -56,7 +56,7 @@ def generate_tokens_and_probabilities(inputs, max_tokens=512):
     return full_response, token_list, prob_list
 
 
-# %%
+ 
 import re
 
 def preprocess_sequence(text, sequence):
@@ -94,7 +94,7 @@ for i, split_str in enumerate(split_strings, start=1):
     print(f"--- Split {i} ---\n{split_str}\n")
 
 
-# %%
+ 
 import math
 
 def calculate_sequence_probability(probabilities, use_log_prob=False):
@@ -133,7 +133,7 @@ overall_probability_log = calculate_sequence_probability(probabilities, use_log_
 print(f"Overall Probability (using log-probs): {overall_probability_log}")
 
 
-# %%
+ 
 def preprocess_token_sequence(tokens, token_sequences):
     """
     Remove consecutive duplicate occurrences of any token sequence in the list.
@@ -184,7 +184,7 @@ cleaned_tokens = preprocess_token_sequence(tokens, sequences)
 print("Cleaned Tokens:", cleaned_tokens)
 
 
-# %%
+ 
 def replace_all(text, dic):
     for i, j in dic.items():
         text = text.replace(i, j)
@@ -192,7 +192,7 @@ def replace_all(text, dic):
 
 import random
 
-# %%
+ 
 def generate_data(num_responses, inputs):
   responses = []
   problist = []
@@ -217,7 +217,7 @@ def generate_data(num_responses, inputs):
     responses.append(response)
   return responses, tokenlist, problist
 
-# %%
+ 
 # completion = client.chat.completions.create(
 #     model="gpt-4o-mini",
 #     messages=[
@@ -235,7 +235,7 @@ def generate_data(num_responses, inputs):
 
 
 
-# %%
+ 
 # def generate_data_from_LlamaCPP(num_responses, inputs):
 #     responses = []
 #     problist = []
@@ -266,7 +266,7 @@ def generate_data(num_responses, inputs):
 
 # print(generate_data_from_LlamaCPP(1, "Write a haiku about recursion in programming."))
 
-# %%
+
 import math
 def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
     print(probabilities)
@@ -278,13 +278,13 @@ def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
 
 print(calc_sequence_probability_LOGPROB(generate_data_from_GPT(1, "Write a haiku about recursion in programming.")[2][0]))
 
-# %%
+
 def extract_problem(prompt):
   problem_index = prompt.index("Problem:")
   problem = prompt[problem_index:]
   return problem
 
-# %%
+
 num_to_string = {
     0: "zero",
     1: "one",
@@ -299,7 +299,7 @@ num_to_string = {
     10: "ten"
 }
 
-# %%
+
 def isolate_sub_responses(tokens, probabilities, sub_response_start):
   # issue: omits the first step.
     """
@@ -367,7 +367,7 @@ def isolate_sub_responses(tokens, probabilities, sub_response_start):
 
     return sub_responses
 
-# %%
+
 def remove_duplicates(main_string, substring):
     """
     Remove everything after the second occurrence of a substring in a string, including the second occurrence itself.
@@ -605,13 +605,13 @@ def check_efficiency():
     return num_agreements / num_inefficients
 
 
-def calc_seq_probability_LOGPROB(probabilities, return_logprob = False):
-    print(probabilities)
-    logprob = sum(probabilities)
-    if return_logprob == False:
-        return math.exp(logprob)
-    else:
-        return logprob
+# def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
+#     print(probabilities)
+#     logprob = sum(probabilities)
+#     if return_logprob == False:
+#         return math.exp(logprob)
+#     else:
+#         return logprob
     
 # prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
 #     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
@@ -667,7 +667,7 @@ def calc_seq_probability_LOGPROB(probabilities, return_logprob = False):
 #         ]
 #     return messages
 
-def gen_chat_object(prompt, problem, include_eg = True):
+def gen_chat_object(prompt, problem, include_eg = True): # for LLAMA and vicuna
     example_problem = """Problem: You need to remove the pit from an avocado for your salad, but your utility knife is blunt. In your drawer, you find a stainless steel egg whisk, a wooden rolling pin, a wine bottle filled with Merlot, a heavy-duty garlic crusher, small plastic spoons, and a fork with prongs bent slightly inwards. Unfortunately, the only spoon available isn't sufficient for the task. How should you proceed to remove the pit?
     Existing steps, if any: 
     Response: """
@@ -688,7 +688,7 @@ def gen_chat_object(prompt, problem, include_eg = True):
         # ]
     return messages
 
-def gen_chat_object_mistral(prompt, problem, include_eg = True):
+def gen_chat_object_mistral(prompt, problem, include_eg = True): # for Mistral and GPT-4o
     example_problem = """Problem: You need to remove the pit from an avocado for your salad, but your utility knife is blunt. In your drawer, you find a stainless steel egg whisk, a wooden rolling pin, a wine bottle filled with Merlot, a heavy-duty garlic crusher, small plastic spoons, and a fork with prongs bent slightly inwards. Unfortunately, the only spoon available isn't sufficient for the task. How should you proceed to remove the pit?
     Existing steps, if any: 
     Response: """

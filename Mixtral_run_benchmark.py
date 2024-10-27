@@ -69,7 +69,8 @@ for i in range(1): # handles multiple problems.
 
     The complete solution cannot have more than {max_stepnum} steps.
     Do NOT include explanation or examples or code in your response.
-  ''' + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
+  '''
+  # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
@@ -200,7 +201,7 @@ for i in range(1): # handles multiple problems.
 
         # calculating probability of sequence
 
-        overall_probability = calc_seq_probability_LOGPROB(problist[n])
+        overall_probability = calc_sequence_probability_LOGPROB(problist[n])
         stepscale_stepprobs.append(overall_probability)
         print(f"Overall Probability for step {step_num}: {overall_probability}")
 
@@ -222,7 +223,7 @@ for i in range(1): # handles multiple problems.
 
     # classifying responses for SE
 
-    prompter = problemstring
+    prompter = promptstring + 'Problem:\n' + problemstring
 
 #     problem_index = prompter.index("Problem:")
 #     prompter = prompter[:problem_index]
