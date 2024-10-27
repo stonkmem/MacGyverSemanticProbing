@@ -120,7 +120,8 @@ if __name__ == '__main__':
         #     n_gpu_layers=-1
         # )
         # wipe_llm_fact = llm_fact.save_state()
-    tokenizer = AutoTokenizer.from_pretrained(modelpath) 
+
+    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
  
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
     # model.to("cuda")
@@ -261,3 +262,77 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     
 # output = gen_prob(macgyver[0]['Problem'], prompt=prompt, num=5)
 # print(output)
+
+import torch 
+
+import torch 
+
+def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
+    responses = []
+    tokenlist = []
+    problist = []
+    max_tokens = 1024
+
+    # print(prompt, problem, )
+    
+    for i in range(num):
+        ans_valid = False
+        string_y = ''
+        logitz = []
+        tokens = []
+        while not ans_valid:
+            logitz = []
+            tokens = []
+            string_y = ''
+            # score 30 samples with humans to check correlation.
+            
+            msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
+#             print("MSG: " + msg)
+
+            encodeds = tokenizer.apply_chat_template(msg, tokenize=False, )# add_generation_prompt=True
+            tokenizer.pad_token = tokenizer.eos_token
+            inputs = tokenizer(encodeds, return_tensors="pt", padding=False).to('cuda')
+#             inputs = encodeds.to('cuda')
+#             inputs = tokenizer(
+#                 [
+#                 msg
+#                 ], return_tensors = "pt").to("cuda")
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            output_logits = outputs.logits
+            tokens_previous = outputs.sequences[0]
+#             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens
+            full_token_text = tokenizer.decode(tokens_previous)
+            token_text  =  full_token_text # consider previous_output_length the length of the previous full_token_text
+            
+#             print("????", token_text)
+            # creates token list 
+            for i in range(len(outputs.sequences[0]) - 2): # leave out EOS token and INST token
+                item = outputs.sequences[0][i + 1]
+                tokens.append(tokenizer.decode(item))
+            # removes prompt 
+            tokens = tokens[-len(output_logits):]
+            # creates string 
+            str_index = token_text.index("[INST]")
+            string_y = token_text[str_index:]
+            print("STRING: ", string_y)
+            print("TOKENS: ", tokens)
+            # gets logits index
+            logitindices = outputs.sequences[0][-len(output_logits):]
+            
+            for i in range(len(tokens) - 2):
+                probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
+#                 print(probs[0][logitindices[i].item()])
+                logitz.append(probs[0][logitindices[i+ 1].item()].item())
+            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+                ans_valid = True
+            elif "STOP" in string_y:
+                ans_valid = True
+            else:
+                print("REGENERATING, STEP ERROR")
+        
+        problist.append(logitz)
+        tokenlist.append(tokens)
+        responses.append(string_y)
+    # print(responses)
+    return responses, tokenlist, problist
+    

@@ -74,10 +74,10 @@ for i in range(1): # handles multiple problems.
 
   # generates an initial solution to extract step count.
     
-  response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  response, token, prob = gen_prob_mistral(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
   
   while response[0].count('\n') >= 20 or response.count("Step") >= 15:
-      response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+      response, token, prob = gen_prob_mistral(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
       print("REGENERATING")
   response = response[0]
   try:
@@ -140,9 +140,9 @@ for i in range(1): # handles multiple problems.
     if step_num == 1:
         problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "\n### Response: "
 #     problemstring += EOS_TOKEN
-    print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
+    print("INPUT: ", gen_chat_object_mistral(promptstring, problemstring, include_eg = False), )
     
-    subresponses, tokenlist, problist = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
+    subresponses, tokenlist, problist = gen_prob_mistral(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
       # removing the prompt from the response
