@@ -140,7 +140,7 @@ for i in range(1): # handles multiple problems.
     if step_num == 1:
         problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "\n### Response: "
 #     problemstring += EOS_TOKEN
-    print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
+    # print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
     subresponses, tokenlist, problist = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
@@ -154,7 +154,7 @@ for i in range(1): # handles multiple problems.
       
       if "STOP" in subresponses[n]:
         num_stops += 1
-        print("STOP FOUND")
+        # print("STOP FOUND")
       else:
         # handle exceptions and different answer formats
         try:
@@ -202,13 +202,13 @@ for i in range(1): # handles multiple problems.
 
         overall_probability = calc_sequence_probability_LOGPROB(problist[n])
         stepscale_stepprobs.append(overall_probability)
-        print(f"Overall Probability for step {step_num}: {overall_probability}")
+        # print(f"Overall Probability for step {step_num}: {overall_probability}")
 
         # appending to step scale
         stepscale_tokenlist.append(tokenlist[n])
         stepscale_problist.append(problist[n])
 
-      print("SUBRESPONSE: ", subresponses[n])
+      # print("SUBRESPONSE: ", subresponses[n])
 
     print("NUM_STOPS: ", num_stops)
     if num_stops >= num_stepvers / 2:
