@@ -16,11 +16,12 @@ export FORCE_CMAKE=1
 pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 
 # Install additional Python packages
-pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch
+pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch accelerate>=0.26.0
 pip install python-dotenv openpyxl
 
 # Install dependencies from requirements file
 pip install -r requirements.txt
+
 
 # Display CUDA information
 echo $CUDA_HOME
