@@ -16,7 +16,7 @@ load_dotenv()
 
 huggingface_token = os.getenv("HF_TOKEN")
 # if __name__ == '__main__':
-if sys.argv[1] == 'llama':
+if sys.argv[0] == 'llama':
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     # llm = Llama.from_pretrained(
     #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
