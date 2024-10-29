@@ -17,7 +17,7 @@ pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbos
 
 # Install additional Python packages
 pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch
-pip install python-dotenv
+pip install python-dotenv openpyxl
 
 # Install dependencies from requirements file
 pip install -r requirements.txt
