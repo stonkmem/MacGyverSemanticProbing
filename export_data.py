@@ -52,7 +52,7 @@ def export_to_txt(txt_file_path):
         write_nested(outputdict, txt_file)
 
 # Example use case
-export_to_txt("outputllama3_1.txt")
+export_to_txt("outputllama3.1_8B_test.txt")
 
 
 
