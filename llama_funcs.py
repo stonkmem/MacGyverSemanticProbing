@@ -8,8 +8,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient, login
 
-from helper_funcs import *
-from data import *
+# from helper_funcs import *
+# from data import *
 # from helper_funcs import gen_chat_object
 
 load_dotenv()

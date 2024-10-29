@@ -275,7 +275,7 @@ def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
     else:
         return logprob
 
-print(calc_sequence_probability_LOGPROB(generate_data_from_GPT(1, "Write a haiku about recursion in programming.")[2][0]))
+# print(calc_sequence_probability_LOGPROB(generate_data_from_GPT(1, "Write a haiku about recursion in programming.")[2][0]))
 
 
 def extract_problem(prompt):
