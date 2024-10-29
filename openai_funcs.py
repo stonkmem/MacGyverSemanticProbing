@@ -2,7 +2,7 @@
 from openai import OpenAI
 import os
 # import openai
-from helper_funcs import gen_chat_object
+from helper_funcs import *
 
 from dotenv import load_dotenv
 

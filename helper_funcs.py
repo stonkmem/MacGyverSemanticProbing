@@ -3,7 +3,7 @@
 from openai_funcs import *
 from llama_funcs import *
 from data import *
-from process_data import *
+# from process_data import *
 import numpy as np
 import torch
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
