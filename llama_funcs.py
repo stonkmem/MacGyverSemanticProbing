@@ -6,7 +6,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
+from huggingface_hub import InferenceClient, login
 
 from helper_funcs import *
 from data import *
@@ -15,6 +15,8 @@ from data import *
 load_dotenv()
 
 huggingface_token = os.getenv("HF_TOKEN")
+
+login(token=huggingface_token)
 # if __name__ == '__main__':
 if sys.argv[0] == 'llama':
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
