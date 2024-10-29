@@ -15,108 +15,108 @@ from data import *
 load_dotenv()
 
 huggingface_token = os.getenv("HF_TOKEN")
-if __name__ == '__main__':
-    if sys.argv[1] == 'llama':
-        modelpath = "meta-llama/Llama-3.1-8B-Instruct"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+# if __name__ == '__main__':
+if sys.argv[1] == 'llama':
+    modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
 
-    elif sys.argv[1] == 'vicuna':
-        modelpath = "lmsys/vicuna-13b-v1.5"
-        # llm = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+elif sys.argv[1] == 'vicuna':
+    modelpath = "lmsys/vicuna-13b-v1.5"
+    # llm = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
-    elif sys.argv[1] == 'mistral':
-        modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_llm = llm.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
+elif sys.argv[1] == 'mistral':
+    modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
-    else:
-        modelpath = "meta-llama/Llama-3.1-8B-Instruct"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
+else:
+    modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
 
 tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
 
