@@ -118,9 +118,10 @@ if __name__ == '__main__':
         # )
         # wipe_llm_fact = llm_fact.save_state()
 
-    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
- 
-    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
+
+model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+print("MODEL LOADED")
     # model.to("cuda")
 
 
