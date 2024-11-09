@@ -228,7 +228,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
                 [
                 msg
                 ], return_tensors = "pt").to("cuda")
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, )
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
+                                     temperature=1.0,
+                                top_p = 0.75, do_sample = True,
+                                    num_beams = 1)
             output_logits = outputs.logits
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token
@@ -289,7 +292,10 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             string_y = ''
             # score 30 samples with humans to check correlation.
             
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
+                                     temperature=1.0,
+                                top_p = 0.75, do_sample = True,
+                                    num_beams = 1)
             output_logits = outputs.logits
             tokens_previous = outputs.sequences[0]
             token_text = tokenizer.decode(tokens_previous)
@@ -349,7 +355,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             tokens = []
             string_y = ''
             # score 30 samples with humans to check correlation.
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
+                                     temperature=1.0,
+                                top_p = 0.75, do_sample = True,
+                                    num_beams = 1)
             output_logits = outputs.logits
             tokens_previous = outputs.sequences[0]
 #             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens
