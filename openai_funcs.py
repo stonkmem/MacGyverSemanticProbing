@@ -1,10 +1,7 @@
-
 from openai import OpenAI
 import os
 # import openai
 from helper_funcs import gen_chat_object
-
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -99,7 +96,7 @@ def get_factuality(question, ans, criteria):
 print(get_entailment("Which country is New York in?", "USA", "New York is located in the USA.")) #['choices'][0]['message']['content']
 # print(get_factuality(""))
 
-def get_factuality_likert(question, ans, criteria):
+def get_factuality_likert(question, ans):
     # client=openai.OpenAI()
     completion = client.chat.completions.create(
     model="gpt-4o",
@@ -121,8 +118,40 @@ def get_factuality_likert(question, ans, criteria):
 #         ]
     )
     return completion.choices[0].message.content
+      
+def get_factuality_chateval(crit, question, ans):
+    rounds = 2
+    evals = []
+    for criterion in crit:
+        hist=[]
+        for i in range(rounds):
+            positive = {'role': 'system', 'content': f'You are a skilled expert, Debater 1, studying solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution meets the criterion of {criterion}.'}
+            completion_positive = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[positive].extend(hist).append({'role':'user','content':f"""[Problem] {question} 
+[The Start of Assistant’s Solution]
+{ans}
+[The End of Assistant's Solution]"""})
+            ).choices[0].message.content
+            hist.append({'role':'assistant', 'content':'I, Debater 1, argue that: ' + completion_positive})
+            negative = {'role': 'system', 'content': f'You are a skilled expert, Debater 2, studying the solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution fails to meet the criterion of {criterion}.'}
+            completion_positive = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[negative].extend(hist).append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+            ).choices[0].message.content
+        juj = {'role': 'system', 'content': f'You are a wise judge studying the solutions to a problem. As a task, you will be provided with a transcript of a debate between two LLMs. Based on the arguments presented, conclude whether or not the solution to the problem fulfils the criterion of {criterion}.\n Present your answer STRICTLY as follows: {criterion}: [[YES/NO]]. For example, {criterion}: [[YES]]'}
+        evals.append(criterion : client.chat.completions.create(
+            model="gpt-4o",
+            messages=[juj].extend(hist).append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+        ).choices[0].message.content == "[[YES]]")
+    return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
 
- 
 # def gen_factuality_score(question, ans, criterialist):
 #     score = 0
 #     scores = get_factuality(question, ans, criterialist)
@@ -160,32 +189,7 @@ def get_factuality_likert(question, ans, criteria):
 #         # finds avg
 #     else:
 #         score = -1
-#     return score
-
-# def gen_C(x, ls, tokenseq, probsq):
-#     C = [[ls[0]]]
-#     T = [[tokenseq[0]]]
-#     P = [[probsq[0]]]
-#     for i in ls:
-#         cl = False
-#         if i != ls[0]:
-#             for c in C:
-#               # break
-# #                 print(c[0], i)
-# #                 print(get_entailment(x, c[0], i))
-#                 if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
-#                     c.append(i);
-#                     c_index = C.index(c)
-#                     T[c_index].append(tokenseq[ls.index(i)])
-#                     P[c_index].append(probsq[ls.index(i)])
-#                     print("c: ", c)
-#                     cl=True;break;
-#         if cl==False and i != ls[0]:
-#             C.append([i])
-#             T.append([tokenseq[ls.index(i)]])
-#             P.append([probsq[ls.index(i)]])
-#     return C, T, P
-
+#       return score
 def gen_C(x, ls, tokenseq, probsq):
     C = [[ls[0]]]
     T = [[tokenseq[0]]]
@@ -241,7 +245,6 @@ def gen_chat_object_GPT(prompt, problem, include_eg = True):
                 {'role': 'user', 'content': problem}
         ]
 #         prompt + '\n For example, an example problem and step could be: \n' + example_problem + '\n' + example_step + '\n\n Now, here is the problem you are given: \n Problem: \n' + problem 
-        #
     else:
         messages = [
             {'role': 'system', 'content': prompt},
