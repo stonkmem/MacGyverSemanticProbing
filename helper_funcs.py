@@ -3,9 +3,10 @@
 from openai_funcs import *
 from llama_funcs import *
 from data import *
-from process_data import *
+# from process_data import *
 import numpy as np
 import torch
+from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
     # inp/uts = tokenizer(prompt, return_tensors="pt").to(device)
@@ -275,7 +276,7 @@ def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
     else:
         return logprob
 
-print(calc_sequence_probability_LOGPROB(generate_data_from_GPT(1, "Write a haiku about recursion in programming.")[2][0]))
+# print(calc_sequence_probability_LOGPROB(generate_data_from_GPT(1, "Write a haiku about recursion in programming.")[2][0]))
 
 
 def extract_problem(prompt):
@@ -495,9 +496,15 @@ def gen_factuality_score(question, ans, criterialist):
     return score, feasibility, efficiency
 
 def gen_factuality_score_likert(question, ans, criterialist): # element 2 is feas, 3 is effec
+
+    # INPUT: question (str), ans (str), criterialist (list of str)
+    # OUTPUT: score (float), feasibility (bool), efficiency (bool)
+    # note: use priority_vector for weights
+
     # safety should be separate and not in AHP 
     score = 0
-    scores = get_factuality_likert(question, ans, criterialist)
+    scores = get_factuality_likert(question, ans, criterialist) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
+    # based on criteria 
     arr = scores.split("[[")
     while len(arr) <= 4:
         scores = get_factuality_likert(question, ans, criterialist)
@@ -708,3 +715,88 @@ def gen_chat_object_mistral(prompt, problem, include_eg = True): # for Mistral a
         ]
 #         prompt + '\n### Problem: \n' + problem
     return messages
+
+# AUROC Score
+
+def calculate_auroc_score(y_true, y_pred):
+    """
+    Calculate the Area Under the Receiver Operating Characteristic Curve (AUROC) score.
+
+    Args:
+    y_true (list): True labels (0 or 1) for each prediction.
+    y_pred (list): Predicted probabilities for each prediction.
+
+    Returns:
+    float: The AUROC score.
+    """
+    auroc = roc_auc_score(y_true, y_pred)
+    return auroc
+
+import numpy as np
+from sklearn.metrics import accuracy_score
+
+def calculate_auarc(y_true, y_scores, threshold=0.5):
+
+    # INPUTS: y_true (list), y_scores (list), threshold (float)
+    # y_true: true binary labels (0 or 1)
+    # y_scores: model's confidence scores for the positive class (probabilities)
+
+    """
+    Calculate the Area Under the Accuracy-Rejection Curve (AUARC) for binary classification.
+    
+    Parameters:
+        y_true (array-like): True binary labels (0 or 1).
+        y_scores (array-like): Model's confidence scores for the positive class.
+        threshold (float): Decision threshold for classification (default: 0.5).
+    
+    Returns:
+        float: AUARC score.
+    """
+
+    y_true = np.array(y_true)
+    y_scores = np.array(y_scores)   
+    # Sort by confidence scores in descending order
+    sorted_indices = np.argsort(-y_scores)
+    y_true_sorted = np.array(y_true)[sorted_indices]
+    y_scores_sorted = np.array(y_scores)[sorted_indices]
+    
+    # Initialize lists to store accuracy and rejection rates
+    accuracies = []
+    rejection_rates = []
+    
+    n = len(y_true_sorted)
+    
+    # Calculate accuracy at each rejection rate
+    for i in range(n + 1):
+        if i == 0:
+            # No rejection, use all predictions
+            y_pred = (y_scores_sorted >= threshold).astype(int)
+        elif i < n:
+            # Use predictions for the top (n - i) confident scores
+            y_pred = (y_scores_sorted[:n - i] >= threshold).astype(int)
+        else:
+            # 100% rejection, set accuracy to 1.0 by convention
+            accuracies.append(1.0)
+            rejection_rates.append(1.0)
+            break
+        
+        # Calculate accuracy for the remaining predictions
+        if len(y_pred) > 0:
+            accuracy = accuracy_score(y_true_sorted[:n - i], y_pred)
+        else:
+            accuracy = 1.0  # No predictions, so accuracy is defined as 1.0 by convention
+        
+        accuracies.append(accuracy)
+        rejection_rates.append(i / n)
+    
+    # Calculate AUARC using the trapezoidal rule
+    auarc = np.trapz(accuracies, rejection_rates)
+    return auarc
+
+# # Example usage
+# y_true = np.array([0, 1, 1, 0, 1, 0, 1, 1, 0, 0])
+# y_scores = np.array([0.1, 0.9, 0.8, 0.4, 0.95, 0.35, 0.7, 0.85, 0.2, 0.3])
+
+# # Calculate AUARC
+# auarc_score = calculate_auarc(y_true, y_scores)
+# print("AUARC Score:", auarc_score)

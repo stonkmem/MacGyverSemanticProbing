@@ -6,121 +6,128 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
+from huggingface_hub import InferenceClient, login
 
-from helper_funcs import *
-from data import *
+# from helper_funcs import *
+# from data import *
 from helper_funcs import gen_chat_object
 
 load_dotenv()
+temp = 1.0
+TOP_P = 0.9
+NUM_BEAMS = 1
 
 huggingface_token = os.getenv("HF_TOKEN")
-if __name__ == '__main__':
-    if sys.argv[1] == 'llama':
-        modelpath = "meta-llama/Llama-3.1-8B-Instruct"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+print('HF_TOKEN' in os.environ) # True of False
+print(os.environ['HF_TOKEN']) # Print contents of variable
+login(token=huggingface_token)
+# if __name__ == '__main__':
+if sys.argv[0] == 'llama':
+    modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
 
-    elif sys.argv[1] == 'vicuna':
-        modelpath = "lmsys/vicuna-13b-v1.5"
-        # llm = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+elif sys.argv[0] == 'vicuna':
+    modelpath = "lmsys/vicuna-13b-v1.5"
+    # llm = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-        #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
-    elif sys.argv[1] == 'mistral':
-        modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_llm = llm.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
+    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
+elif sys.argv[0] == 'mistral':
+    modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-        #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-        #     logits_all = True,
-        #     n_gpu_layers = -1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
-    else:
-        modelpath = "meta-llama/Llama-3.1-8B-Instruct"
-        # llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm = llm.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
+    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
+    #     logits_all = True,
+    #     n_gpu_layers = -1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
+else:
+    modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+    # llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm = llm.save_state()
 
-        # entailment_llm = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_entailment_llm = entailment_llm.save_state()
+    # entailment_llm = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_entailment_llm = entailment_llm.save_state()
 
-        # llm_fact = Llama.from_pretrained(
-        #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-        #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-        #     logits_all = True,
-        #     n_gpu_layers=-1
-        # )
-        # wipe_llm_fact = llm_fact.save_state()
+    # llm_fact = Llama.from_pretrained(
+    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
+    #     logits_all = True,
+    #     n_gpu_layers=-1
+    # )
+    # wipe_llm_fact = llm_fact.save_state()
 
-    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
- 
-    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
+
+model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+print("MODEL LOADED")
     # model.to("cuda")
 
 
@@ -224,7 +231,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
                 [
                 msg
                 ], return_tensors = "pt").to("cuda")
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, )
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
+                                     temperature=temp,
+                                top_p = TOP_P, do_sample = True,
+                                    num_beams = NUM_BEAMS)
             output_logits = outputs.logits
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token
@@ -285,7 +295,10 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             string_y = ''
             # score 30 samples with humans to check correlation.
             
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
+                                     temperature=temp,
+                                top_p = TOP_P, do_sample = True,
+                                    num_beams = NUM_BEAMS)
             output_logits = outputs.logits
             tokens_previous = outputs.sequences[0]
             token_text = tokenizer.decode(tokens_previous)
@@ -345,7 +358,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             tokens = []
             string_y = ''
             # score 30 samples with humans to check correlation.
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True)
+            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
+                                     temperature=temp,
+                                top_p = TOP_P, do_sample = True,
+                                    num_beams = NUM_BEAMS)
             output_logits = outputs.logits
             tokens_previous = outputs.sequences[0]
 #             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens

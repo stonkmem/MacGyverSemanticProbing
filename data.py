@@ -28,7 +28,7 @@ macgyver_prompt = """
 {}"""
 
 
-num_stepvers = 11
+num_stepvers = 10
 step_num = 1
 max_steps = "ten"
 
