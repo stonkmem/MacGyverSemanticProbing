@@ -143,13 +143,14 @@ def get_factuality_chateval(crit, question, ans):
 [The End of Assistant's Answer]"""})
             ).choices[0].message.content
         juj = {'role': 'system', 'content': f'You are a wise judge studying the solutions to a problem. As a task, you will be provided with a transcript of a debate between two LLMs. Based on the arguments presented, conclude whether or not the solution to the problem fulfils the criterion of {criterion}.\n Present your answer STRICTLY as follows: {criterion}: [[YES/NO]]. For example, {criterion}: [[YES]]'}
-        evals.append(criterion : client.chat.completions.create(
+        evals.append({criterion : client.chat.completions.create(
             model="gpt-4o",
             messages=[juj].extend(hist).append({'role':'user','content':f"""[Question] {question} 
 [The Start of Assistant’s Answer]
 {ans}
 [The End of Assistant's Answer]"""})
-        ).choices[0].message.content == "[[YES]]")
+        ).choices[0].message.content == "[[YES]]"})
+
     return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
 
 # def gen_factuality_score(question, ans, criterialist):
