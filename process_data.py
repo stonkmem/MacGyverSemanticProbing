@@ -8,8 +8,16 @@ from openai_funcs import *
 from Llama_run_benchmark import * # can mod for other LLMs
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 import numpy as np
+import sys
 fullscale_classifiedproblist = []
 classprobabilities = [] 
+
+use_chateval = False
+
+if len(sys.argv) > 0: 
+  if sys.argv[0] == "chateval":
+    use_chateval = True
+
 for j in range(len(fullscale_classifiedproblist)): # full scale
   problemscale_classprobabilities = []
   for k in range(len(fullscale_classifiedproblist[j])): # problem scale
@@ -45,6 +53,12 @@ factuality = []
 efficiency = []
 feasibility = []
 criterialist = ["feasibility", "safety", "efficiency", "effectiveness"] # add constraint fitting? 
+privector = {
+    "feasibility": 0.47295,
+    "safety": 0.29784,
+    "efficiency": 0.086711,
+    "effectiveness": 0.14250
+}
 for i in range(len(SE_complex)): # for each problem
   problem_factuality = []
   problem_feasibility = 0
@@ -54,7 +68,10 @@ for i in range(len(SE_complex)): # for each problem
     step_feasibility = 0
     step_efficiency = 0
     for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
-        factual, feasible, efficient = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
+        if use_chateval:
+            factual, feasible, efficient = gen_factuality_score_chateval_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist, privector)
+        else:
+            factual, feasible, efficient = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
         step_factuality.append(factual)
         if feasible == True:
             step_feasibility += 1
