@@ -126,6 +126,8 @@ for i in range(1): # handles multiple problems.
       problemstring = macgyver[i]['Problem'] + '\n' + "Existing steps, if any:\n "
       for k in range(len(prev_steps)):
         problemstring += prev_steps[k]
+
+      problemstring += EOS_TOKEN
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
       problemstring += f"\n### Response: "
