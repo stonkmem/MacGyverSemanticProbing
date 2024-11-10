@@ -1,5 +1,6 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
 # import openai
 # from helper_funcs import *
 
