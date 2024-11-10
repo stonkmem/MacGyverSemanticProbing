@@ -6,6 +6,7 @@ from data import *
 # from process_data import *
 import numpy as np
 import torch
+from sklearn import roc_curve, roc_auc_score, accuracy_score
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
     # inp/uts = tokenizer(prompt, return_tensors="pt").to(device)
@@ -708,3 +709,43 @@ def gen_chat_object_mistral(prompt, problem, include_eg = True): # for Mistral a
         ]
 #         prompt + '\n### Problem: \n' + problem
     return messages
+
+# AUROC Score
+
+def calculate_auroc_score(y_true, y_pred):
+    """
+    Calculate the Area Under the Receiver Operating Characteristic Curve (AUROC) score.
+
+    Args:
+    y_true (list): True labels (0 or 1) for each prediction.
+    y_pred (list): Predicted probabilities for each prediction.
+
+    Returns:
+    float: The AUROC score.
+    """
+    auroc = roc_auc_score(y_true, y_pred)
+    return auroc
+
+def calculate_auarc_score(y_true, y_scores):
+    sorted_indices = np.argsort(-y_scores)  # Sort in descending order
+    y_scores_sorted = y_scores[sorted_indices]
+    y_true_sorted = y_true[sorted_indices]
+
+    # Calculate accuracy at different rejection rates
+    accuracies = []
+    rejection_rates = np.linspace(0, 1, len(y_true_sorted) + 1)
+
+    for i in range(len(y_true_sorted) + 1):
+        # Reject 'i' least confident predictions
+        if i == 0:
+            # No rejection, use all predictions
+            y_pred = (y_scores_sorted >= 0.5).astype(int)  # Assume threshold of 0.5
+        else:
+            y_pred = (y_scores_sorted[:len(y_scores_sorted) - i] >= 0.5).astype(int)
+        # Calculate accuracy for the remaining predictions
+        accuracy = accuracy_score(y_true_sorted[:len(y_true_sorted) - i], y_pred)
+        accuracies.append(accuracy)
+
+    # Approximate the area under the accuracy-rejection curve using the trapezoidal rule
+    auarc = np.trapz(accuracies, rejection_rates)
+    return auarc
