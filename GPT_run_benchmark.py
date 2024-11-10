@@ -247,7 +247,7 @@ for i in range(1): # handles multiple problems.
   fullscale_subresponselist.append(problemscale_subresponselist)
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers:
+  if num_stops < num_stepvers  and len(problemscale_stepprobs) > 1:
       selected_step_index = max(problemscale_stepprobs[step_num - 1])
       selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
       # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])

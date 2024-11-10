@@ -5,7 +5,9 @@ from llama_funcs import *
 from helper_funcs import *
 from data import *
 from openai_funcs import *
-from Llama_run_benchmark import *
+from Llama_run_benchmark import * # can mod for other LLMs
+from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
+import numpy as np
 fullscale_classifiedproblist = []
 classprobabilities = [] 
 for j in range(len(fullscale_classifiedproblist)): # full scale
@@ -95,3 +97,4 @@ for i in range(len(total_scores)):
   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
   lambda_scores.append(problem_lambda_score)
 # print(lambda_scores)
+
