@@ -1,18 +1,18 @@
 # extract variables from the data into a JSON file
 # extract variables from the data into a JSON file
 
-from llama_funcs import *
-from helper_funcs import *
-from data import *
-from openai_funcs import *
-from Llama_run_benchmark import *
+# from llama_funcs import *
+# from helper_funcs import *
+# from data import *
+# from openai_funcs import *
+# from Llama_run_benchmark import *
 # from helper_funcs import calculate_prob_of_class_logprobs
-from process_data import *
+from process_data import feasibility_score, efficiency_score, SE_simple, SE_complex, factuality, feasibility, efficiency, total_scores, lambda_scores, classprobabilities, fullscale_classifiedsubresponselist, fullscale_classifiedproblist, fullscale_promptlist, fullscale_prev_steps
 
 import json
 
 # extract variables from the data into a text file
-
+print("EXPORTING DATA")
 def export_to_txt(txt_file_path):
     outputdict = {   
         "feasibilitypercentage": feasibility_score,
@@ -29,7 +29,8 @@ def export_to_txt(txt_file_path):
         "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
         "fullscale_classifiedproblist": fullscale_classifiedproblist,
         "fullscale_promptlist": fullscale_promptlist,
-        "fullscale_prev_steps": fullscale_prev_steps
+        "fullscale_prev_steps": fullscale_prev_steps,
+        # "fullscale_prob"
     }
 
     def write_nested(data, txt_file, indent=0):

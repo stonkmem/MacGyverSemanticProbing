@@ -1,12 +1,13 @@
 # calculates the probabilities of each class for each subresponse
 
 import numpy as np
-from llama_funcs import *
+# from llama_funcs import *
 from helper_funcs import *
-from data import *
-from openai_funcs import *
-from Llama_run_benchmark import * # can mod for other LLMs
-from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
+# from data import *
+# from openai_funcs import *
+from Llama_run_benchmark import fullscale_classifiedproblist, fullscale_subresponselist, fullscale_promptlist, fullscale_prev_steps, fullscale_classifiedsubresponselist
+ # can mod for other LLMs
+# from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 import numpy as np
 import sys
 fullscale_classifiedproblist = []
@@ -14,9 +15,11 @@ classprobabilities = []
 
 use_chateval = False
 
-if len(sys.argv) > 0: 
-  if sys.argv[0] == "chateval":
+if len(sys.argv) > 1: 
+  if sys.argv[1] == "chateval":
     use_chateval = True
+  
+print("PROCESSING DATA")
 
 for j in range(len(fullscale_classifiedproblist)): # full scale
   problemscale_classprobabilities = []
@@ -31,7 +34,7 @@ for j in range(len(fullscale_classifiedproblist)): # full scale
     problemscale_classprobabilities.append(subresponsescale_classprobs)
 
   classprobabilities.append(problemscale_classprobabilities)
-
+print(classprobabilities, "classprobabilities")
 SE_simple = []
 for i in range(len(classprobabilities)):
   problem_SE = []
@@ -59,6 +62,9 @@ privector = {
     "efficiency": 0.086711,
     "effectiveness": 0.14250
 }
+
+print(SE_complex, "SE_complex")
+print("LLMJUDGING")
 for i in range(len(SE_complex)): # for each problem
   problem_factuality = []
   problem_feasibility = 0
@@ -117,3 +123,5 @@ for i in range(len(total_scores)):
 
 feasibility_score = check_feasibility(feasibility)
 efficiency_score = check_efficiency(efficiency)
+
+print("DATA PROCESSED")

@@ -265,6 +265,27 @@ for i in range(1): # handles multiple problems.
   fullscale_classifiedproblist.append(problemscale_classifiedproblist) # needed 
 
 
+print(fullscale_classifiedproblist, "CLASSIFIED PROBS")
+print(fullscale_classifiedsubresponselist, "CLASSIFIED RESPONSES")
+# print(fullscale_problist, "PROBLIST") 
+
+
+# move classification outside
+# for j in range(len(fullscale_classifiedproblist)): # full scale
+#   problemscale_classifiedproblist = []
+#   problemscale_classifiedsubresponselist = []
+#   for k in range(len(fullscale_classifiedproblist[j])): # problem scale
+#     subresponsescale_classifiedproblist = []
+#     subresponsescale_classifiedsubresponselist = []
+#     for i in range(len(fullscale_classifiedproblist[j][k])): # subresponse scale
+#       classified_response, classified_token, classified_prob = gen_C(fullscale_promptlist[j][k], fullscale_subresponselist[j][k], fullscale_problist[j][k], fullscale_problist[j][k])
+#       subresponsescale_classifiedproblist.append(classified_prob)
+#       subresponsescale_classifiedsubresponselist.append(classified_response)
+#     problemscale_classifiedproblist.append(subresponsescale_classifiedproblist)
+#     problemscale_classifiedsubresponselist.append(subresponsescale_classifiedsubresponselist)
+#   fullscale_classifiedproblist.append(problemscale_classifiedproblist)
+#   fullscale_classifiedsubresponselist.append(problemscale_classifiedsubresponselist)
+
  # tokenlist is quad nested:
  # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]
 # print(problemscale_responselist)
