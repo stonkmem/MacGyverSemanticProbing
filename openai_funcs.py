@@ -150,7 +150,6 @@ def get_factuality_chateval(crit, question, ans):
 {ans}
 [The End of Assistant's Answer]"""})
         ).choices[0].message.content == "[[YES]]"})
-
     return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
 
 # def gen_factuality_score(question, ans, criterialist):

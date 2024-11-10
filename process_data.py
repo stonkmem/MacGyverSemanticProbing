@@ -6,7 +6,7 @@ from helper_funcs import *
 from data import *
 from openai_funcs import *
 from Llama_run_benchmark import * # can mod for other LLMs
-from sklearn import roc_curve, roc_auc_score, accuracy_score
+from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 import numpy as np
 fullscale_classifiedproblist = []
 classprobabilities = [] 
