@@ -586,7 +586,7 @@ def total_lambda_score(scores, gamma=0.9, lambda_=0.8):
     total_score = np.mean(lambda_returns)  # Aggregate score using mean or sum
     return total_score
 
-def check_feasibility():
+def check_feasibility(feasibility):
     num_infeasibles = 0
     num_agreements = 0
     for i in range(len(feasibility)):
@@ -600,7 +600,7 @@ def check_feasibility():
         return -1
     return num_agreements / num_infeasibles
 
-def check_efficiency():
+def check_efficiency(efficiency):
     num_inefficients = 0
     num_agreements = 0
     for i in range(len(efficiency)):

@@ -98,3 +98,5 @@ for i in range(len(total_scores)):
   lambda_scores.append(problem_lambda_score)
 # print(lambda_scores)
 
+feasibility_score = check_feasibility(feasibility)
+efficiency_score = check_efficiency(efficiency)

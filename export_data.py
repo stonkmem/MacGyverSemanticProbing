@@ -15,8 +15,8 @@ import json
 
 def export_to_txt(txt_file_path):
     outputdict = {   
-        "feasibilitypercentage": check_feasibility(),
-        "efficiencypercentage": check_efficiency(),
+        "feasibilitypercentage": feasiblity_score,
+        "efficiencypercentage": efficiency_score,
         "SE_simple": SE_simple, 
         "SE_complex": SE_complex, 
         "factuality": factuality, 
@@ -99,8 +99,8 @@ output_file = open("results_test1.json", "w")
 
 
 outputdict = {   
-    "feasibilitypercentage": check_feasibility(),
-    "efficiencypercentage": check_efficiency(),
+    "feasibilitypercentage": feasibility_score,
+    "efficiencypercentage": efficiency_score,
     "SE_simple": SE_simple, 
     "SE_complex": SE_complex, 
     "factuality": factuality, 
