@@ -542,7 +542,23 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
         # finds avg
     return score, feasibility, efficiency
 
-
+def gen_factuality_score_chateval_likert(question, ans, criterialist, priority_vector): # element 2 is feas, 3 is effec
+    score = 0
+    scores = get_factuality_chateval_likert(criterialist, question, ans) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
+    # based on criteria
+    feasibility = True
+    efficiency = True
+    for i in range(len(criterialist)):
+        criteria = criterialist[i]
+        scores[i][criteria] = int(scores[i][criteria])
+        if criteria == 'feasible':
+            if scores[i][criteria] <= 7 and scores[i][criteria] < scores[criterialist.index("efficiency")]["efficiency"] and scores[i][criteria] != 0:
+                feasibility = False
+        elif criteria == 'efficient':
+            if scores[i][criteria] <= 7 and scores[i][criteria] < scores[criterialist.index("feasibility")]["feasibility"] and scores[i][criteria] != 0:
+                efficiency = False
+        score += scores[i][criteria] / 10 * priority_vector[criteria]
+    return score, feasibility, efficiency
 
 def lambda_return(scores, gamma, lambda_):
     """

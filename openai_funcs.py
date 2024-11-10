@@ -169,6 +169,116 @@ def get_factuality_chateval_binary(crit, question, ans):
         ).choices[0].message.content == "[[YES]]"})
     return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
 
+
+def get_factuality_chateval_binary(crit, question, ans):
+    rounds = 2
+    evals = []
+    for criterion in crit:
+        hist = []
+        for i in range(rounds):
+            positive = {'role': 'system', 'content': f'You are a skilled expert, Debater 1, studying solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution meets the criterion of {criterion}.'}
+            positivearr = [positive]
+            positivearr.extend(hist)
+            positivearr.append({'role':'user','content':f"""[Problem] {question} 
+[The Start of Assistant’s Solution]
+{ans}
+[The End of Assistant's Solution]"""})
+            completion_positive = client.chat.completions.create(
+                model="gpt-4o",
+                messages=positivearr
+            ).choices[0].message.content
+            hist.append({'role':'assistant', 'content':'I, Debater 1, argue that: ' + completion_positive})
+            negative = {'role': 'system', 'content': f'You are a skilled expert, Debater 2, studying the solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution fails to meet the criterion of {criterion}.'}
+            negativearr = [negative]
+            negativearr.extend(hist)
+            negativearr.append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+            completion_negative = client.chat.completions.create(
+                model="gpt-4o",
+                messages=negativearr
+            ).choices[0].message.content
+            hist.append({'role':'assistant', 'content':'I, Debater 2, argue that: ' + completion_negative})
+        juj = {'role': 'system', 'content': f'You are a wise judge studying the solutions to a problem. As a task, you will be provided with a transcript of a debate between two LLMs. Based on the arguments presented, conclude whether or not the solution to the problem fulfils the criterion of {criterion}.\n Present your answer STRICTLY as follows: {criterion}: [[YES/NO]]. For example, {criterion}: [[YES]]'}
+        jujarr = [juj]
+        jujarr.extend(hist)
+        jujarr.append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+        print(jujarr)
+        output = client.chat.completions.create(
+            model="gpt-4o",
+            messages=jujarr
+        ).choices[0].message.content
+        # print(output, "JUJ")
+        evals.append({criterion : client.chat.completions.create(
+            model="gpt-4o",
+            messages=jujarr
+        ).choices[0].message.content == "[[YES]]"})
+    return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
+
+# print(get_factuality_chateval_binary(["safety", "effectiveness"], 'How do you cook an egg?', "fry it with a frying pan"))
+
+def get_factuality_chateval_likert(crit, question, ans):
+    rounds = 2
+    evals = []
+    for criterion in crit:
+        hist = []
+        for i in range(rounds):
+            positive = {'role': 'system', 'content': f'You are a skilled expert, Debater 1, studying solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution meets the criterion of {criterion}.'}
+            positivearr = [positive]
+            positivearr.extend(hist)
+            positivearr.append({'role':'user','content':f"""[Problem] {question} 
+[The Start of Assistant’s Solution]
+{ans}
+[The End of Assistant's Solution]"""})
+            completion_positive = client.chat.completions.create(
+                model="gpt-4o",
+                messages=positivearr
+            ).choices[0].message.content
+            hist.append({'role':'assistant', 'content':'I, Debater 1, argue that: ' + completion_positive})
+            negative = {'role': 'system', 'content': f'You are a skilled expert, Debater 2, studying the solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution fails to meet the criterion of {criterion}.'}
+            negativearr = [negative]
+            negativearr.extend(hist)
+            negativearr.append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+            completion_negative = client.chat.completions.create(
+                model="gpt-4o",
+                messages=negativearr
+            ).choices[0].message.content
+            hist.append({'role':'assistant', 'content':'I, Debater 2, argue that: ' + completion_negative})
+        juj = {'role': 'system', 'content': f'You are a wise judge studying the solutions to a problem. As a task, you will be provided with a transcript of a debate between two LLMs. Based on the arguments presented, conclude the extent to which a solution to the problem fulfils the criterion of {criterion}.\n Present your answer STRICTLY as an integer score of 1 to 10 as follows: {criterion}: [[<score>]]. For example, {criterion}: [[7]]'}
+        jujarr = [juj]
+        jujarr.extend(hist)
+        jujarr.append({'role':'user','content':f"""[Question] {question} 
+[The Start of Assistant’s Answer]
+{ans}
+[The End of Assistant's Answer]"""})
+        # print(jujarr)
+        output = client.chat.completions.create(
+            model="gpt-4o",
+            messages=jujarr
+        ).choices[0].message.content
+        
+        score = 0
+        try:
+            index = output.index("[[")
+            output = output[index + 2:]
+            if output[1] == '0':
+                score = 10
+            else:
+                score = output[0]
+                # print(len(output))
+        except:
+            print('err0r')
+        evals.append({criterion : score})
+    return evals #RETURNS an array comprising several dictionaries, each of which is in the following format: {'criterion', judgement}
+
+# print(get_factuality_chateval_likert(["safety", "effectiveness"], 'How do you cook an egg?', "fry it with a frying pan"))
 # print(get_factuality_chateval_binary(["safety", "effectiveness"], 'How do you cook an egg?', "fry it with a frying pan"))
 
 # def gen_factuality_score(question, ans, criterialist):

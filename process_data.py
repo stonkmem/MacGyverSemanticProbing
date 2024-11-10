@@ -44,7 +44,7 @@ for i in range(len(classprobabilities)):
 factuality = []
 efficiency = []
 feasibility = []
-criterialist = ["feasible", "safe", "resource-efficient", "effective"] # add constraint fitting? 
+criterialist = ["feasibility", "safety", "efficiency", "effectiveness"] # add constraint fitting? 
 for i in range(len(SE_complex)): # for each problem
   problem_factuality = []
   problem_feasibility = 0
