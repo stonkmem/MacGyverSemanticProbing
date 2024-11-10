@@ -496,6 +496,11 @@ def gen_factuality_score(question, ans, criterialist):
     return score, feasibility, efficiency
 
 def gen_factuality_score_likert(question, ans, criterialist): # element 2 is feas, 3 is effec
+
+    # INPUT: question (str), ans (str), criterialist (list of str)
+    # OUTPUT: score (float), feasibility (bool), efficiency (bool)
+    # note: use priority_vector for weights
+
     # safety should be separate and not in AHP 
     score = 0
     scores = get_factuality_likert(question, ans, criterialist)
