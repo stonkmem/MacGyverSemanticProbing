@@ -5,7 +5,7 @@ from llama_funcs import *
 from helper_funcs import *
 from data import *
 from openai_funcs import *
-from Llama_run_benchmark import *
+from Llama_run_benchmark import * # can mod for other LLMs
 fullscale_classifiedproblist = []
 classprobabilities = [] 
 for j in range(len(fullscale_classifiedproblist)): # full scale

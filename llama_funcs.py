@@ -14,7 +14,7 @@ from helper_funcs import gen_chat_object
 
 load_dotenv()
 temp = 1.0
-TOP_P = 0.75
+TOP_P = 0.9
 NUM_BEAMS = 1
 
 huggingface_token = os.getenv("HF_TOKEN")
