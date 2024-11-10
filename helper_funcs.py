@@ -1,7 +1,7 @@
  
 
 from openai_funcs import *
-from llama_funcs import model, tokenizer
+# from llama_funcs import model, tokenizer
 from data import *
 # from process_data import *
 import numpy as np
