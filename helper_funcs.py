@@ -6,7 +6,7 @@ from data import *
 # from process_data import *
 import numpy as np
 import torch
-from sklearn import roc_curve, roc_auc_score, accuracy_score
+from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt
     # inp/uts = tokenizer(prompt, return_tensors="pt").to(device)
@@ -503,7 +503,8 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
 
     # safety should be separate and not in AHP 
     score = 0
-    scores = get_factuality_likert(question, ans, criterialist)
+    scores = get_factuality_likert(question, ans, criterialist) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
+    # based on criteria 
     arr = scores.split("[[")
     while len(arr) <= 4:
         scores = get_factuality_likert(question, ans, criterialist)
@@ -731,26 +732,71 @@ def calculate_auroc_score(y_true, y_pred):
     auroc = roc_auc_score(y_true, y_pred)
     return auroc
 
-def calculate_auarc_score(y_true, y_scores):
-    sorted_indices = np.argsort(-y_scores)  # Sort in descending order
-    y_scores_sorted = y_scores[sorted_indices]
-    y_true_sorted = y_true[sorted_indices]
+import numpy as np
+from sklearn.metrics import accuracy_score
 
-    # Calculate accuracy at different rejection rates
+def calculate_auarc(y_true, y_scores, threshold=0.5):
+
+    # INPUTS: y_true (list), y_scores (list), threshold (float)
+    # y_true: true binary labels (0 or 1)
+    # y_scores: model's confidence scores for the positive class (probabilities)
+
+    """
+    Calculate the Area Under the Accuracy-Rejection Curve (AUARC) for binary classification.
+    
+    Parameters:
+        y_true (array-like): True binary labels (0 or 1).
+        y_scores (array-like): Model's confidence scores for the positive class.
+        threshold (float): Decision threshold for classification (default: 0.5).
+    
+    Returns:
+        float: AUARC score.
+    """
+
+    y_true = np.array(y_true)
+    y_scores = np.array(y_scores)   
+    # Sort by confidence scores in descending order
+    sorted_indices = np.argsort(-y_scores)
+    y_true_sorted = np.array(y_true)[sorted_indices]
+    y_scores_sorted = np.array(y_scores)[sorted_indices]
+    
+    # Initialize lists to store accuracy and rejection rates
     accuracies = []
-    rejection_rates = np.linspace(0, 1, len(y_true_sorted) + 1)
-
-    for i in range(len(y_true_sorted) + 1):
-        # Reject 'i' least confident predictions
+    rejection_rates = []
+    
+    n = len(y_true_sorted)
+    
+    # Calculate accuracy at each rejection rate
+    for i in range(n + 1):
         if i == 0:
             # No rejection, use all predictions
-            y_pred = (y_scores_sorted >= 0.5).astype(int)  # Assume threshold of 0.5
+            y_pred = (y_scores_sorted >= threshold).astype(int)
+        elif i < n:
+            # Use predictions for the top (n - i) confident scores
+            y_pred = (y_scores_sorted[:n - i] >= threshold).astype(int)
         else:
-            y_pred = (y_scores_sorted[:len(y_scores_sorted) - i] >= 0.5).astype(int)
+            # 100% rejection, set accuracy to 1.0 by convention
+            accuracies.append(1.0)
+            rejection_rates.append(1.0)
+            break
+        
         # Calculate accuracy for the remaining predictions
-        accuracy = accuracy_score(y_true_sorted[:len(y_true_sorted) - i], y_pred)
+        if len(y_pred) > 0:
+            accuracy = accuracy_score(y_true_sorted[:n - i], y_pred)
+        else:
+            accuracy = 1.0  # No predictions, so accuracy is defined as 1.0 by convention
+        
         accuracies.append(accuracy)
-
-    # Approximate the area under the accuracy-rejection curve using the trapezoidal rule
+        rejection_rates.append(i / n)
+    
+    # Calculate AUARC using the trapezoidal rule
     auarc = np.trapz(accuracies, rejection_rates)
     return auarc
+
+# # Example usage
+# y_true = np.array([0, 1, 1, 0, 1, 0, 1, 1, 0, 0])
+# y_scores = np.array([0.1, 0.9, 0.8, 0.4, 0.95, 0.35, 0.7, 0.85, 0.2, 0.3])
+
+# # Calculate AUARC
+# auarc_score = calculate_auarc(y_true, y_scores)
+# print("AUARC Score:", auarc_score)
