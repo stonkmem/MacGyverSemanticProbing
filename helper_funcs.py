@@ -500,12 +500,14 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
     # INPUT: question (str), ans (str), criterialist (list of str)
     # OUTPUT: score (float), feasibility (bool), efficiency (bool)
     # note: use priority_vector for weights
+    # should also output the array 
 
     # safety should be separate and not in AHP 
     score = 0
     scores = get_factuality_likert(question, ans, criterialist) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
     # based on criteria 
     arr = scores.split("[[")
+    scorearray = []
     while len(arr) <= 4:
         scores = get_factuality_likert(question, ans, criterialist)
         arr = scores.split("[[")
@@ -522,8 +524,10 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
 #                 print(arr[i][0], arr[i][1])
                 if arr[i][1] == "0":
                     score += 1 * priority_vector[i - 1] # 10
+                    scorearray.append(1)
                 else:
                     score += int(arr[i][0]) / 10 * priority_vector[i - 1]
+                    scorearray.append(int(arr[i][0]) / 10)
 #                     if i == 2:
 #                         if int(arr[2][0]) <= 6: # 7
 #                             feasibility = False
