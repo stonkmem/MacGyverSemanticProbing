@@ -1,4 +1,5 @@
-from llama_funcs import num_to_string, gen_prob, extract_problem, split_by_sequence, replace_all, remove_duplicates, calc_sequence_probability_LOGPROB, gen_C, tokenizer, num_stepvers, EOS_TOKEN
+from llama_funcs import *
+# from llama_funcs import num_to_string, gen_prob, extract_problem, split_by_sequence, replace_all, remove_duplicates, calc_sequence_probability_LOGPROB, gen_C, tokenizer, num_stepvers
 # from helper_funcs import *
 # from data import *
 # from openai_funcs import *
