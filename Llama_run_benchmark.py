@@ -6,6 +6,7 @@ from llama_funcs import *
 
 
 step_num = 1
+max_steps = 'ten'
 prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
     Solve the problem in the fewest steps possible.
