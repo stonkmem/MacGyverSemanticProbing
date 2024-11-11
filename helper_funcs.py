@@ -476,7 +476,7 @@ priority_vector = [0.47295, 0.29784, 0.086711, 0.14250]
 
 def gen_factuality_score(question, ans, criterialist):
     score = 0
-    scores = get_factuality(question, ans, criterialist)
+    scores = get_factuality(question, ans)
     arr = scores.split("[[")
     feasibility = True
     efficiency = True
@@ -506,12 +506,12 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
 
     # safety should be separate and not in AHP 
     score = 0
-    scores = get_factuality_likert(question, ans, criterialist) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
+    scores = get_factuality_likert(question, ans) # should return a string: [[<score>]], [[<score>]], [[<score>]], [[<score>]]
     # based on criteria 
     arr = scores.split("[[")
     scorearray = []
     while len(arr) <= 4:
-        scores = get_factuality_likert(question, ans, criterialist)
+        scores = get_factuality_likert(question, ans)
         arr = scores.split("[[")
     feasibility = True
     efficiency = True
