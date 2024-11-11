@@ -37,9 +37,9 @@ for j in range(len(fullscale_classifiedproblist)): # full scale
     problemscale_classprobabilities.append(subresponsescale_classprobs)
 
   classprobabilities.append(problemscale_classprobabilities)
-print(classprobabilities, "classprobabilities")
-print(fullscale_classifiedsubresponselist, "fullscale_classifiedsubresponselist")
-print(fullscale_classifiedproblist, "fullscale_classifiedproblist")
+# print(classprobabilities, "classprobabilities")
+# print(fullscale_classifiedsubresponselist, "fullscale_classifiedsubresponselist")
+# print(fullscale_classifiedproblist, "fullscale_classifiedproblist")
 SE_simple = []
 for i in range(len(classprobabilities)):
   problem_SE = []
@@ -116,8 +116,10 @@ for i in range(len(SE_complex)):
     problem_scores.append(compute_total_score(SE_complex[i][j], factuality[i][j])) # here factuality is a list of scores while SE is a single value
   total_scores.append(problem_scores)
 # print(total_scores)
+true_total_scores = []
 for i in range(len(total_scores)):
-  print(generate_problem_score_simple(total_scores[i]))
+  print(generate_problem_score_simple(total_scores[i]), "generating simple score")
+  true_total_scores.append(generate_problem_score_simple(total_scores[i]))
 gamma = 0.9  # Discount factor
 lambda_ = 0.8  # Lambda parameter
 lambda_scores = []

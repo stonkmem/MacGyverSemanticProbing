@@ -248,7 +248,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             for token in tokens:
                 string_y += token
-            print("STRING: ", string_y)
+            print("OUTPUT_STRING", string_y)
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             

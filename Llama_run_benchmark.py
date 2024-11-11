@@ -41,7 +41,7 @@ max_stepnum = 10
 min_stepnum = 2
 
 # responses = []
-for i in range(1): # handles multiple problems.
+for i in range(50): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
@@ -214,8 +214,9 @@ for i in range(1): # handles multiple problems.
 
       # print("SUBRESPONSE: ", subresponses[n])
 
-    print("NUM_STOPS: ", num_stops)
+    print("NUM_STOPS: ", num_stops, num_stepvers / 2)
     if num_stops >= num_stepvers / 2:
+      print("STOPPING, NO MORE STEPS")
       problem_break = True
       break
 
