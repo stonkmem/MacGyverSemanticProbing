@@ -2,7 +2,7 @@
 
 from openai_funcs import gen_C, gen_chat_object_GPT, generate_data_from_GPT, get_entailment_openai, get_entailment, get_factuality, get_factuality_chateval_binary, get_factuality_chateval_likert, get_factuality_likert, get_corr_feas_eff_openai
 # from llama_funcs import model, tokenizer
-from data import macgyver
+from data import *
 # from process_data import *
 import numpy as np
 import torch
