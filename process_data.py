@@ -12,7 +12,7 @@ from Llama_run_benchmark import *
 # from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 import numpy as np
 import sys
-fullscale_classifiedproblist = []
+# fullscale_classifiedproblist = []
 classprobabilities = [] 
 
 use_chateval = False
@@ -38,6 +38,8 @@ for j in range(len(fullscale_classifiedproblist)): # full scale
 
   classprobabilities.append(problemscale_classprobabilities)
 print(classprobabilities, "classprobabilities")
+print(fullscale_classifiedsubresponselist, "fullscale_classifiedsubresponselist")
+print(fullscale_classifiedproblist, "fullscale_classifiedproblist")
 SE_simple = []
 for i in range(len(classprobabilities)):
   problem_SE = []
