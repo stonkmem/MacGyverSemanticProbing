@@ -6,6 +6,8 @@ from data import macgyver
 # from process_data import *
 import numpy as np
 import torch
+
+print("RUNNING HELPER FUNCS")
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 def generate_tokens_and_probabilities(inputs, max_tokens=512):
     # Tokenize the prompt

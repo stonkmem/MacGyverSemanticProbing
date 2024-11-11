@@ -11,6 +11,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 entailment_llm_openai = OpenAI(api_key=api_key)
+print("RUNNING OPENAI")
 
 def get_entailment_openai(question, a, b):
     return entailment_llm_openai.chat.completions.create(
