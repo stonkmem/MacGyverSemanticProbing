@@ -8,6 +8,7 @@
 # from Llama_run_benchmark import *
 # from helper_funcs import calculate_prob_of_class_logprobs
 from process_data import feasibility_score, efficiency_score, SE_simple, SE_complex, factuality, feasibility, efficiency, total_scores, lambda_scores, classprobabilities, fullscale_classifiedsubresponselist, fullscale_classifiedproblist, fullscale_promptlist, fullscale_prev_steps
+# feasibility_score, efficiency_score, SE_simple, SE_complex, factuality, feasibility, efficiency, total_scores, lambda_scores, classprobabilities, fullscale_classifiedsubresponselist, fullscale_classifiedproblist, fullscale_promptlist, fullscale_prev_steps
 
 import json
 
