@@ -41,7 +41,7 @@ max_stepnum = 10
 min_stepnum = 2
 
 # responses = []
-for i in range(50): # handles multiple problems.
+for i in range(5): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
