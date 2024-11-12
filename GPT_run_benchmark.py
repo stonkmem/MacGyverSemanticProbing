@@ -1,8 +1,8 @@
 
 from llama_funcs import *
-from helper_funcs import *
-from data import *
-from openai_funcs import *
+# from helper_funcs import *
+# from data import *
+# from openai_funcs import *
 
 step_num = 1
 prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
@@ -96,9 +96,9 @@ for i in range(1): # handles multiple problems.
   if num_steps <= 10:
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
-
+  problem_break = False
   for j in range(num_steps): # handles multiple steps for a problem.
-    problem_break = False
+    
     step_num = 1 + j
     promptstring = prompt
     if step_num == 1:
@@ -247,7 +247,7 @@ for i in range(1): # handles multiple problems.
   fullscale_subresponselist.append(problemscale_subresponselist)
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers  and len(problemscale_stepprobs) > 1:
+  if num_stops < num_stepvers  and len(problemscale_stepprobs) > 1 and not problem_break:
       selected_step_index = max(problemscale_stepprobs[step_num - 1])
       selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
       # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
