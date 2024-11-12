@@ -25,6 +25,8 @@ if len(sys.argv) > 1:
     from Mixtral_run_benchmark import *
   else:
     from Llama_run_benchmark import *
+else:
+  from Llama_run_benchmark import *
 
 print(sys.argv, "SYS ARGV")
 
