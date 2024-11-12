@@ -100,9 +100,9 @@ for i in range(50): # handles multiple problems.
   if num_steps <= 10:
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
-
+  problem_break = False
   for j in range(num_steps): # handles multiple steps for a problem.
-    problem_break = False
+    
     step_num = 1 + j
     promptstring = prompt
     if step_num == 1:
@@ -255,7 +255,7 @@ for i in range(50): # handles multiple problems.
   fullscale_subresponselist.append(problemscale_subresponselist)
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers and len(problemscale_stepprobs) > 1:
+  if num_stops < num_stepvers and len(problemscale_stepprobs) > 1 and problem_break == False:
       selected_step_index = max(problemscale_stepprobs[step_num - 1])
       selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
       # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
