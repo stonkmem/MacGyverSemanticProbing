@@ -32,8 +32,8 @@ print(sys.argv, "SYS ARGV")
 
 use_chateval = False
 
-if len(sys.argv) > 1: 
-  if sys.argv[1] == "chateval":
+if len(sys.argv) > 3: 
+  if sys.argv[3] == "chateval":
     use_chateval = True
   
 print("PROCESSING DATA")
