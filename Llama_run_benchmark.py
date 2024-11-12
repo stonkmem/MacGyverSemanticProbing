@@ -41,7 +41,7 @@ max_stepnum = 10
 min_stepnum = 2
 
 # responses = []
-for i in range(5): # handles multiple problems.
+for i in range(1): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
@@ -268,8 +268,8 @@ for i in range(5): # handles multiple problems.
   fullscale_classifiedproblist.append(problemscale_classifiedproblist) # needed 
 
 
-print(fullscale_classifiedproblist, "CLASSIFIED PROBS")
-print(fullscale_classifiedsubresponselist, "CLASSIFIED RESPONSES")
+# print(fullscale_classifiedproblist, "CLASSIFIED PROBS")
+# print(fullscale_classifiedsubresponselist, "CLASSIFIED RESPONSES")
 # print(fullscale_problist, "PROBLIST") 
 
 

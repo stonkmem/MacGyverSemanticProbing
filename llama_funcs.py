@@ -22,6 +22,7 @@ huggingface_token = os.getenv("HF_TOKEN")
 print('HF_TOKEN' in os.environ) # True of False
 print(os.environ['HF_TOKEN']) # Print contents of variable
 login(token=huggingface_token)
+print(sys.argv, "ARGUMENTS")
 # if __name__ == '__main__':
 if sys.argv[0] == 'llama':
     print("LLAMA")
