@@ -104,22 +104,24 @@ for i in range(len(SE_complex)): # for each problem
         if efficient == True:
             step_efficiency += 1
     problem_factuality.append(step_factuality)
-    if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
-        problem_feasibility += 1
-    if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
-        problem_efficiency += 1
+    if len(fullscale_subresponselist[i][j]) > 0:
+      if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
+          problem_feasibility += 1
+      if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
+          problem_efficiency += 1
     print(step_feasibility, step_efficiency)
 
   # aggregates the feasibility and efficiency scores for each problem. 
   factuality.append(problem_factuality)
-  if problem_feasibility / len(SE_complex[i]) > 0.6:
-    feasibility.append(1)
-  else:
-    feasibility.append(0)
-  if problem_efficiency / len(SE_complex[i]) > 0.6:
-    efficiency.append(1)
-  else:
-    efficiency.append(0)
+  if len(SE_complex[i]) > 0:
+    if problem_feasibility / len(SE_complex[i]) > 0.6:
+      feasibility.append(1)
+    else:
+      feasibility.append(0)
+    if problem_efficiency / len(SE_complex[i]) > 0.6:
+      efficiency.append(1)
+    else:
+      efficiency.append(0)
 
 
 
