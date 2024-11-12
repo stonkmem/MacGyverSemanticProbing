@@ -136,7 +136,9 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+if modelpath != "GPT":
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
+# model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
     # model.to("cuda")
 
