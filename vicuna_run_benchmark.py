@@ -135,7 +135,7 @@ for i in range(1): # handles multiple problems.
     # gets output from LLM
     
     if step_num == 1:
-        problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + "\n### Response: "
+        problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + "### Response: "
 #     problemstring += EOS_TOKEN
     print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
