@@ -148,128 +148,128 @@ efficiency_score = check_efficiency(efficiency)
 
 print("DATA PROCESSED")
 
-import json
+# import json
 
-# extract variables from the data into a text file
-print("EXPORTING DATA")
-def export_to_txt(txt_file_path):
-    outputdict = {   
-        "feasibilitypercentage": feasibility_score,
-        "efficiencypercentage": efficiency_score,
-        "SE_simple": SE_simple, 
-        "SE_complex": SE_complex, 
-        "factuality": factuality, 
-        "feasibility": feasibility, 
-        "efficiency": efficiency, 
-        "total_scores": total_scores, 
-        "true_total_scores": true_total_scores,
-        "lambda_scores": lambda_scores,
-        "classprobabilities": classprobabilities, 
-        #    "fullscale_subresponselist": fullscale_subresponselist,
-        "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
-        "fullscale_classifiedproblist": fullscale_classifiedproblist,
-        "fullscale_promptlist": fullscale_promptlist,
-        "fullscale_prev_steps": fullscale_prev_steps,
-        # "fullscale_prob"
-    }
-
-    def write_nested(data, txt_file, indent=0):
-        for key, value in data.items():
-            if isinstance(value, dict):
-                txt_file.write(f"{' ' * indent}{key}:\n")
-                write_nested(value, txt_file, indent + 4)
-            elif isinstance(value, list):
-                txt_file.write(f"{' ' * indent}{key}:\n")
-                for item in value:
-                    if isinstance(item, (dict, list)):
-                        write_nested({f"item": item}, txt_file, indent + 4)
-                    else:
-                        txt_file.write(f"{' ' * (indent + 4)}- {item}\n")
-            else:
-                txt_file.write(f"{' ' * indent}{key}: {value}\n")
-
-    # Write the data to a text file
-    with open(txt_file_path, 'w') as txt_file:
-        write_nested(outputdict, txt_file)
-
-# Example use case
-
-# if len(sys.argv) > 2:
-#   export_to_txt(sys.argv[2])
-# else:
-#   export_to_txt("outputllama3.1_8B_test.txt")
-
-# export_to_txt("outputllama3.1_8B_test.txt")
-
-
-
+# # extract variables from the data into a text file
+# print("EXPORTING DATA")
 # def export_to_txt(txt_file_path):
 #     outputdict = {   
-#         "feasibilitypercentage": check_feasibility(),
-#         "efficiencypercentage": check_efficiency(),
+#         "feasibilitypercentage": feasibility_score,
+#         "efficiencypercentage": efficiency_score,
 #         "SE_simple": SE_simple, 
 #         "SE_complex": SE_complex, 
 #         "factuality": factuality, 
 #         "feasibility": feasibility, 
 #         "efficiency": efficiency, 
 #         "total_scores": total_scores, 
+#         "true_total_scores": true_total_scores,
 #         "lambda_scores": lambda_scores,
 #         "classprobabilities": classprobabilities, 
 #         #    "fullscale_subresponselist": fullscale_subresponselist,
 #         "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
 #         "fullscale_classifiedproblist": fullscale_classifiedproblist,
 #         "fullscale_promptlist": fullscale_promptlist,
-#         "fullscale_prev_steps": fullscale_prev_steps
+#         "fullscale_prev_steps": fullscale_prev_steps,
+#         # "fullscale_prob"
 #     }
 
-#     # Write the data to a text file
-#     with open(txt_file_path, 'w') as txt_file:
-#         for key, value in outputdict.items():
-#             txt_file.write(f"{key}: {value}\n")
-
-# # Export to text file
-# export_to_txt("results.txt")
-
-# def export_to_txt(json_file_path, txt_file_path):
-#     # Read the JSON file
-#     with open(json_file_path, 'r') as json_file:
-#         data = json.load(json_file)
-    
-#     # Write the data to a text file
-#     with open(txt_file_path, 'w') as txt_file:
+#     def write_nested(data, txt_file, indent=0):
 #         for key, value in data.items():
-#             txt_file.write(f"{key}: {value}\n")
+#             if isinstance(value, dict):
+#                 txt_file.write(f"{' ' * indent}{key}:\n")
+#                 write_nested(value, txt_file, indent + 4)
+#             elif isinstance(value, list):
+#                 txt_file.write(f"{' ' * indent}{key}:\n")
+#                 for item in value:
+#                     if isinstance(item, (dict, list)):
+#                         write_nested({f"item": item}, txt_file, indent + 4)
+#                     else:
+#                         txt_file.write(f"{' ' * (indent + 4)}- {item}\n")
+#             else:
+#                 txt_file.write(f"{' ' * indent}{key}: {value}\n")
 
-# # Usage
-# export_to_txt("results.json", "results.txt")
-if len(sys.argv) > 2:
-  # export_to_txt("newtest.txt")
+#     # Write the data to a text file
+#     with open(txt_file_path, 'w') as txt_file:
+#         write_nested(outputdict, txt_file)
 
-  output_filename = "results_test1.json"
-  if len(sys.argv) > 2:
-    output_filename = sys.argv[2]
+# # Example use case
 
-  output_file = open(output_filename, "w")
-  # output_file = open("results_test1.json", "w")
+# # if len(sys.argv) > 2:
+# #   export_to_txt(sys.argv[2])
+# # else:
+# #   export_to_txt("outputllama3.1_8B_test.txt")
+
+# # export_to_txt("outputllama3.1_8B_test.txt")
 
 
-  outputdict = {   
-      "feasibilitypercentage": feasibility_score,
-      "efficiencypercentage": efficiency_score,
-      "SE_simple": SE_simple, 
-      "SE_complex": SE_complex, 
-      "factuality": factuality, 
-      "feasibility": feasibility, 
-      "efficiency": efficiency, 
-      "total_scores": total_scores, 
-      "lambda_scores": lambda_scores,
-      "classprobabilities": classprobabilities, 
-      #    "fullscale_subresponselist": fullscale_subresponselist,
-      "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
-      "fullscale_classifiedproblist": fullscale_classifiedproblist,
-      "fullscale_promptlist": fullscale_promptlist,
-      "fullscale_prev_steps": fullscale_prev_steps
-  }
 
-  json.dump(outputdict, output_file)
-  output_file.close()
+# # def export_to_txt(txt_file_path):
+# #     outputdict = {   
+# #         "feasibilitypercentage": check_feasibility(),
+# #         "efficiencypercentage": check_efficiency(),
+# #         "SE_simple": SE_simple, 
+# #         "SE_complex": SE_complex, 
+# #         "factuality": factuality, 
+# #         "feasibility": feasibility, 
+# #         "efficiency": efficiency, 
+# #         "total_scores": total_scores, 
+# #         "lambda_scores": lambda_scores,
+# #         "classprobabilities": classprobabilities, 
+# #         #    "fullscale_subresponselist": fullscale_subresponselist,
+# #         "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+# #         "fullscale_classifiedproblist": fullscale_classifiedproblist,
+# #         "fullscale_promptlist": fullscale_promptlist,
+# #         "fullscale_prev_steps": fullscale_prev_steps
+# #     }
+
+# #     # Write the data to a text file
+# #     with open(txt_file_path, 'w') as txt_file:
+# #         for key, value in outputdict.items():
+# #             txt_file.write(f"{key}: {value}\n")
+
+# # # Export to text file
+# # export_to_txt("results.txt")
+
+# # def export_to_txt(json_file_path, txt_file_path):
+# #     # Read the JSON file
+# #     with open(json_file_path, 'r') as json_file:
+# #         data = json.load(json_file)
+    
+# #     # Write the data to a text file
+# #     with open(txt_file_path, 'w') as txt_file:
+# #         for key, value in data.items():
+# #             txt_file.write(f"{key}: {value}\n")
+
+# # # Usage
+# # export_to_txt("results.json", "results.txt")
+# if len(sys.argv) > 2:
+#   # export_to_txt("newtest.txt")
+
+#   output_filename = "results_test1.json"
+#   if len(sys.argv) > 2:
+#     output_filename = sys.argv[2]
+
+#   output_file = open(output_filename, "w")
+#   # output_file = open("results_test1.json", "w")
+
+
+#   outputdict = {   
+#       "feasibilitypercentage": feasibility_score,
+#       "efficiencypercentage": efficiency_score,
+#       "SE_simple": SE_simple, 
+#       "SE_complex": SE_complex, 
+#       "factuality": factuality, 
+#       "feasibility": feasibility, 
+#       "efficiency": efficiency, 
+#       "total_scores": total_scores, 
+#       "lambda_scores": lambda_scores,
+#       "classprobabilities": classprobabilities, 
+#       #    "fullscale_subresponselist": fullscale_subresponselist,
+#       "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+#       "fullscale_classifiedproblist": fullscale_classifiedproblist,
+#       "fullscale_promptlist": fullscale_promptlist,
+#       "fullscale_prev_steps": fullscale_prev_steps
+#   }
+
+#   json.dump(outputdict, output_file)
+#   output_file.close()
