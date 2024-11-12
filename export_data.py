@@ -100,7 +100,10 @@ export_to_txt("outputllama3.1_8B_test.txt")
 
 # # Usage
 # export_to_txt("results.json", "results.txt")
-output_file = open("results_test1.json", "w")
+output_filename = "results_test1.json"
+if len(sys.argv) > 2:
+    output_filename = sys.argv[2]
+output_file = open(output_filename, "w")
 
 
 outputdict = {   

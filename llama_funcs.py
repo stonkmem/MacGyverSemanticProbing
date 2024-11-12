@@ -55,6 +55,7 @@ elif sys.argv[1] == 'llama' :
 
 elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
+    print("VICUNA")
     # llm = Llama.from_pretrained(
     #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
     #     filename = 'stable-vicuna-13B.Q6_K.gguf',
@@ -80,6 +81,7 @@ elif sys.argv[1] == 'vicuna':
     # wipe_llm_fact = llm_fact.save_state()
 elif sys.argv[1] == 'mistral':
     modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    print("MISTRAL")
     # llm = Llama.from_pretrained(
     #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
     #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
@@ -129,8 +131,10 @@ else:
     #     n_gpu_layers=-1
     # )
     # wipe_llm_fact = llm_fact.save_state()
-
-tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
+if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
+    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
+else:
+    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
 model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
