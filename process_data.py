@@ -243,7 +243,7 @@ def export_to_txt(txt_file_path):
 # # Usage
 # export_to_txt("results.json", "results.txt")
 if len(sys.argv) > 2:
-  export_to_txt("newtest.txt")
+  # export_to_txt("newtest.txt")
 
   output_filename = "results_test1.json"
   if len(sys.argv) > 2:
