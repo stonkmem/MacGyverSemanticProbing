@@ -24,7 +24,9 @@ print(os.environ['HF_TOKEN']) # Print contents of variable
 login(token=huggingface_token)
 print(sys.argv, "ARGUMENTS")
 # if __name__ == '__main__':
-if sys.argv[0] == 'llama':
+if len(sys.argv) < 2:
+    modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+elif sys.argv[1] == 'llama' :
     print("LLAMA")
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     # llm = Llama.from_pretrained(
@@ -51,7 +53,7 @@ if sys.argv[0] == 'llama':
     # )
     # wipe_llm_fact = llm_fact.save_state()
 
-elif sys.argv[0] == 'vicuna':
+elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
     # llm = Llama.from_pretrained(
     #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
@@ -76,7 +78,7 @@ elif sys.argv[0] == 'vicuna':
     #     n_gpu_layers=-1
     # )
     # wipe_llm_fact = llm_fact.save_state()
-elif sys.argv[0] == 'mistral':
+elif sys.argv[1] == 'mistral':
     modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     # llm = Llama.from_pretrained(
     #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
