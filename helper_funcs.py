@@ -526,10 +526,10 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
 #                 print(arr[i][0], arr[i][1])
                 if arr[i][1] == "0":
                     score += 1 * priority_vector[i - 1] # 10
-                    scorearray.append(1)
+                    scorearray.append(10)
                 else:
                     score += int(arr[i][0]) / 10 * priority_vector[i - 1]
-                    scorearray.append(int(arr[i][0]) / 10)
+                    scorearray.append(int(arr[i][0]))
 #                     if i == 2:
 #                         if int(arr[2][0]) <= 6: # 7
 #                             feasibility = False
@@ -542,7 +542,7 @@ def gen_factuality_score_likert(question, ans, criterialist): # element 2 is fea
         # score /= len(criterialist) # normalise
         score = -1
         # finds avg
-    return score, feasibility, efficiency
+    return score, feasibility, efficiency, scorearray
 
 def gen_factuality_score_chateval_likert(question, ans, criterialist, priority_vector): # element 2 is feas, 3 is effec
     score = 0
@@ -550,6 +550,7 @@ def gen_factuality_score_chateval_likert(question, ans, criterialist, priority_v
     # based on criteria
     feasibility = True
     efficiency = True
+    scorearray = []
     for i in range(len(criterialist)):
         criteria = criterialist[i]
         scores[i][criteria] = int(scores[i][criteria])
@@ -560,7 +561,8 @@ def gen_factuality_score_chateval_likert(question, ans, criterialist, priority_v
             if scores[i][criteria] <= 7 and scores[i][criteria] < scores[criterialist.index("feasibility")]["feasibility"] and scores[i][criteria] != 0:
                 efficiency = False
         score += scores[i][criteria] / 10 * priority_vector[criteria]
-    return score, feasibility, efficiency
+        scorearray.append(scores[i][criteria])
+    return score, feasibility, efficiency, scorearray
 
 def lambda_return(scores, gamma, lambda_):
     """

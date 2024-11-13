@@ -34,6 +34,7 @@ def export_to_txt(txt_file_path):
         "fullscale_classifiedproblist": fullscale_classifiedproblist,
         "fullscale_promptlist": fullscale_promptlist,
         "fullscale_prev_steps": fullscale_prev_steps,
+        "response_eval_pairs": response_eval_pairs,
         # "fullscale_prob"
     }
 

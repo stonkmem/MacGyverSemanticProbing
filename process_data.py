@@ -85,6 +85,7 @@ privector = {
 
 print(SE_complex, "SE_complex")
 print("LLMJUDGING")
+response_eval_pairs = []
 for i in range(len(SE_complex)): # for each problem
   problem_factuality = []
   problem_feasibility = 0
@@ -95,10 +96,16 @@ for i in range(len(SE_complex)): # for each problem
     step_efficiency = 0
     for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
         if use_chateval:
-            factual, feasible, efficient = gen_factuality_score_chateval_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist, privector)
+            factual, feasible, efficient, scorearrays = gen_factuality_score_chateval_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist, privector)
         else:
-            factual, feasible, efficient = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
+            factual, feasible, efficient, scorearrays = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
         step_factuality.append(factual)
+        response_eval_pairs.append({
+          "response": fullscale_subresponselist[i][j][k],
+          "scores": scorearrays,
+          "prompt": fullscale_promptlist[i][j],
+
+        })
         if feasible == True:
             step_feasibility += 1
         if efficient == True:
