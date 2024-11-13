@@ -23,6 +23,7 @@ print('HF_TOKEN' in os.environ) # True of False
 print(os.environ['HF_TOKEN']) # Print contents of variable
 login(token=huggingface_token)
 print(sys.argv, "ARGUMENTS")
+os.environ["HF_HOME"] = "scratch/macgyversemanticprobing/cache/"
 # if __name__ == '__main__':
 if len(sys.argv) < 2:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
