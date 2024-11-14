@@ -16,7 +16,7 @@
 # pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 
 # Install additional Python packages
-cd ~/
+cd ~
 export HF_HOME=scratch/macgyversemanticprobing/.cache/huggingface
 export HF_HUB_CACHE=scratch/macgyversemanticprobing/.cache/huggingface/hub
 
