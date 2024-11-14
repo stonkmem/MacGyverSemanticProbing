@@ -16,6 +16,7 @@
 # pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 
 # Install additional Python packages
+cd ~/
 export HF_HOME=scratch/macgyversemanticprobing/.cache/huggingface
 export HF_HUB_CACHE=scratch/macgyversemanticprobing/.cache/huggingface/hub
 
@@ -32,3 +33,5 @@ echo $CUDA_HOME
 nvidia-smi && nvcc --version
 
 echo "Done installing dependencies"
+
+cd macgyversemanticprobing/MacGyverSemanticProbing
