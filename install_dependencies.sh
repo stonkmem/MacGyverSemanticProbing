@@ -16,9 +16,9 @@
 # pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 
 # Install additional Python packages
-cd ~
-export HF_HOME=scratch/macgyversemanticprobing/.cache/huggingface
-export HF_HUB_CACHE=scratch/macgyversemanticprobing/.cache/huggingface/hub
+cd ~/scratch
+export HF_HOME=~/scratch/macgyversemanticprobing/.cache/huggingface
+export HF_HUB_CACHE=~/scratch/macgyversemanticprobing/.cache/huggingface/hub
 
 pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch accelerate>=0.26.0 
 pip install openpyxl scikit-learn
