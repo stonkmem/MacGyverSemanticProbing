@@ -92,7 +92,10 @@ efficiency2 = []
 feasibility2 = []
 for i in range(len(SE_complex)): # for each problem
   solution = " ".join(fullscale_prev_steps[i])
-  factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_likert(fullscale_promptlist[i][0], solution, criterialist)
+  if use_chateval:
+      factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_chateval_likert(fullscale_promptlist[i][0], solution, criterialist, privector)
+  else:
+      factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_likert(fullscale_promptlist[i][0], solution, criterialist)
   factuality2.append(factual2)
   # print(solution, fullscale_promptlist[i][0])
   response_eval_pairs2.append(
