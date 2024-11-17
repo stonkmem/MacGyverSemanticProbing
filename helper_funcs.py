@@ -824,3 +824,10 @@ def calculate_auarc(y_true, y_scores, threshold=0.5):
 # # Calculate AUARC
 # auarc_score = calculate_auarc(y_true, y_scores)
 # print("AUARC Score:", auarc_score)
+
+def compute_total_score_2(SE, factuality):
+    if len(SE) > 0:
+        SE_avg = sum(SE) / len(SE)
+    else:
+        SE_avg = 0
+    return factuality * SE_avg

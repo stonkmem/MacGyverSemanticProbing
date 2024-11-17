@@ -35,6 +35,15 @@ def export_to_txt(txt_file_path):
         "fullscale_promptlist": fullscale_promptlist,
         "fullscale_prev_steps": fullscale_prev_steps,
         "response_eval_pairs": response_eval_pairs,
+
+        "response_eval_pairs_2" : response_eval_pairs2,
+        "true_total_scores_2" : true_total_scores_2,
+        "factuality2" : factuality2,
+        "efficiency2" : efficiency2,
+        "feasibility2" : feasibility2,
+        "feasibilitypercentage2": feasibility_score2,
+        "efficiencypercentage2" : efficiency_score2
+
         # "fullscale_prob"
     }
 
@@ -122,7 +131,17 @@ outputdict = {
     "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
     "fullscale_classifiedproblist": fullscale_classifiedproblist,
     "fullscale_promptlist": fullscale_promptlist,
-    "fullscale_prev_steps": fullscale_prev_steps
+    "fullscale_prev_steps": fullscale_prev_steps,
+    "fullscale_classifiedstepproblist" : fullscale_classifiedstepproblist,
+    "response_eval_pairs" : response_eval_pairs,
+    
+    "response_eval_pairs_2" : response_eval_pairs2,
+    "true_total_scores_2" : true_total_scores_2,
+    "factuality2" : factuality2,
+    "efficiency2" : efficiency2,
+    "feasibility2" : feasibility2,
+    "feasibilitypercentage2": feasibility_score2,
+    "efficiencypercentage2" : efficiency_score2,
 }
 
 json.dump(outputdict, output_file)

@@ -36,6 +36,7 @@ fullscale_stepprobs = [] # list of overall probs for each step, for each problem
 fullscale_prev_steps = []
 fullscale_classifiedsubresponselist = []
 fullscale_classifiedproblist = []
+fullscale_classifiedstepproblist = []
 
 max_stepnum = 10
 min_stepnum = 2
@@ -51,6 +52,7 @@ for i in range(1): # handles multiple problems.
   problemscale_promptlist = []
   problemscale_classifiedsubresponselist = []
   problemscale_classifiedproblist = []
+  problemscale_classifiedstepprobs = []
 
   max_stepnum = 10
   max_steps = num_to_string[max_stepnum]
@@ -225,8 +227,17 @@ for i in range(1): # handles multiple problems.
     # shift classification outside of the main generation loop? 
     classified_response, classified_token, classified_prob = gen_C(prompter, stepscale_subresponselist, stepscale_tokenlist, stepscale_problist)
     print("CLASSIFIED RESPONSE: ")
+    stepscale_classifiedstepprob = []
+    # print("CLASSIFIED RESPONSE: ")
     for m in range(len(classified_response)):
       print(classified_response[m])
+      class_stepprob = []
+      for z in range(len(classified_prob[m])):
+        overall_prob = calc_sequence_probability_LOGPROB(classified_prob[m][z])
+        class_stepprob.append(overall_prob)
+      stepscale_classifiedstepprob.append(class_stepprob)
+    problemscale_classifiedstepprobs.append(stepscale_classifiedstepprob)
+
     problemscale_classifiedsubresponselist.append(classified_response)
     problemscale_classifiedproblist.append(classified_prob)
     problemscale_promptlist.append(prompter)
@@ -256,6 +267,7 @@ for i in range(1): # handles multiple problems.
   fullscale_promptlist.append(problemscale_promptlist) # needed 
   fullscale_classifiedsubresponselist.append(problemscale_classifiedsubresponselist) # needed
   fullscale_classifiedproblist.append(problemscale_classifiedproblist) # needed 
+  fullscale_classifiedstepproblist.append(problemscale_classifiedstepprobs)
 
 
  # tokenlist is quad nested:

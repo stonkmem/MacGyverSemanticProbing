@@ -86,7 +86,33 @@ privector = {
 print(SE_complex, "SE_complex")
 print("LLMJUDGING")
 response_eval_pairs = []
+response_eval_pairs2 = []
+factuality2 = []
+efficiency2 = []
+feasibility2 = []
 for i in range(len(SE_complex)): # for each problem
+  solution = " ".join(fullscale_prev_steps[i])
+  factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_likert(fullscale_promptlist[i][0], solution, criterialist)
+  factuality2.append(factual2)
+  # print(solution, fullscale_promptlist[i][0])
+  response_eval_pairs2.append(
+        {
+            "response": solution,
+            "scores": scorearrays2,
+            "prompt": fullscale_promptlist[i][0]
+        }
+    )
+  if feasible2 == True:
+      feasibility2.append(1)
+  else:
+      feasibility2.append(0)
+  if efficient2 == True:
+      efficiency2.append(1)
+  else:
+      efficiency2.append(0)
+
+
+
   problem_factuality = []
   problem_feasibility = 0
   problem_efficiency = 0
@@ -144,6 +170,15 @@ true_total_scores = []
 for i in range(len(total_scores)):
   print(generate_problem_score_simple(total_scores[i]), "generating simple score")
   true_total_scores.append(generate_problem_score_simple(total_scores[i]))
+
+
+true_total_scores_2 = []
+for i in range(len(SE_complex)):
+    print("T2: ", compute_total_score_2(SE_complex[i], factuality2[i]))
+    true_total_scores_2.append(compute_total_score_2(SE_complex[i], factuality2[i]))
+print(true_total_scores_2)
+
+
 gamma = 0.9  # Discount factor
 lambda_ = 0.8  # Lambda parameter
 lambda_scores = []
@@ -154,6 +189,9 @@ for i in range(len(total_scores)):
 
 feasibility_score = check_feasibility(feasibility)
 efficiency_score = check_efficiency(efficiency)
+
+feasibility_score2 = check_feasibility(feasibility2)
+efficiency_score2 = check_efficiency(efficiency2)
 
 print("DATA PROCESSED")
 
