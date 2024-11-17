@@ -10,7 +10,7 @@ prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordi
     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
     Solve the problem in the fewest steps possible.
     Arrive at the complete solution by step {max_steps}, such that it can solve the problem.
-    Be clear, specific and concise, maintaining practicality.
+    Be clear, specific and concise, and make your step safe, feasible, efficient and effective.
     Ensure that the step you generate brings you significantly closer to solving the problem fully.
     
     Do not generate step {step_num + 1}, etc., or include explanation, examples or any python (or other) code in your response.
@@ -142,7 +142,7 @@ for i in range(1): # handles multiple problems.
     # gets output from LLM
     
     if step_num == 1:
-        problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "\n### Response: "
+        problemstring = macgyver[i]["Problem"] + "\n### Response: "
 #     problemstring += EOS_TOKEN
     print("INPUT: ", gen_chat_object_mistral(promptstring, problemstring, include_eg = False), )
     
