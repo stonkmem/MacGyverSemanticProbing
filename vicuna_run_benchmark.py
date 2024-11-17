@@ -40,9 +40,13 @@ fullscale_classifiedstepproblist = []
 
 max_stepnum = 10
 min_stepnum = 2
+starting_problem = 0
+num_problems = 1
+if len(sys.argv) > 7:
+  num_problems = int(sys.argv[7])
 
 # responses = []
-for i in range(1): # handles multiple problems.
+for a in range(num_problems): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
   problemscale_tokenlist = []
@@ -53,6 +57,7 @@ for i in range(1): # handles multiple problems.
   problemscale_classifiedsubresponselist = []
   problemscale_classifiedproblist = []
   problemscale_classifiedstepprobs = []
+  i = starting_problem + a
 
   max_stepnum = 10
   max_steps = num_to_string[max_stepnum]
