@@ -15,6 +15,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 temp = 1.0
+
+if len(sys.argv) > 6:
+    temp = float(sys.argv[6])
+    print("TEMP: ", temp)
 TOP_P = 0.9
 NUM_BEAMS = 1
 
@@ -57,57 +61,15 @@ elif sys.argv[1] == 'llama' :
 elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
     print("VICUNA")
-    # llm = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
 elif sys.argv[1] == 'mistral':
     modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     print("MISTRAL")
-    # llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
 elif sys.argv[1] == 'llama_70b':
     modelpath = "meta-llama/Llama-3.1-70B-Instruct"
+    print("LLAMA 70B")
+elif sys.argv[1] == 'vicuna-7b':
+    modelpath = "lmsys/vicuna-7b-v1.5"
+    print("VICUNA 7B")
 else:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     print("OTHER")

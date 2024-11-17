@@ -71,132 +71,139 @@ for i in range(len(classprobabilities)):
     problem_SE.append(calculate_SE_complex(classprobabilities[i][j]))
   SE_complex.append(problem_SE)
 
-# factuality score generation
-factuality = []
-efficiency = []
-feasibility = []
-criterialist = ["feasibility", "safety", "efficiency", "effectiveness"] # add constraint fitting? 
-privector = {
-    "feasibility": 0.47295,
-    "safety": 0.29784,
-    "efficiency": 0.086711,
-    "effectiveness": 0.14250
-}
 
-print(SE_complex, "SE_complex")
-print("LLMJUDGING")
-response_eval_pairs = []
-response_eval_pairs2 = []
-factuality2 = []
-efficiency2 = []
-feasibility2 = []
-for i in range(len(SE_complex)): # for each problem
-  solution = " ".join(fullscale_prev_steps[i])
-  if use_chateval:
-      factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_chateval_likert(fullscale_promptlist[i][0], solution, criterialist, privector)
-  else:
-      factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_likert(fullscale_promptlist[i][0], solution, criterialist)
-  factuality2.append(factual2)
-  # print(solution, fullscale_promptlist[i][0])
-  response_eval_pairs2.append(
-        {
-            "response": solution,
-            "scores": scorearrays2,
-            "prompt": fullscale_promptlist[i][0]
-        }
-    )
-  if feasible2 == True:
-      feasibility2.append(1)
-  else:
-      feasibility2.append(0)
-  if efficient2 == True:
-      efficiency2.append(1)
-  else:
-      efficiency2.append(0)
+judge = True
+if len(sys.argv) > 5:
+  if sys.argv[5] == "false":
+    judge = False
 
+if judge:
+  # factuality score generation
+  factuality = []
+  efficiency = []
+  feasibility = []
+  criterialist = ["feasibility", "safety", "efficiency", "effectiveness"] # add constraint fitting? 
+  privector = {
+      "feasibility": 0.47295,
+      "safety": 0.29784,
+      "efficiency": 0.086711,
+      "effectiveness": 0.14250
+  }
 
-
-  problem_factuality = []
-  problem_feasibility = 0
-  problem_efficiency = 0
-  for j in range(len(SE_complex[i])): # for each step
-    step_factuality = []
-    step_feasibility = 0
-    step_efficiency = 0
-    # for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
-        # if use_chateval:
-        #     factual, feasible, efficient, scorearrays = gen_factuality_score_chateval_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist, privector)
-        # else:
-        #     factual, feasible, efficient, scorearrays = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
-        # step_factuality.append(factual)
-        # response_eval_pairs.append({
-        #   "response": fullscale_subresponselist[i][j][k],
-        #   "scores": scorearrays,
-        #   "prompt": fullscale_promptlist[i][j],
-
-        # })
-        # if feasible == True:
-        #     step_feasibility += 1
-        # if efficient == True:
-        #     step_efficiency += 1
-    # problem_factuality.append(step_factuality)
-    # if len(fullscale_subresponselist[i][j]) > 0:
-    #   if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
-    #       problem_feasibility += 1
-    #   if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
-    #       problem_efficiency += 1
-    # print(step_feasibility, step_efficiency)
-
-  # aggregates the feasibility and efficiency scores for each problem. 
-  factuality.append(problem_factuality)
-  if len(SE_complex[i]) > 0:
-    if problem_feasibility / len(SE_complex[i]) > 0.6:
-      feasibility.append(1)
+  print(SE_complex, "SE_complex")
+  print("LLMJUDGING")
+  response_eval_pairs = []
+  response_eval_pairs2 = []
+  factuality2 = []
+  efficiency2 = []
+  feasibility2 = []
+  for i in range(len(SE_complex)): # for each problem
+    solution = " ".join(fullscale_prev_steps[i])
+    if use_chateval:
+        factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_chateval_likert(fullscale_promptlist[i][0], solution, criterialist, privector)
     else:
-      feasibility.append(0)
-    if problem_efficiency / len(SE_complex[i]) > 0.6:
-      efficiency.append(1)
+        factual2, feasible2, efficient2, scorearrays2 = gen_factuality_score_likert(fullscale_promptlist[i][0], solution, criterialist)
+    factuality2.append(factual2)
+    # print(solution, fullscale_promptlist[i][0])
+    response_eval_pairs2.append(
+          {
+              "response": solution,
+              "scores": scorearrays2,
+              "prompt": fullscale_promptlist[i][0]
+          }
+      )
+    if feasible2 == True:
+        feasibility2.append(1)
     else:
-      efficiency.append(0)
+        feasibility2.append(0)
+    if efficient2 == True:
+        efficiency2.append(1)
+    else:
+        efficiency2.append(0)
 
 
 
-total_scores = []
-# for i in range(len(SE_complex)):
-#   problem_scores = []
-#   for j in range(len(SE_complex[i])):
-#     print(compute_total_score(SE_complex[i][j], factuality[i][j]))
-#     problem_scores.append(compute_total_score(SE_complex[i][j], factuality[i][j])) # here factuality is a list of scores while SE is a single value
-#   total_scores.append(problem_scores)
-# # print(total_scores)
-true_total_scores = []
-# for i in range(len(total_scores)):
-#   print(generate_problem_score_simple(total_scores[i]), "generating simple score")
-#   true_total_scores.append(generate_problem_score_simple(total_scores[i]))
+    problem_factuality = []
+    problem_feasibility = 0
+    problem_efficiency = 0
+    for j in range(len(SE_complex[i])): # for each step
+      step_factuality = []
+      step_feasibility = 0
+      step_efficiency = 0
+      # for k in range(len(fullscale_subresponselist[i][j])): # for each sub response
+          # if use_chateval:
+          #     factual, feasible, efficient, scorearrays = gen_factuality_score_chateval_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist, privector)
+          # else:
+          #     factual, feasible, efficient, scorearrays = gen_factuality_score_likert(fullscale_promptlist[i][j], fullscale_subresponselist[i][j][k], criterialist)
+          # step_factuality.append(factual)
+          # response_eval_pairs.append({
+          #   "response": fullscale_subresponselist[i][j][k],
+          #   "scores": scorearrays,
+          #   "prompt": fullscale_promptlist[i][j],
+
+          # })
+          # if feasible == True:
+          #     step_feasibility += 1
+          # if efficient == True:
+          #     step_efficiency += 1
+      # problem_factuality.append(step_factuality)
+      # if len(fullscale_subresponselist[i][j]) > 0:
+      #   if step_feasibility / len(fullscale_subresponselist[i][j]) > 0.6:
+      #       problem_feasibility += 1
+      #   if step_efficiency / len(fullscale_subresponselist[i][j]) > 0.6:
+      #       problem_efficiency += 1
+      # print(step_feasibility, step_efficiency)
+
+    # aggregates the feasibility and efficiency scores for each problem. 
+    factuality.append(problem_factuality)
+    if len(SE_complex[i]) > 0:
+      if problem_feasibility / len(SE_complex[i]) > 0.6:
+        feasibility.append(1)
+      else:
+        feasibility.append(0)
+      if problem_efficiency / len(SE_complex[i]) > 0.6:
+        efficiency.append(1)
+      else:
+        efficiency.append(0)
 
 
-true_total_scores_2 = []
-for i in range(len(SE_complex)):
-    print("T2: ", compute_total_score_2(SE_complex[i], factuality2[i]))
-    true_total_scores_2.append(compute_total_score_2(SE_complex[i], factuality2[i]))
-print(true_total_scores_2)
+
+  total_scores = []
+  # for i in range(len(SE_complex)):
+  #   problem_scores = []
+  #   for j in range(len(SE_complex[i])):
+  #     print(compute_total_score(SE_complex[i][j], factuality[i][j]))
+  #     problem_scores.append(compute_total_score(SE_complex[i][j], factuality[i][j])) # here factuality is a list of scores while SE is a single value
+  #   total_scores.append(problem_scores)
+  # # print(total_scores)
+  true_total_scores = []
+  # for i in range(len(total_scores)):
+  #   print(generate_problem_score_simple(total_scores[i]), "generating simple score")
+  #   true_total_scores.append(generate_problem_score_simple(total_scores[i]))
 
 
-gamma = 0.9  # Discount factor
-lambda_ = 0.8  # Lambda parameter
-lambda_scores = []
-# for i in range(len(total_scores)):
-#   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
-#   lambda_scores.append(problem_lambda_score)
-# print(lambda_scores)
+  true_total_scores_2 = []
+  for i in range(len(SE_complex)):
+      print("T2: ", compute_total_score_2(SE_complex[i], factuality2[i]))
+      true_total_scores_2.append(compute_total_score_2(SE_complex[i], factuality2[i]))
+  print(true_total_scores_2)
 
-feasibility_score = check_feasibility(feasibility)
-efficiency_score = check_efficiency(efficiency)
 
-feasibility_score2 = check_feasibility(feasibility2)
-efficiency_score2 = check_efficiency(efficiency2)
+  gamma = 0.9  # Discount factor
+  lambda_ = 0.8  # Lambda parameter
+  lambda_scores = []
+  # for i in range(len(total_scores)):
+  #   problem_lambda_score = total_lambda_score(total_scores[i], gamma, lambda_)
+  #   lambda_scores.append(problem_lambda_score)
+  # print(lambda_scores)
 
-print("DATA PROCESSED")
+  feasibility_score = check_feasibility(feasibility)
+  efficiency_score = check_efficiency(efficiency)
+
+  feasibility_score2 = check_feasibility(feasibility2)
+  efficiency_score2 = check_efficiency(efficiency2)
+
+  print("DATA PROCESSED")
 
 # import json
 
