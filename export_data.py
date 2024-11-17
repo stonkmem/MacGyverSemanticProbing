@@ -67,7 +67,7 @@ def export_to_txt(txt_file_path):
         write_nested(outputdict, txt_file)
 
 # Example use case
-export_to_txt("outputllama3.1_8B_test.txt")
+# export_to_txt("outputllama3.1_8B_test.txt")
 
 
 
@@ -116,17 +116,19 @@ if len(sys.argv) > 2:
 output_file = open(output_filename, "w")
 
 
-outputdict = {   
+outputdict = {  
+     "SE_simple": SE_simple, 
+    "SE_complex": SE_complex, 
+    "classprobabilities": classprobabilities, 
+    
     "feasibilitypercentage": feasibility_score,
     "efficiencypercentage": efficiency_score,
-    "SE_simple": SE_simple, 
-    "SE_complex": SE_complex, 
     "factuality": factuality, 
     "feasibility": feasibility, 
     "efficiency": efficiency, 
     "total_scores": total_scores, 
     "lambda_scores": lambda_scores,
-    "classprobabilities": classprobabilities, 
+    
     #    "fullscale_subresponselist": fullscale_subresponselist,
     "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
     "fullscale_classifiedproblist": fullscale_classifiedproblist,
