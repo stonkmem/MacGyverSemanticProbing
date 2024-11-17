@@ -106,6 +106,8 @@ elif sys.argv[1] == 'mistral':
     #     n_gpu_layers = -1
     # )
     # wipe_llm_fact = llm_fact.save_state()
+elif sys.argv[1] == 'llama_70b':
+    modelpath = "meta-llama/Llama-3.1-70B-Instruct"
 else:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     print("OTHER")
