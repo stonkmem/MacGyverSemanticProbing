@@ -1,6 +1,6 @@
 from transformers import pipeline
 
-pipe = pipeline("text-classification",model="tasksource/deberta-base-long-nli")
+pipe = pipeline("text-classification",model="tasksource/deberta-base-long-nli", device="cuda")
 
 def get_entailment_nli(question, a, b):
     return pipe({'text':a,

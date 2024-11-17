@@ -105,7 +105,7 @@ def get_factuality(question, ans):
 #         ]
     )
     return completion.choices[0].message.content
-print(get_entailment("Which country is New York in?", "USA", "New York is located in the USA.")) #['choices'][0]['message']['content']
+# print(get_entailment("Which country is New York in?", "USA", "New York is located in the USA.")) #['choices'][0]['message']['content']
 # print(get_factuality(""))
 
 def get_factuality_likert(question, ans):
