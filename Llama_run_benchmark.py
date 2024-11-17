@@ -38,6 +38,8 @@ fullscale_classifiedsubresponselist = []
 fullscale_classifiedproblist = []
 fullscale_classifiedstepproblist = []
 
+fullscale_hslist = []
+
 max_stepnum = 10
 min_stepnum = 2
 starting_problem = 0
@@ -57,6 +59,8 @@ for a in range(num_problems): # handles multiple problems.
   problemscale_classifiedsubresponselist = []
   problemscale_classifiedproblist = []
   problemscale_classifiedstepprobs = []
+
+  problemscale_hslist = []
   i = starting_problem + a
 
   max_stepnum = 10
@@ -83,10 +87,10 @@ for a in range(num_problems): # handles multiple problems.
 
   # generates an initial solution to extract step count.
     
-  response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  response, token, prob, hs = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
   
   while response[0].count('\n') >= 20 or response.count("Step") >= 15:
-      response, token, prob = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+      response, token, prob, hs = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
       print("REGENERATING")
   response = response[0]
   try:
@@ -153,7 +157,7 @@ for a in range(num_problems): # handles multiple problems.
 #     problemstring += EOS_TOKEN
     # print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
-    subresponses, tokenlist, problist = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
+    subresponses, tokenlist, problist, hs = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
       # removing the prompt from the response
@@ -232,6 +236,8 @@ for a in range(num_problems): # handles multiple problems.
     problemscale_subresponselist.append(stepscale_subresponselist)
     problemscale_stepprobs.append(stepscale_stepprobs)
 
+    problemscale_hslist.append(hs)  
+
     # classifying responses for SE
 
     prompter = promptstring + 'Problem:\n' + problemstring
@@ -270,6 +276,7 @@ for a in range(num_problems): # handles multiple problems.
 #   fullscale_responselist.append(problemscale_responselist) # each element is prompt at each step, this is needed? idts
   fullscale_subresponselist.append(problemscale_subresponselist)
   fullscale_classifiedstepproblist.append(problemscale_classifiedstepprobs)
+  fullscale_hslist.append(problemscale_hslist)
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
   if num_stops < num_stepvers and len(problemscale_stepprobs) > 1 and problem_break == False:

@@ -188,7 +188,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     tokenlist = []
     problist = []
     max_tokens = 1024
-
+    hiddenstates = []
     # print(prompt, problem, )
     
     for i in range(num):
@@ -196,10 +196,12 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         string_y = ''
         logitz = []
         tokens = []
+        
         while not ans_valid:
             logitz = []
             tokens = []
             string_y = ''
+            # hiddenstates = []
             # score 30 samples with humans to check correlation.
             
             msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
@@ -211,8 +213,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token
                 item = outputs.sequences[0][i]
@@ -240,9 +244,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        hiddenstates.append(hidden_states[-1])
     # print(responses)
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates
     
 # output = gen_prob(macgyver[0]['Problem'], prompt=prompt, num=5)
 # print(output)
@@ -251,6 +256,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
     problist = []
+    hiddenstates = []
     max_tokens = 1024
 
     # print(prompt, problem, )
@@ -275,8 +281,10 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             tokens_previous = outputs.sequences[0]
             token_text = tokenizer.decode(tokens_previous)
             # creates token list 
@@ -311,13 +319,15 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        hiddenstates.append(hidden_states[-1])
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates
 
 def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
     problist = []
+    hiddenstates = []
     max_tokens = 1024
 
     # print(prompt, problem, )
@@ -338,8 +348,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             tokens_previous = outputs.sequences[0]
 #             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens
             full_token_text = tokenizer.decode(tokens_previous)
@@ -380,5 +392,6 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        hiddenstates.append(hidden_states[-1])
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates
