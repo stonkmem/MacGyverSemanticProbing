@@ -135,7 +135,7 @@ for a in range(num_problems): # handles multiple problems.
       # Currently using greedy decoding
       selected_step_index = max(problemscale_stepprobs[step_num - 2])
       selected_step_index = problemscale_stepprobs[step_num - 2].index(selected_step_index)
-      prev_steps.append(f"Step {step_num - 1} of the solution is: " + problemscale_subresponselist[selected_step_index].replace("Step " + str(step_num - 1) + ":", ""))
+      prev_steps.append(f"Step {step_num - 1} of the solution is: " + problemscale_subresponselist[step_num - 2][selected_step_index].replace("Step " + str(step_num - 1) + ":", ""))
       problemstring = macgyver[i]['Problem'] + '\n' + "Existing steps, if any:\n "
       for k in range(len(prev_steps)):
         problemstring += prev_steps[k]
