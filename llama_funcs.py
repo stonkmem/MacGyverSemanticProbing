@@ -282,7 +282,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
 
         encodeds = tokenizer.apply_chat_template(msg, tokenize=False, ) # add_generation_prompt=True
-        # tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer(encodeds, return_tensors="pt", padding=True).to("cuda")
 
         while not ans_valid:
