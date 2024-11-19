@@ -287,6 +287,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             hidden_states = outputs.hidden_states
             tokens_previous = outputs.sequences[0]
             token_text = tokenizer.decode(tokens_previous)
+            print(outputs)
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
                 item = outputs.sequences[0][i]

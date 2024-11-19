@@ -109,6 +109,8 @@ for a in range(num_problems): # handles multiple problems.
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
   problem_break = False
+
+  num_steps = 2
   for j in range(num_steps): # handles multiple steps for a problem.
     
     step_num = 1 + j
@@ -138,7 +140,7 @@ for a in range(num_problems): # handles multiple problems.
         problemstring += prev_steps[k]
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
-      problemstring += EOS_TOKEN
+      # problemstring += EOS_TOKEN
       problemstring += f"\n### Response: "
 
     stepscale_tokenlist = []
@@ -149,7 +151,7 @@ for a in range(num_problems): # handles multiple problems.
     # gets output from LLM
     
     if step_num == 1:
-        problemstring = macgyver[i]["Problem"] + "\n### Response: "
+        problemstring = macgyver[i]["Problem"] + EOS_TOKEN + "\n### Response: "
 #     problemstring += EOS_TOKEN
     print("INPUT: ", gen_chat_object_mistral(promptstring, problemstring, include_eg = False), )
     
