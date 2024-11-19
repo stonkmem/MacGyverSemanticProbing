@@ -141,7 +141,7 @@ for a in range(num_problems): # handles multiple problems.
         problemstring += prev_steps[k]
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
-      # problemstring += EOS_TOKEN
+      problemstring += EOS_TOKEN
       problemstring += f"\n### Response: "
 
     stepscale_tokenlist = []
