@@ -70,6 +70,12 @@ elif sys.argv[1] == 'llama_70b':
 elif sys.argv[1] == 'vicuna-7b':
     modelpath = "lmsys/vicuna-7b-v1.5"
     print("VICUNA 7B")
+elif sys.argv[1] == "mistral-nemo":
+    modelpath = "mistralai/Mistral-Nemo-Instruct-2407"
+    print("MISTRAL NEMO")
+elif sys.argv[1] == "mistral-large":
+    modelpath = "mistralai/Mistral-Large-Instruct-2407"
+    print("MISTRAL LARGE")
 else:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     print("OTHER")

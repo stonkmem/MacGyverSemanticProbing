@@ -21,7 +21,7 @@ if len(sys.argv) > 1:
     from Llama_run_benchmark import *
   elif sys.argv[1] == 'gpt4':
     from GPT_run_benchmark import *
-  elif sys.argv[1] == 'mixtral':
+  elif sys.argv[1] == 'mixtral' or sys.argv[1] == 'mistral-nemo' or sys.argv[1] == 'mistral-large':
     from Mixtral_run_benchmark import *
   else:
     from Llama_run_benchmark import *
