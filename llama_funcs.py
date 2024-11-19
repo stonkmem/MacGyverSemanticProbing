@@ -105,6 +105,7 @@ if modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
+print(torch.cuda.get_device_properties(0).total_memory, "TOTAL MEMORY")
     # model.to("cuda")
 
 
