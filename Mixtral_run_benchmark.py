@@ -90,15 +90,16 @@ for a in range(num_problems): # handles multiple problems.
       response, token, prob, hs = gen_prob_mistral(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
       print("REGENERATING")
   response = response[0]
-  try:
-      response_index = response.index("<|eot_id|>")
-      response = response[response_index:]
-  except:
-    print('INIT:', response)
+  # try:
+  #     response_index = response.index("<|eot_id|>")
+  #     response = response[response_index:]
+  # except:
+  #   print('INIT:', response)
 
-  steps = split_by_sequence(response, "Step ")
+  # steps = split_by_sequence(response, "Step ")
 #   print("STEPS: ", steps)
-  num_steps = len(steps)
+  # num_steps = len(steps)
+  num_steps = response.count("Step")
   # print("NUM_STEPVERS: ", num_steps)
 
   num_steps = max(min(max_stepnum, num_steps), min_stepnum)
