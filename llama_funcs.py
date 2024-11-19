@@ -376,9 +376,13 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             tokens = tokens[-len(output_logits):]
             
             # creates string 
-            str_index = token_text.index("Response: ") + 11
-            string_y = token_text[str_index:]
-            string_y.replace(tokenizer.eos_token, "")
+            string_y = ' '.join(tokens)
+            # str_index = token_text.index("Response: ") + 11
+            # string_y = token_text[str_index:]
+            # string_y.replace(tokenizer.eos_token, "")
+            string_y = string_y.replace(tokenizer.eos_token, "")
+            string_y = string_y.replace(tokenizer.pad_token, "")
+            string_y = string_y.replace("Response: ", "")
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
