@@ -158,7 +158,7 @@ for a in range(num_problems): # handles multiple problems.
     if step_num == 1:
         problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "\n### Response: "
 #     problemstring += EOS_TOKEN
-    print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
+    # print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
     subresponses, tokenlist, problist, hs = gen_prob(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0

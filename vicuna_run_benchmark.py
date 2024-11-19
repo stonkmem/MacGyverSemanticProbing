@@ -124,6 +124,9 @@ for a in range(num_problems): # handles multiple problems.
       problemstring = ''
       
       promptstring = replace_all(promptstring, dictionary) # updating prompt
+      promptstring = replace_all(
+        promptstring, {f"step 101": "step 11", "step 90": "step 10"}
+      )
 
       # updating prompt by appending to prev step list.
 
@@ -149,7 +152,7 @@ for a in range(num_problems): # handles multiple problems.
     if step_num == 1:
         problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "### Response: "
 #     problemstring += EOS_TOKEN
-    print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
+    # print("INPUT: ", gen_chat_object(promptstring, problemstring, include_eg = False), )
     
     subresponses, tokenlist, problist, hs = gen_prob_vicuna(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0

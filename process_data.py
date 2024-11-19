@@ -15,9 +15,9 @@ import sys
 # fullscale_classifiedproblist = []
 classprobabilities = [] 
 if len(sys.argv) > 1:
-  if sys.argv[1] == 'vicuna':
+  if sys.argv[1] == 'vicuna' or sys.argv[1] == 'vicuna-7b':
     from vicuna_run_benchmark import *
-  elif sys.argv[1] == 'llama':
+  elif sys.argv[1] == 'llama' or sys.argv[1] == 'llama_70b':
     from Llama_run_benchmark import *
   elif sys.argv[1] == 'gpt4':
     from GPT_run_benchmark import *
