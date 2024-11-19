@@ -129,6 +129,9 @@ for a in range(num_problems): # handles multiple problems.
       problemstring = ''
       
       promptstring = replace_all(promptstring, dictionary) # updating prompt
+      promptstring = replace_all(
+        promptstring, {f"step 101": "step 11", "step 90": "step 10"}
+      )
 
       # updating prompt by appending to prev step list.
 
