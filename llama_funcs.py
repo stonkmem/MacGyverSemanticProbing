@@ -393,7 +393,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
                 logitz.append(probs[0][logitindices[i].item()].item())
             tokens = tokens[1:]
             logitz = logitz[1:]
-            print("STRING: ", string_y)
+            print("STRING_1: ", string_y)
             print("TOKENS: ", tokens)
             # print(len(tokens), len(logitz))
             # check if len of tokens and logitz is same
