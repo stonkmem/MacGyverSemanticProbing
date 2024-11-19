@@ -244,7 +244,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1])
+        hiddenstates.append(hidden_states[-1].tolist())
     # print(responses)
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
@@ -319,7 +319,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1])
+        hiddenstates.append(hidden_states[-1].tolist())
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
 
@@ -392,6 +392,6 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1])
+        hiddenstates.append(hidden_states[-1].tolist())
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
