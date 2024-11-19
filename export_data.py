@@ -145,7 +145,7 @@ if judge:
         "feasibilitypercentage2": feasibility_score2,
         "efficiencypercentage2" : efficiency_score2,
 
-        "fullscale_hslist": fullscale_hslist,
+        # "fullscale_hslist": fullscale_hslist,
     }
 else:
     outputdict = {  
@@ -158,7 +158,7 @@ else:
         "fullscale_classifiedproblist": fullscale_classifiedproblist,
         "fullscale_promptlist": fullscale_promptlist,
         "fullscale_prev_steps": fullscale_prev_steps,
-        "fullscale_hslist": fullscale_hslist,
+        # "fullscale_hslist": fullscale_hslist,
     }
 
 json.dump(outputdict, output_file)
