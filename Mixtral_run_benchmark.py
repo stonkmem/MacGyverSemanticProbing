@@ -111,7 +111,7 @@ for a in range(num_problems): # handles multiple problems.
     print("MAX_STEPS: ", max_steps)
   problem_break = False
 
-  num_steps = 2
+  # num_steps = 2
   for j in range(num_steps): # handles multiple steps for a problem.
     
     step_num = 1 + j
