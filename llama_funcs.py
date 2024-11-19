@@ -76,6 +76,9 @@ elif sys.argv[1] == "mistral-nemo":
 elif sys.argv[1] == "mistral-large":
     modelpath = "mistralai/Mistral-Large-Instruct-2407"
     print("MISTRAL LARGE")
+elif sys.argv[1] == "ministral":
+    modelpath = "mistralai/Ministral-8B-Instruct-2410"
+    print("MINISTRAL")
 else:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     print("OTHER")
