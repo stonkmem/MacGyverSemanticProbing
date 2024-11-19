@@ -244,7 +244,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1].tolist())
+        detensored_hs = []
+        for i in range(len(hidden_states[-1])): # remove tensors
+            detensored_hs.append(hidden_states[-1][i].tolist())
+        hiddenstates.append(detensored_hs)
     # print(responses)
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
@@ -320,7 +323,10 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1].tolist())
+        detensored_hs = []
+        for i in range(len(hidden_states[-1])):
+            detensored_hs.append(hidden_states[-1][i].tolist())
+        hiddenstates.append(detensored_hs)
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
 
@@ -393,6 +399,9 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        hiddenstates.append(hidden_states[-1].tolist())
+        detensored_hs = []
+        for i in range(len(hidden_states[-1])):
+            detensored_hs.append(hidden_states[-1][i].tolist())
+        hiddenstates.append(detensored_hs)
     # print(responses)
     return responses, tokenlist, problist, hiddenstates
