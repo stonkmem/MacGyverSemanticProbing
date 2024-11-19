@@ -227,6 +227,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             for token in tokens:
                 string_y += token
             print("OUTPUT_STRING", string_y)
+            string_y = string_y.replace(tokenizer.eos_token, "")
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             
@@ -272,7 +273,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
 
         encodeds = tokenizer.apply_chat_template(msg, tokenize=False, )# add_generation_prompt=True
-        tokenizer.pad_token = tokenizer.eos_token
+        # tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer(encodeds, return_tensors="pt", padding=True)
 
         while not ans_valid:
@@ -301,6 +302,8 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             str_index = token_text.index("[/INST]") + 7
             string_y = token_text[str_index:]
+            string_y = string_y.replace("[/INST]", "")
+            string_y = string_y.replace(tokenizer.eos_token, "")
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
@@ -345,7 +348,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         logitz = []
         tokens = []
         msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-        tokenizer.pad_token = tokenizer.eos_token
+        # tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer([msg], return_tensors="pt", padding=True)
         while not ans_valid:
             logitz = []
@@ -375,6 +378,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             str_index = token_text.index("Response: ") + 11
             string_y = token_text[str_index:]
+            string_y.replace(tokenizer.eos_token, "")
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
