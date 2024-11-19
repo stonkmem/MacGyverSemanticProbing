@@ -369,17 +369,21 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             
 #             print("????", token_text)
             # creates token list 
+            items = []
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
                 item = outputs.sequences[0][i]
+                items.append(item)
                 tokens.append(tokenizer.decode(item))
             # removes prompt 
             tokens = tokens[-len(output_logits):]
+            items = items[-len(output_logits):]
             
             # creates string 
-            string_y = ' '.join(tokens)
+            # string_y = ' '.join(tokens)
             # str_index = token_text.index("Response: ") + 11
             # string_y = token_text[str_index:]
             # string_y.replace(tokenizer.eos_token, "")
+            string_y = tokenizer.decode(items, skip_special_tokens=True)
             string_y = string_y.replace(tokenizer.eos_token, "")
             string_y = string_y.replace(tokenizer.pad_token, "")
             string_y = string_y.replace("Response: ", "")
