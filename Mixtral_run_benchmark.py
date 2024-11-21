@@ -281,7 +281,7 @@ for a in range(num_problems): # handles multiple problems.
   fullscale_hslist.append(problemscale_hslist)
   # fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers and len(problemscale_stepprobs) > 1 and problem_break == False:
+  if num_stops < num_stepvers and len(problemscale_stepprobs[step_num - 1]) > 1 and problem_break == False:
       selected_step_index = max(problemscale_stepprobs[step_num - 1])
       selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
       # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
