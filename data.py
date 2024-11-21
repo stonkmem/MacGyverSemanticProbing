@@ -75,3 +75,6 @@ macgyver = load_dataset("csv", data_files="problem_solution_pair.csv", split="tr
 macgyver = macgyver.map(format_macgyver_prompt, batched = True,)
 macgyver = macgyver.filter(lambda example: example["Solvable?"] == "Yes")
 print(macgyver[0]["text"])
+
+import random
+random.shuffle(macgyver)
