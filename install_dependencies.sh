@@ -23,8 +23,8 @@ echo $HF_HOME
 echo $HF_HUB_CACHE
 
 pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch accelerate>=0.26.0 
-pip install openpyxl scikit-learn
-pip install python-dotenv sentencepiece protobuf google 
+pip install openpyxl scikit-learn 
+pip install python-dotenv sentencepiece protobuf google bitsandbytes
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # Install dependencies from requirements file
