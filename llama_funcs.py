@@ -113,7 +113,9 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath != "gpt4":
+if modelpath == "meta-llama/Llama-3.1-70B-Instruct":
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True, torch_dtype=torch.float16)
+elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
