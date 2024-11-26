@@ -74,7 +74,14 @@ from datasets import load_dataset
 macgyver = load_dataset("csv", data_files="problem_solution_pair.csv", split="train")
 macgyver = macgyver.map(format_macgyver_prompt, batched = True,)
 macgyver = macgyver.filter(lambda example: example["Solvable?"] == "Yes")
-print(macgyver[0]["text"])
+# print(macgyver[0]["text"])
+seed1 = 42 
+# shuffle method 1
+# macgyver = macgyver.shuffle(seed = seed1)
+# macgyver = macgyver.flatten_indices()
 
-import random
-random.shuffle(macgyver)
+iterable_m_dataset = macgyver.to_iterable_dataset(num_shards = 128)
+
+macgyver = iterable_m_dataset.shuffle(seed = seed1, buffer_size = 100)
+
+
