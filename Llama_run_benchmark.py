@@ -61,6 +61,7 @@ for a in range(num_problems): # handles multiple problems.
   problemscale_classifiedstepprobs = []
 
   problemscale_hslist = []
+  problemscale_finalhslist = []
   i = starting_problem + a
 
   max_stepnum = 10
@@ -147,6 +148,7 @@ for a in range(num_problems): # handles multiple problems.
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
       problemstring += f"\n### Response: "
+      problemscale_finalhslist.append(problemscale_hslist[step_num - 2][selected_step_index])
 
     stepscale_tokenlist = []
     stepscale_problist = []
@@ -279,7 +281,7 @@ for a in range(num_problems): # handles multiple problems.
 #   fullscale_responselist.append(problemscale_responselist) # each element is prompt at each step, this is needed? idts
   fullscale_subresponselist.append(problemscale_subresponselist)
   fullscale_classifiedstepproblist.append(problemscale_classifiedstepprobs)
-  fullscale_hslist.append(problemscale_hslist)
+  
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
   if num_stops < num_stepvers and len(problemscale_stepprobs[step_num - 1]) >= 1 and problem_break == False:
@@ -288,7 +290,9 @@ for a in range(num_problems): # handles multiple problems.
       # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
       # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
       prev_steps.append(f"\n Step {step_num} of the solution is: " + problemscale_subresponselist[step_num - 1][selected_step_index].replace("Step " + str(step_num) + ":", ""))
-  
+      problemscale_finalhslist.append(problemscale_hslist[step_num - 1][selected_step_index])
+
+  fullscale_hslist.append(problemscale_finalhslist)
   fullscale_prev_steps.append(prev_steps) # for each problem
   fullscale_promptlist.append(problemscale_promptlist) # needed 
   fullscale_classifiedsubresponselist.append(problemscale_classifiedsubresponselist) # needed
