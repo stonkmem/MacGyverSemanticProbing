@@ -34,6 +34,15 @@ if len(sys.argv) < 2:
 elif sys.argv[1] == 'llama' :
     print("LLAMA")
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
+elif sys.argv[1] == 'llama30':
+    print("llama 3.0")
+    modelpath = "meta-llama/Meta-Llama-3-8B-Instruct"
+elif sys.argv[1] == 'llama2':
+    print('llama2')
+    modelpath = "meta-llama/Llama-2-7b-hf"
+elif sys.argv[1] == "llama3.2":
+    print("llama3.2")
+    modelpath = "meta-llama/Llama-3.2-3B-Instruct"
     # llm = Llama.from_pretrained(
     #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
     #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
