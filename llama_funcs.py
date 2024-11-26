@@ -260,10 +260,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        # detensored_hs = []
+        detensored_hs = hidden_states[-2][-1].tolist()
         # for i in range(len(hidden_states[-1])): # remove tensors
         #     detensored_hs.append(hidden_states[-1][i].tolist())
-        # hiddenstates.append(detensored_hs)
+        hiddenstates.append(detensored_hs)
         # hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
 
