@@ -77,11 +77,11 @@ macgyver = macgyver.filter(lambda example: example["Solvable?"] == "Yes")
 # print(macgyver[0]["text"])
 seed1 = 42 
 # shuffle method 1
-# macgyver = macgyver.shuffle(seed = seed1)
-# macgyver = macgyver.flatten_indices()
+macgyver = macgyver.shuffle(seed = seed1)
+macgyver = macgyver.flatten_indices()
 
-iterable_m_dataset = macgyver.to_iterable_dataset(num_shards = 128)
+# iterable_m_dataset = macgyver.to_iterable_dataset(num_shards = 128)
 
-macgyver = iterable_m_dataset.shuffle(seed = seed1, buffer_size = 100)
+# macgyver = iterable_m_dataset.shuffle(seed = seed1, buffer_size = 100)
 
 
