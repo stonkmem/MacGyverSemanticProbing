@@ -831,3 +831,25 @@ def compute_total_score_2(SE, factuality):
     else:
         SE_avg = 0
     return factuality * SE_avg
+
+def calculate_prob_of_class_logprobsN(class_sequence_logprobs, return_logprob = False): # calculate directly from logprobs
+    prob = 0
+    if return_logprob == False:
+        for i in range(len(class_sequence_logprobs)):
+            # print(calc_sequence_probability_LOGPROB(class_sequence_logprobs[i]))
+            prob += calc_sequence_probability_LOGPROBN(class_sequence_logprobs[i]) 
+            # array of probs from logprobs
+    else:
+        for i in range(len(class_sequence_logprobs)):
+            prob += calc_sequence_probability_LOGPROBN(class_sequence_logprobs[i], True) 
+            # array of logprobs
+    return prob
+
+def calc_sequence_probability_LOGPROBN(probabilities, return_logprob = False):
+    # print(probabilities)
+    logprob = sum(probabilities) / len(probabilities)
+    # print(logprob)
+    if return_logprob == False:
+        return math.exp(logprob)
+    else:
+        return logprob

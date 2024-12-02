@@ -1,6 +1,6 @@
 # calculates the probabilities of each class for each subresponse
 
-import numpy as np
+# import numpy as np
 # from llama_funcs import *
 # from helper_funcs import *
 # from data import *
@@ -17,11 +17,11 @@ classprobabilities = []
 if len(sys.argv) > 1:
   if sys.argv[1] == 'vicuna' or sys.argv[1] == 'vicuna-7b' or sys.argv[1] == "vicuna-33b":
     from vicuna_run_benchmark import *
-  elif sys.argv[1] == 'llama' or sys.argv[1] == 'llama_70b':
+  elif sys.argv[1] == 'llama' or sys.argv[1] == 'llama_70b' or sys.argv[1] == 'llama3.2' or sys.argv[1] == 'llama30' or sys.argv[1] == 'llama2':
     from Llama_run_benchmark import *
   elif sys.argv[1] == 'gpt4':
     from GPT_run_benchmark import *
-  elif sys.argv[1] == 'mixtral' or sys.argv[1] == 'mistral-nemo' or sys.argv[1] == 'mistral-large' or sys.argv[1] == 'ministral':
+  elif sys.argv[1] == 'mixtral' or sys.argv[1] == 'mistral-nemo' or sys.argv[1] == 'mistral-large' or sys.argv[1] == 'ministral' or sys.argv[1] == 'mistral':
     from Mixtral_run_benchmark import *
   else:
     from Llama_run_benchmark import *
@@ -55,6 +55,23 @@ for j in range(len(fullscale_classifiedproblist)): # full scale
 # print(classprobabilities, "classprobabilities")
 # print(fullscale_classifiedsubresponselist, "fullscale_classifiedsubresponselist")
 # print(fullscale_classifiedproblist, "fullscale_classifiedproblist")
+
+classprobabilitiesN = []
+
+for j in range(len(fullscale_classifiedproblist)): # full scale
+  problemscale_classprobabilities = []
+  for k in range(len(fullscale_classifiedproblist[j])): # problem scale
+    subresponsescale_classprobs = []
+    # for each subresponse, there should be an array of class probs.
+    for i in range(len(fullscale_classifiedproblist[j][k])): # subresponse scale
+      # print(len(fullscale_classifiedproblist[j][k][1])) # should return a nested array containing arrays of probs for each seq in a class.
+      classprob = calculate_prob_of_class_logprobsN(fullscale_classifiedproblist[j][k][i])
+      # currently configured such that 1 class is 1 problem.
+      subresponsescale_classprobs.append(classprob)
+    problemscale_classprobabilities.append(subresponsescale_classprobs)
+
+  classprobabilitiesN.append(problemscale_classprobabilities)
+
 SE_simple = []
 for i in range(len(classprobabilities)):
   problem_SE = []
@@ -70,6 +87,14 @@ for i in range(len(classprobabilities)):
   for j in range(len(classprobabilities[i])):
     problem_SE.append(calculate_SE_complex(classprobabilities[i][j]))
   SE_complex.append(problem_SE)
+
+SE_complexN = []
+for i in range(len(classprobabilitiesN)):
+  problem_SE = []
+  for j in range(len(classprobabilitiesN[i])):
+    problem_SE.append(calculate_SE_complex(classprobabilitiesN[i][j]))
+  SE_complexN.append(problem_SE)
+# SE_complex = SE_complex2 # toggle normalisation 
 
 
 judge = True

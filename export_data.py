@@ -119,6 +119,7 @@ if judge:
     outputdict = {  
         "SE_simple": SE_simple, 
         "SE_complex": SE_complex, 
+        "SE_complexN": SE_complexN,
         "classprobabilities": classprobabilities, 
         
         "feasibilitypercentage": feasibility_score,
@@ -151,6 +152,7 @@ else:
     outputdict = {  
         "SE_simple": SE_simple, 
         "SE_complex": SE_complex, 
+        "SE_complexN": SE_complexN,
         "classprobabilities": classprobabilities, 
         
         #    "fullscale_subresponselist": fullscale_subresponselist,

@@ -17,9 +17,9 @@ prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordi
     Do not generate step {step_num + 1}, etc., or include explanation, examples or any python (or other) code in your response.
     Limit the length of the one step you generate to one sentence maximum.  
     Make your response as creative and innovative as possible.
-    If the problem can already be solved with the existing steps, respond strictly with "STOP"
-
-    Respond STRICTLY in this format:
+    
+    Respond strictly with "STOP" if you think that the existing steps provided already form a complete solution to the problem. 
+    Else, respond STRICTLY in this format:
     Step {step_num}: <generate version of step {step_num} here>
 
     """

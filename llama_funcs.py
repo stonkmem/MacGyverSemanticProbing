@@ -43,30 +43,6 @@ elif sys.argv[1] == 'llama2':
 elif sys.argv[1] == "llama3.2":
     print("llama3.2")
     modelpath = "meta-llama/Llama-3.2-3B-Instruct"
-    # llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
-
 elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
     print("VICUNA")
@@ -74,7 +50,7 @@ elif sys.argv[1] == 'mistral':
     modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     print("MISTRAL")
 elif sys.argv[1] == 'llama_70b':
-    modelpath = "meta-llama/Llama-3.1-70B-Instruct"
+    modelpath = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"
     print("LLAMA 70B")
 elif sys.argv[1] == 'vicuna-7b':
     modelpath = "lmsys/vicuna-7b-v1.5"
@@ -122,7 +98,7 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath == "meta-llama/Llama-3.1-70B-Instruct":
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True, torch_dtype=torch.float16)
 elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
