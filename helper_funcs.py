@@ -271,7 +271,7 @@ def generate_data(num_responses, inputs):
 
 import math
 def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
-    print(probabilities)
+    # print(probabilities)
     logprob = sum(probabilities)
     if return_logprob == False:
         return math.exp(logprob)
