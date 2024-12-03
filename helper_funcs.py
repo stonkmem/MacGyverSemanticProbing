@@ -272,7 +272,10 @@ def generate_data(num_responses, inputs):
 import math
 def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
     # print(probabilities)
-    logprob = sum(probabilities)
+    logprob = 0
+    for i in range(len(probabilities)):
+        if probabilities[i] > -1000:
+            logprob += probabilities[i]
     if return_logprob == False:
         return math.exp(logprob)
     else:
@@ -849,7 +852,15 @@ def calculate_prob_of_class_logprobsN(class_sequence_logprobs, return_logprob = 
 
 def calc_sequence_probability_LOGPROBN(probabilities, return_logprob = False):
     # print(probabilities)
-    logprob = sum(probabilities) / len(probabilities)
+    count = 0
+    total = 0
+    for i in range(len(probabilities)):
+        if probabilities[i] > -1000:
+            count += 1
+            total += probabilities[i]
+    if count > 0:
+        logprob = total / count
+    # logprob = sum(probabilities) / len(probabilities)
     # print(logprob)
     if return_logprob == False:
         return math.exp(logprob)
