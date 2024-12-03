@@ -451,7 +451,9 @@ def calculate_SE_complex(class_probs):
     # sum_classprobs = 0
     # for j in range(len(class_probs)):
       # sum_classprobs += class_probs[j]
-    newprob = class_probs[i] / sum_classprobs
+    newprob = 0
+    if sum_classprobs > 0:
+        newprob = class_probs[i] / sum_classprobs
     if newprob > 0:
         SE += newprob * math.log(newprob)
   return -SE
