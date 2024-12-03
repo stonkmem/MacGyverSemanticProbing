@@ -583,7 +583,7 @@ if __name__ == '__main__':
             for foo in macgyver_df['fullscale_prev_steps'].iat[i]:
                 antwort+=foo
             if i<10:
-                results_oneshot_binary_openai.append(factuality_cot_binary_openai(frage, antwort))
+                results_oneshot_binary_openai.append(factuality_cot_binary_openai(frage, antwort, comment="hai :3"))
             
         # print(macgyver_df['fullscale_promptlist'].iat[5][0].split("Existing steps, if any:")[0],"\n\n", macgyver_df['fullscale_prev_steps'].iat[5])
         # print(len(macgyver_df.index))
