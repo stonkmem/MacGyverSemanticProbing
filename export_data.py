@@ -35,6 +35,15 @@ def export_to_txt(txt_file_path):
         "fullscale_promptlist": fullscale_promptlist,
         "fullscale_prev_steps": fullscale_prev_steps,
         "response_eval_pairs": response_eval_pairs,
+
+        "response_eval_pairs_2" : response_eval_pairs2,
+        "true_total_scores_2" : true_total_scores_2,
+        "factuality2" : factuality2,
+        "efficiency2" : efficiency2,
+        "feasibility2" : feasibility2,
+        "feasibilitypercentage2": feasibility_score2,
+        "efficiencypercentage2" : efficiency_score2
+
         # "fullscale_prob"
     }
 
@@ -58,7 +67,7 @@ def export_to_txt(txt_file_path):
         write_nested(outputdict, txt_file)
 
 # Example use case
-export_to_txt("outputllama3.1_8B_test.txt")
+# export_to_txt("outputllama3.1_8B_test.txt")
 
 
 
@@ -106,24 +115,53 @@ if len(sys.argv) > 2:
     output_filename = sys.argv[2]
 output_file = open(output_filename, "w")
 
+if judge:
+    outputdict = {  
+        "SE_simple": SE_simple, 
+        "SE_complex": SE_complex, 
+        "SE_complexN": SE_complexN,
+        "classprobabilities": classprobabilities, 
+        
+        "feasibilitypercentage": feasibility_score,
+        "efficiencypercentage": efficiency_score,
+        "factuality": factuality, 
+        "feasibility": feasibility, 
+        "efficiency": efficiency, 
+        "total_scores": total_scores, 
+        "lambda_scores": lambda_scores,
+        
+        #    "fullscale_subresponselist": fullscale_subresponselist,
+        "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+        "fullscale_classifiedproblist": fullscale_classifiedproblist,
+        "fullscale_promptlist": fullscale_promptlist,
+        "fullscale_prev_steps": fullscale_prev_steps,
+        "fullscale_classifiedstepproblist" : fullscale_classifiedstepproblist,
+        "response_eval_pairs" : response_eval_pairs,
+        
+        "response_eval_pairs_2" : response_eval_pairs2,
+        "true_total_scores_2" : true_total_scores_2,
+        "factuality2" : factuality2,
+        "efficiency2" : efficiency2,
+        "feasibility2" : feasibility2,
+        "feasibilitypercentage2": feasibility_score2,
+        "efficiencypercentage2" : efficiency_score2,
 
-outputdict = {   
-    "feasibilitypercentage": feasibility_score,
-    "efficiencypercentage": efficiency_score,
-    "SE_simple": SE_simple, 
-    "SE_complex": SE_complex, 
-    "factuality": factuality, 
-    "feasibility": feasibility, 
-    "efficiency": efficiency, 
-    "total_scores": total_scores, 
-    "lambda_scores": lambda_scores,
-    "classprobabilities": classprobabilities, 
-    #    "fullscale_subresponselist": fullscale_subresponselist,
-    "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
-    "fullscale_classifiedproblist": fullscale_classifiedproblist,
-    "fullscale_promptlist": fullscale_promptlist,
-    "fullscale_prev_steps": fullscale_prev_steps
-}
+        # "fullscale_hslist": fullscale_hslist,
+    }
+else:
+    outputdict = {  
+        "SE_simple": SE_simple, 
+        "SE_complex": SE_complex, 
+        "SE_complexN": SE_complexN,
+        "classprobabilities": classprobabilities, 
+        
+        #    "fullscale_subresponselist": fullscale_subresponselist,
+        "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+        "fullscale_classifiedproblist": fullscale_classifiedproblist,
+        "fullscale_promptlist": fullscale_promptlist,
+        "fullscale_prev_steps": fullscale_prev_steps,
+        # "fullscale_hslist": fullscale_hslist,
+    }
 
 json.dump(outputdict, output_file)
 output_file.close()

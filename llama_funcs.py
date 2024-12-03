@@ -15,6 +15,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 temp = 1.0
+
+if len(sys.argv) > 6:
+    temp = float(sys.argv[6])
+    print("TEMP: ", temp)
 TOP_P = 0.9
 NUM_BEAMS = 1
 
@@ -30,82 +34,39 @@ if len(sys.argv) < 2:
 elif sys.argv[1] == 'llama' :
     print("LLAMA")
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
-    # llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
-    #     filename = 'Llama-3.2-3B-Instruct-Q6_K_L.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
-
+elif sys.argv[1] == 'llama30':
+    print("llama 3.0")
+    modelpath = "meta-llama/Meta-Llama-3-8B-Instruct"
+elif sys.argv[1] == 'llama2':
+    print('llama2')
+    modelpath = "meta-llama/Llama-2-7b-hf"
+elif sys.argv[1] == "llama3.2":
+    print("llama3.2")
+    modelpath = "meta-llama/Llama-3.2-3B-Instruct"
 elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
     print("VICUNA")
-    # llm = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="TheBloke/stable-vicuna-13B-GGUF",
-    #     filename = 'stable-vicuna-13B.Q6_K.gguf',
-    #     logits_all = True,
-    #     n_gpu_layers=-1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
 elif sys.argv[1] == 'mistral':
     modelpath = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     print("MISTRAL")
-    # llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_llm = llm.save_state()
-
-    # entailment_llm = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_entailment_llm = entailment_llm.save_state()
-
-    # llm_fact = Llama.from_pretrained(
-    #     repo_id="bartowski/Mistral-22B-v0.2-GGUF",
-    #     filename="Mistral-22B-v0.2-Q5_K_M.gguf",
-    #     logits_all = True,
-    #     n_gpu_layers = -1
-    # )
-    # wipe_llm_fact = llm_fact.save_state()
+elif sys.argv[1] == 'llama_70b':
+    modelpath = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"
+    print("LLAMA 70B")
+elif sys.argv[1] == 'vicuna-7b':
+    modelpath = "lmsys/vicuna-7b-v1.5"
+    print("VICUNA 7B")
+elif sys.argv[1] == 'vicuna-33b':
+    modelpath = "lmsys/vicuna-33b-v1.3"
+    print("VICUNA 13B")
+elif sys.argv[1] == "mistral-nemo":
+    modelpath = "mistralai/Mistral-Nemo-Instruct-2407"
+    print("MISTRAL NEMO")
+elif sys.argv[1] == "mistral-large":
+    modelpath = "mistralai/Mistral-Large-Instruct-2407"
+    print("MISTRAL LARGE")
+elif sys.argv[1] == "ministral":
+    modelpath = "mistralai/Ministral-8B-Instruct-2410"
+    print("MINISTRAL")
 else:
     modelpath = "meta-llama/Llama-3.1-8B-Instruct"
     print("OTHER")
@@ -137,10 +98,13 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath != "gpt4":
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True, torch_dtype=torch.float16)
+elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
+print(torch.cuda.get_device_properties(0).total_memory, "TOTAL MEMORY")
     # model.to("cuda")
 
 
@@ -224,7 +188,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     tokenlist = []
     problist = []
     max_tokens = 1024
-
+    hiddenstates = []
     # print(prompt, problem, )
     
     for i in range(num):
@@ -232,10 +196,12 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         string_y = ''
         logitz = []
         tokens = []
+        
         while not ans_valid:
             logitz = []
             tokens = []
             string_y = ''
+            # hiddenstates = []
             # score 30 samples with humans to check correlation.
             
             msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
@@ -247,8 +213,10 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token
                 item = outputs.sequences[0][i]
@@ -259,6 +227,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             for token in tokens:
                 string_y += token
             print("OUTPUT_STRING", string_y)
+            string_y = string_y.replace(tokenizer.eos_token, "")
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             
@@ -276,9 +245,15 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        detensored_hs = hidden_states[-2][-1].tolist()
+        # for i in range(len(hidden_states[-1])): # remove tensors
+        #     detensored_hs.append(hidden_states[-1][i].tolist())
+        hiddenstates.append(detensored_hs)
+        # hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
+
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates
     
 # output = gen_prob(macgyver[0]['Problem'], prompt=prompt, num=5)
 # print(output)
@@ -287,6 +262,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
     problist = []
+    hiddenstates = []
     max_tokens = 1024
 
     # print(prompt, problem, )
@@ -298,9 +274,9 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         tokens = []
         msg = gen_chat_object_mistral(prompt, problem, include_eg=include_eg)  
 
-        encodeds = tokenizer.apply_chat_template(msg, tokenize=False, )# add_generation_prompt=True
+        encodeds = tokenizer.apply_chat_template(msg, tokenize=False, ) # add_generation_prompt=True
         tokenizer.pad_token = tokenizer.eos_token
-        inputs = tokenizer(encodeds, return_tensors="pt", padding=True)
+        inputs = tokenizer(encodeds, return_tensors="pt", padding=True).to("cuda")
 
         while not ans_valid:
             logitz = []
@@ -311,10 +287,13 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             tokens_previous = outputs.sequences[0]
             token_text = tokenizer.decode(tokens_previous)
+            # print(outputs)
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
                 item = outputs.sequences[0][i]
@@ -325,6 +304,8 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             str_index = token_text.index("[/INST]") + 7
             string_y = token_text[str_index:]
+            string_y = string_y.replace("[/INST]", "")
+            string_y = string_y.replace(tokenizer.eos_token, "")
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
@@ -347,13 +328,19 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        # detensored_hs = []
+        # for i in range(len(hidden_states[-1])):
+        #     detensored_hs.append(hidden_states[-1][i].tolist())
+        
+        hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates
 
 def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
     problist = []
+    hiddenstates = []
     max_tokens = 1024
 
     # print(prompt, problem, )
@@ -364,7 +351,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         logitz = []
         tokens = []
         msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-        tokenizer.pad_token = tokenizer.eos_token
+        # tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer([msg], return_tensors="pt", padding=True)
         while not ans_valid:
             logitz = []
@@ -374,8 +361,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True,
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
+                                output_hidden_states = True,
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
+            hidden_states = outputs.hidden_states
             tokens_previous = outputs.sequences[0]
 #             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens
             full_token_text = tokenizer.decode(tokens_previous)
@@ -383,15 +372,24 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             
 #             print("????", token_text)
             # creates token list 
+            items = []
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
                 item = outputs.sequences[0][i]
+                items.append(item)
                 tokens.append(tokenizer.decode(item))
             # removes prompt 
             tokens = tokens[-len(output_logits):]
+            items = items[-len(output_logits):]
             
             # creates string 
-            str_index = token_text.index("Response: ") + 11
-            string_y = token_text[str_index:]
+            # string_y = ' '.join(tokens)
+            # str_index = token_text.index("Response: ") + 11
+            # string_y = token_text[str_index:]
+            # string_y.replace(tokenizer.eos_token, "")
+            string_y = tokenizer.decode(items, skip_special_tokens=True)
+            string_y = string_y.replace(tokenizer.eos_token, "")
+            string_y = string_y.replace(tokenizer.pad_token, "")
+            string_y = string_y.replace("Response: ", "")
             
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
@@ -402,7 +400,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
                 logitz.append(probs[0][logitindices[i].item()].item())
             tokens = tokens[1:]
             logitz = logitz[1:]
-            print("STRING: ", string_y)
+            print("STRING_1: ", string_y)
             print("TOKENS: ", tokens)
             # print(len(tokens), len(logitz))
             # check if len of tokens and logitz is same
@@ -416,5 +414,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
+        # detensored_hs = []
+        # for i in range(len(hidden_states[-1])):
+        #     detensored_hs.append(hidden_states[-1][i].tolist())
+        # hiddenstates.append(detensored_hs)
+        hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
-    return responses, tokenlist, problist
+    return responses, tokenlist, problist, hiddenstates

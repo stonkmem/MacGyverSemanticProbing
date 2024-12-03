@@ -271,7 +271,7 @@ def generate_data(num_responses, inputs):
 
 import math
 def calc_sequence_probability_LOGPROB(probabilities, return_logprob = False):
-    print(probabilities)
+    # print(probabilities)
     logprob = sum(probabilities)
     if return_logprob == False:
         return math.exp(logprob)
@@ -824,3 +824,32 @@ def calculate_auarc(y_true, y_scores, threshold=0.5):
 # # Calculate AUARC
 # auarc_score = calculate_auarc(y_true, y_scores)
 # print("AUARC Score:", auarc_score)
+
+def compute_total_score_2(SE, factuality):
+    if len(SE) > 0:
+        SE_avg = sum(SE) / len(SE)
+    else:
+        SE_avg = 0
+    return factuality * SE_avg
+
+def calculate_prob_of_class_logprobsN(class_sequence_logprobs, return_logprob = False): # calculate directly from logprobs
+    prob = 0
+    if return_logprob == False:
+        for i in range(len(class_sequence_logprobs)):
+            # print(calc_sequence_probability_LOGPROB(class_sequence_logprobs[i]))
+            prob += calc_sequence_probability_LOGPROBN(class_sequence_logprobs[i]) 
+            # array of probs from logprobs
+    else:
+        for i in range(len(class_sequence_logprobs)):
+            prob += calc_sequence_probability_LOGPROBN(class_sequence_logprobs[i], True) 
+            # array of logprobs
+    return prob
+
+def calc_sequence_probability_LOGPROBN(probabilities, return_logprob = False):
+    # print(probabilities)
+    logprob = sum(probabilities) / len(probabilities)
+    # print(logprob)
+    if return_logprob == False:
+        return math.exp(logprob)
+    else:
+        return logprob

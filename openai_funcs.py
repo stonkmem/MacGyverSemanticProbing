@@ -1,17 +1,27 @@
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import sys
+from dabertaMNLI import * 
 # import openai
 # from helper_funcs import *
 
 load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
+use_gpt4 = True
+if len(sys.argv) > 5: # for entailment 
+    if sys.argv[5] == "false":
+        use_gpt4 = False
 
-client = OpenAI(api_key=api_key)
+if use_gpt4:
 
-entailment_llm_openai = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key)
+
+    entailment_llm_openai = OpenAI(api_key=api_key)
 print("RUNNING OPENAI")
+
+
 
 def get_entailment_openai(question, a, b):
     return entailment_llm_openai.chat.completions.create(
@@ -95,7 +105,7 @@ def get_factuality(question, ans):
 #         ]
     )
     return completion.choices[0].message.content
-print(get_entailment("Which country is New York in?", "USA", "New York is located in the USA.")) #['choices'][0]['message']['content']
+# print(get_entailment("Which country is New York in?", "USA", "New York is located in the USA.")) #['choices'][0]['message']['content']
 # print(get_factuality(""))
 
 def get_factuality_likert(question, ans):
@@ -343,13 +353,31 @@ def gen_C(x, ls, tokenseq, probsq):
               # break
 #                 print(c[0], i)
 #                 print(get_entailment(x, c[0], i))
-                if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
-                    c.append(i);
-                    c_index = C.index(c)
-                    T[c_index].append(tokenseq[ls.index(i)])
-                    P[c_index].append(probsq[ls.index(i)])
-                    print("c: ", c)
-                    cl=True;break;
+                if len(sys.argv) > 4:
+                    if sys.argv[4] != "deberta":
+                        if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
+                            c.append(i);
+                            c_index = C.index(c)
+                            T[c_index].append(tokenseq[ls.index(i)])
+                            P[c_index].append(probsq[ls.index(i)])
+                            print("c: ", c)
+                            cl=True;break;
+                    else:
+                        if (get_entailment_nli(x, c[0], i) == 'entailment' and get_entailment_nli(x, i, c[0]) == 'entailment') or i == c[0]:
+                            c.append(i);
+                            c_index = C.index(c)
+                            T[c_index].append(tokenseq[ls.index(i)])
+                            P[c_index].append(probsq[ls.index(i)])
+                            print("c: ", c)
+                            cl=True;break;
+                else:
+                    if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
+                        c.append(i);
+                        c_index = C.index(c)
+                        T[c_index].append(tokenseq[ls.index(i)])
+                        P[c_index].append(probsq[ls.index(i)])
+                        print("c: ", c)
+                        cl=True;break;
         elif index != 0 or ls.count(i) > 1:
             C[classindex].append(i);
             # c_index = C.index(c)
