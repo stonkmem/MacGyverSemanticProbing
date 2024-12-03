@@ -11,9 +11,10 @@ def read_json_file(json_file_path):
         data = json.load(json_file)
     return data
 
-file_name = "results.json"
-if len(sys.argv) > 1:
-    file_name = sys.argv[1]
-# Example use case
-data = read_json_file(file_name)
-print(data)
+if __name__ == '__main__':
+    file_name = "results.json"
+    if len(sys.argv) > 1:
+        file_name = sys.argv[1]
+    # Example use case
+    data = read_json_file(file_name)
+    print(data)
