@@ -7,3 +7,4 @@ keys.py
 __pycache__/
 .env
 .venv/
+notes/

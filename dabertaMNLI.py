@@ -11,3 +11,5 @@ def get_probs_nli(question, a, b):
           'text_pair':b})
     return (dic['label'], dic['score'])
 
+if __name__ == '__main__':
+    print(get_probs_nli('Where is Paris?', 'Paris is in France.', "The country of France."))
