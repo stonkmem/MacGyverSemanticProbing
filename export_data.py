@@ -160,7 +160,7 @@ else:
         "fullscale_classifiedproblist": fullscale_classifiedproblist,
         "fullscale_promptlist": fullscale_promptlist,
         "fullscale_prev_steps": fullscale_prev_steps,
-        # "fullscale_hslist": fullscale_hslist,
+        "fullscale_hslist": fullscale_hslist,
     }
 
 json.dump(outputdict, output_file)
