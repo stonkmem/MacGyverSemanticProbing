@@ -860,6 +860,8 @@ def calc_sequence_probability_LOGPROBN(probabilities, return_logprob = False):
             total += probabilities[i]
     if count > 0:
         logprob = total / count
+    else:
+        logprob = -1000
     # logprob = sum(probabilities) / len(probabilities)
     # print(logprob)
     if return_logprob == False:
