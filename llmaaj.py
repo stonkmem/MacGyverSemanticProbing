@@ -7,6 +7,7 @@ import pandas as pd
 import seaborn as sns
 import openai
 import json
+from process_data import *
 
 def prepare_df():
     df = pd.read_excel("https://github.com/allenai/MacGyver/blob/main/data/MacGyver/problem_solution_pair.xlsx?raw=true", engine="openpyxl")
@@ -518,8 +519,9 @@ def factuality_chateval_likert_openai(question, ans, **kwargs):
             positive = {'role': 'system', 'content': f'You are a skilled expert, Debater 1, studying solutions to a problem. As a task, you will be provided with a problem, solution, and a criteria to judge it on. You are to produce a 50 word argument for how the solution meets the criterion of {criterion}.\n Note the following definitions: A solution satisfies the criterion of {criterion} if {meaning[criterion]}'}
             positivearr = [positive]
             positivearr.extend(hist)
-            positivearr.append({'role':'user','content':f"""[Problem] {question} 
-[The Start of Assistant’s Solution]
+            positivearr.append({'role':'user','content':f"""[Problem] 
+{question} 
+[The Start of Assistant's Solution]
 {ans}
 [The End of Assistant's Solution]"""})
             completion_positive = client.chat.completions.create(
@@ -531,7 +533,7 @@ def factuality_chateval_likert_openai(question, ans, **kwargs):
             negativearr = [negative]
             negativearr.extend(hist)
             negativearr.append({'role':'user','content':f"""[Question] {question} 
-[The Start of Assistant’s Answer]
+[The Start of Assistant's Answer]
 {ans}
 [The End of Assistant's Answer]"""})
             completion_negative = client.chat.completions.create(
@@ -543,7 +545,7 @@ def factuality_chateval_likert_openai(question, ans, **kwargs):
         jujarr = [juj]
         jujarr.extend(hist)
         jujarr.append({'role':'user','content':f"""[Question] {question} 
-[The Start of Assistant’s Answer]
+[The Start of Assistant's Answer]
 {ans}
 [The End of Assistant's Answer]"""})
         #print(jujarr)
@@ -570,11 +572,22 @@ def factuality_chateval_likert_openai(question, ans, **kwargs):
     return evals
 
 if __name__ == '__main__':
-    for filename in ['reults_GPT4_T1.json']:
-        with open(filename, 'r') as file:
-            data = json.load(file)
-    print(data)
-    pass
+    for filename in ['results_GPT4_T1.json']:
+        # with open(filename, 'r') as file:
+        #     data = json.load(file)
+        macgyver_df = pd.read_json(filename)
+        results_oneshot_binary_openai = []
+        for i in range(len(macgyver_df.index)):
+            frage = macgyver_df['fullscale_promptlist'].iat[i][0].split("Existing steps, if any:")[0]
+            antwort=''
+            for foo in macgyver_df['fullscale_prev_steps'].iat[i]:
+                antwort+=foo
+            if i<10:
+                results_oneshot_binary_openai.append(factuality_cot_binary_openai(frage, antwort))
+            
+        # print(macgyver_df['fullscale_promptlist'].iat[5][0].split("Existing steps, if any:")[0],"\n\n", macgyver_df['fullscale_prev_steps'].iat[5])
+        # print(len(macgyver_df.index))
+    # pass
 '''for i in range(len(ratings)):
     # print(df_eff['Label'].iat[i],'\n')
     if((df_eff['Label'].iat[i] == 'inefficient') and (not (ratings[i].lower().find('yes')!=-1))):
