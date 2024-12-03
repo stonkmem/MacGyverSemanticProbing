@@ -149,19 +149,37 @@ if judge:
         # "fullscale_hslist": fullscale_hslist,
     }
 else:
-    outputdict = {  
-        "SE_simple": SE_simple, 
-        "SE_complex": SE_complex, 
-        "SE_complexN": SE_complexN,
-        "classprobabilities": classprobabilities, 
-        
-        #    "fullscale_subresponselist": fullscale_subresponselist,
-        "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
-        "fullscale_classifiedproblist": fullscale_classifiedproblist,
-        "fullscale_promptlist": fullscale_promptlist,
-        "fullscale_prev_steps": fullscale_prev_steps,
-        "fullscale_hslist": fullscale_hslist,
-    }
+    toggle_hs = False
+    if len(sys.argv) > 8:
+        if sys.argv[8] == 'hs':
+            toggle_hs = True
+    if toggle_hs:
+        outputdict = { 
+            "SE_simple": SE_simple, 
+            "SE_complex": SE_complex, 
+            "SE_complexN": SE_complexN,
+            "classprobabilities": classprobabilities, 
+            
+            #    "fullscale_subresponselist": fullscale_subresponselist,
+            "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+            "fullscale_classifiedproblist": fullscale_classifiedproblist,
+            "fullscale_promptlist": fullscale_promptlist,
+            "fullscale_prev_steps": fullscale_prev_steps,
+            "fullscale_hslist": fullscale_hslist,
+        }
+    else:
+        outputdict = { 
+            "SE_simple": SE_simple, 
+            "SE_complex": SE_complex, 
+            "SE_complexN": SE_complexN,
+            "classprobabilities": classprobabilities, 
+            
+            #    "fullscale_subresponselist": fullscale_subresponselist,
+            "fullscale_classifiedsubresponselist": fullscale_classifiedsubresponselist,
+            "fullscale_classifiedproblist": fullscale_classifiedproblist,
+            "fullscale_promptlist": fullscale_promptlist,
+            "fullscale_prev_steps": fullscale_prev_steps,
+        }
 
 json.dump(outputdict, output_file)
 output_file.close()
