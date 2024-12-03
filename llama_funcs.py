@@ -352,7 +352,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         tokens = []
         msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
         # tokenizer.pad_token = tokenizer.eos_token
-        inputs = tokenizer([msg], return_tensors="pt", padding=True)
+        inputs = tokenizer([msg], return_tensors="pt", padding=True).to("cuda")
         while not ans_valid:
             logitz = []
             tokens = []
