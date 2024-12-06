@@ -245,7 +245,11 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        detensored_hs = hidden_states[-2][-1].tolist()
+        selected_indices = [0, 8, 16, 28, 31]
+        second_last_hs = hidden_states[:, -2, :]
+        selected_tensors = [second_last_hs[:, idx:idx+1] for idx in selected_indices]
+        detensored_hs = [t.tolist() for t in selected_tensors]
+        # detensored_hs = hidden_states[-2][-1].tolist()
         # for i in range(len(hidden_states[-1])): # remove tensors
         #     detensored_hs.append(hidden_states[-1][i].tolist())
         hiddenstates.append(detensored_hs)
