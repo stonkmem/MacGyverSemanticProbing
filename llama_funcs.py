@@ -247,6 +247,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         responses.append(string_y)
         selected_indices = [0, 8, 16, 28, 31]
         second_last_hs = hidden_states[-2]
+        print(len(second_last_hs), "SECOND LAST HS")
         selected_tensors = [second_last_hs[idx] for idx in selected_indices]
         detensored_hs = [t.tolist() for t in selected_tensors]
         # detensored_hs = hidden_states[-2][-1].tolist()
