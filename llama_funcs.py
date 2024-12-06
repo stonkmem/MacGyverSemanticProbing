@@ -99,7 +99,7 @@ else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
 if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
-    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True, torch_dtype=torch.float16)
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True)
 elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
