@@ -189,8 +189,6 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     problist = []
     max_tokens = 1024
     hiddenstates = []
-    # print(prompt, problem, )
-    
     for i in range(num):
         ans_valid = False
         string_y = ''
@@ -201,9 +199,6 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = []
             tokens = []
             string_y = ''
-            # hiddenstates = []
-            # score 30 samples with humans to check correlation.
-            
             msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
 #             print("MSG: " + msg)
             inputs = tokenizer(
@@ -245,9 +240,9 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        selected_indices = [0, 8, 16, 28, 31]
+        selected_indices = [0, 8, 16, 24, 32] # [0, 16, 32, 48, 64, 80]
         second_last_hs = hidden_states[-2]
-        print(len(second_last_hs), "SECOND LAST HS")
+        # print(len(second_last_hs), "SECOND LAST HS")
         selected_tensors = [second_last_hs[idx] for idx in selected_indices]
         detensored_hs = [t.tolist() for t in selected_tensors]
         # detensored_hs = hidden_states[-2][-1].tolist()
