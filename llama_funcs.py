@@ -3,7 +3,7 @@ import sys
 import os
 import transformers
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModel, BitsAndBytesConfig
 
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient, login
@@ -52,6 +52,9 @@ elif sys.argv[1] == 'mistral':
 elif sys.argv[1] == 'llama_70b':
     modelpath = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"
     print("LLAMA 70B")
+elif sys.argv[1] == 'llama3.3':
+    modelpath = "meta-llama/Llama-3.3-70B-Instruct"
+    print("LLAMA 3.3 70B")
 elif sys.argv[1] == 'vicuna-7b':
     modelpath = "lmsys/vicuna-7b-v1.5"
     print("VICUNA 7B")
@@ -98,8 +101,9 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
-    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True)
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or "meta-llama/Llama-3.3-70B-Instruct":
+    quantization_config = BitsAndBytesConfig(load_in_8bit=True)
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', torch_dtype=torch.bfloat16, quantization_config=quantization_config)
 elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
