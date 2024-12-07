@@ -17,7 +17,7 @@ classprobabilities = []
 if len(sys.argv) > 1:
   if sys.argv[1] == 'vicuna' or sys.argv[1] == 'vicuna-7b' or sys.argv[1] == "vicuna-33b":
     from vicuna_run_benchmark import *
-  elif sys.argv[1] == 'llama' or sys.argv[1] == 'llama_70b' or sys.argv[1] == 'llama3.2' or sys.argv[1] == 'llama30' or sys.argv[1] == 'llama2':
+  elif sys.argv[1] == 'llama' or sys.argv[1] == 'llama_70b' or sys.argv[1] == 'llama3.2' or sys.argv[1] == 'llama30' or sys.argv[1] == 'llama2' or sys.argv[1] == 'llama3.3:
     from Llama_run_benchmark import *
   elif sys.argv[1] == 'gpt4':
     from GPT_run_benchmark import *
