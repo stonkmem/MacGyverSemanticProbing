@@ -19,6 +19,11 @@ temp = 1.0
 if len(sys.argv) > 6:
     temp = float(sys.argv[6])
     print("TEMP: ", temp)
+
+toggle_hs = False
+if len(sys.argv) > 8:
+    if sys.argv[8] == 'hs':
+        toggle_hs = True
 TOP_P = 0.9
 NUM_BEAMS = 1
 
@@ -253,6 +258,11 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         # for i in range(len(hidden_states[-1])): # remove tensors
         #     detensored_hs.append(hidden_states[-1][i].tolist())
         hiddenstates.append(detensored_hs)
+        detensored_hs = []
+        hiddenstates = [t.detach().cpu() for t in hiddenstates]
+        selected_tensors = [t.detach().cpu() for t in selected_tensors]
+        hiddenstates = []
+        selected_tensors = []
         # hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
 
