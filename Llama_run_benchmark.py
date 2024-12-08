@@ -3,6 +3,7 @@ from llama_funcs import *
 # from helper_funcs import *
 # from data import *
 # from openai_funcs import *
+# from datetime import datetime
 
 
 step_num = 1
@@ -71,6 +72,10 @@ for a in range(num_problems): # handles multiple problems.
 
   max_stepnum = 10
   max_steps = num_to_string[max_stepnum]
+  now = datetime.now()
+
+  current_time = now.strftime("%H:%M:%S")
+  print("Current Time =", current_time + "problem start")
 
   inputstring = f'''
   You are Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
@@ -307,6 +312,10 @@ for a in range(num_problems): # handles multiple problems.
   fullscale_classifiedsubresponselist.append(problemscale_classifiedsubresponselist) # needed
   fullscale_classifiedproblist.append(problemscale_classifiedproblist) # needed 
 
+  now = datetime.now()
+
+  current_time = now.strftime("%H:%M:%S")
+  print("Current Time =", current_time, "problem end")
 
 # print(fullscale_classifiedproblist, "CLASSIFIED PROBS")
 # print(fullscale_classifiedsubresponselist, "CLASSIFIED RESPONSES")

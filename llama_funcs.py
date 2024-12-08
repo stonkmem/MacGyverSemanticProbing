@@ -3,6 +3,7 @@ import sys
 import os
 import transformers
 import torch
+from datetime import datetime
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModel, BitsAndBytesConfig
 
 from dotenv import load_dotenv
@@ -113,6 +114,10 @@ elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 print("MODEL LOADED")
+now = datetime.now()
+
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
 print(torch.cuda.get_device_properties(0).total_memory, "TOTAL MEMORY")
     # model.to("cuda")
 
