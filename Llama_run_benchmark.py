@@ -204,7 +204,7 @@ for a in range(num_problems): # handles multiple problems.
               subresponses[n] = "Step " + str(step_num) + ": " + subresponses[n][subresponse_index:]
             except:
               print("ERROR: ", subresponses[n])
-              continue
+              
         subresponses[n] = subresponses[n].replace("<|eot_id|>", "")
         subresponses[n] = subresponses[n].replace("Response:", "")
         try:
