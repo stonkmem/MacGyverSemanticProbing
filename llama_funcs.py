@@ -259,9 +259,9 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         #     detensored_hs.append(hidden_states[-1][i].tolist())
         hiddenstates.append(detensored_hs)
         detensored_hs = []
-        hiddenstates = [t.detach().cpu() for t in hiddenstates]
+        hidden_states = [t.detach().cpu() for t in hidden_states]
         selected_tensors = [t.detach().cpu() for t in selected_tensors]
-        hiddenstates = []
+        hidden_states = []
         selected_tensors = []
         # hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
