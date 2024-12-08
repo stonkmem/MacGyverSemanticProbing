@@ -281,12 +281,13 @@ for a in range(num_problems): # handles multiple problems.
   fullscale_hslist.append(problemscale_hslist)
   # fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers and len(problemscale_stepprobs[step_num - 1]) > 1 and problem_break == False:
-      selected_step_index = max(problemscale_stepprobs[step_num - 1])
-      selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
-      # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-      # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
-      prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
+  if num_stops < num_stepvers and problem_break == False:
+      if len(problemscale_stepprobs[step_num - 1]) > 1:
+        selected_step_index = max(problemscale_stepprobs[step_num - 1])
+        selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
+        # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
+        # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
+        prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
   
   fullscale_prev_steps.append(prev_steps) # for each problem
   fullscale_promptlist.append(problemscale_promptlist) # needed 

@@ -3,7 +3,7 @@ import sys
 import os
 import transformers
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModel, BitsAndBytesConfig
 
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient, login
@@ -52,6 +52,9 @@ elif sys.argv[1] == 'mistral':
 elif sys.argv[1] == 'llama_70b':
     modelpath = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"
     print("LLAMA 70B")
+elif sys.argv[1] == 'llama3.3':
+    modelpath = "meta-llama/Llama-3.3-70B-Instruct"
+    print("LLAMA 3.3 70B")
 elif sys.argv[1] == 'vicuna-7b':
     modelpath = "lmsys/vicuna-7b-v1.5"
     print("VICUNA 7B")
@@ -98,8 +101,9 @@ if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
-    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', load_in_8bit = True, torch_dtype=torch.float16)
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or "meta-llama/Llama-3.3-70B-Instruct":
+    quantization_config = BitsAndBytesConfig(load_in_8bit=True)
+    model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', torch_dtype=torch.bfloat16, quantization_config=quantization_config)
 elif modelpath != "gpt4":
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
 # model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto')
@@ -189,8 +193,6 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     problist = []
     max_tokens = 1024
     hiddenstates = []
-    # print(prompt, problem, )
-    
     for i in range(num):
         ans_valid = False
         string_y = ''
@@ -201,9 +203,6 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = []
             tokens = []
             string_y = ''
-            # hiddenstates = []
-            # score 30 samples with humans to check correlation.
-            
             msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
 #             print("MSG: " + msg)
             inputs = tokenizer(
@@ -245,7 +244,12 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        detensored_hs = hidden_states[-2][-1].tolist()
+        selected_indices = [0, 16, 32, 48, 64, 80] # [0, 8, 16, 24, 32]
+        second_last_hs = hidden_states[-2]
+        # print(len(second_last_hs), "SECOND LAST HS")
+        selected_tensors = [second_last_hs[idx] for idx in selected_indices]
+        detensored_hs = [t.tolist() for t in selected_tensors]
+        # detensored_hs = hidden_states[-2][-1].tolist()
         # for i in range(len(hidden_states[-1])): # remove tensors
         #     detensored_hs.append(hidden_states[-1][i].tolist())
         hiddenstates.append(detensored_hs)

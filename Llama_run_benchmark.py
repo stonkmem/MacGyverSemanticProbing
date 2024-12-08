@@ -47,6 +47,11 @@ num_problems = 1
 if len(sys.argv) > 7:
   num_problems = int(sys.argv[7])
 
+toggle_hs = False
+if len(sys.argv) > 8:
+    if sys.argv[8] == 'hs':
+        toggle_hs = True
+
 # responses = []
 for a in range(num_problems): # handles multiple problems.
   prev_steps = []
@@ -148,7 +153,8 @@ for a in range(num_problems): # handles multiple problems.
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
       problemstring += f"\n### Response: "
-      problemscale_finalhslist.append(problemscale_hslist[step_num - 2][selected_step_index])
+      if toggle_hs:
+        problemscale_finalhslist.append(problemscale_hslist[step_num - 2][selected_step_index])
 
     stepscale_tokenlist = []
     stepscale_problist = []
@@ -241,7 +247,8 @@ for a in range(num_problems): # handles multiple problems.
     problemscale_subresponselist.append(stepscale_subresponselist)
     problemscale_stepprobs.append(stepscale_stepprobs)
 
-    problemscale_hslist.append(hs)  
+    if toggle_hs:
+      problemscale_hslist.append(hs)  
 
     # classifying responses for SE
 
@@ -284,13 +291,15 @@ for a in range(num_problems): # handles multiple problems.
   
 #   fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
 
-  if num_stops < num_stepvers and len(problemscale_stepprobs[step_num - 1]) >= 1 and problem_break == False:
-      selected_step_index = max(problemscale_stepprobs[step_num - 1])
-      selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
-      # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-      # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
-      prev_steps.append(f"\n Step {step_num} of the solution is: " + problemscale_subresponselist[step_num - 1][selected_step_index].replace("Step " + str(step_num) + ":", ""))
-      problemscale_finalhslist.append(problemscale_hslist[step_num - 1][selected_step_index])
+  if num_stops < num_stepvers and problem_break == False:
+      if len(problemscale_stepprobs[step_num - 1]) >= 1:
+          selected_step_index = max(problemscale_stepprobs[step_num - 1])
+          selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
+          # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
+          # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
+          prev_steps.append(f"\n Step {step_num} of the solution is: " + problemscale_subresponselist[step_num - 1][selected_step_index].replace("Step " + str(step_num) + ":", ""))
+      if toggle_hs:
+          problemscale_finalhslist.append(problemscale_hslist[step_num - 1][selected_step_index])
 
   fullscale_hslist.append(problemscale_finalhslist)
   fullscale_prev_steps.append(prev_steps) # for each problem
