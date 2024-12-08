@@ -249,7 +249,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        selected_indices =  [0, 16, 32, 48, 64, 80] # [0, 8, 16, 24, 32]
+        selected_indices =  [0, 8, 16, 24, 32] # [0, 16, 32, 48, 64, 80] # 
         if len(hidden_states) > 1:
             second_last_hs = hidden_states[-2]
             # print(len(second_last_hs), "SECOND LAST HS")
