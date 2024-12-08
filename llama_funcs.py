@@ -234,7 +234,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
                 probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
 #                 print(probs[0][logitindices[i].item()])
                 logitz.append(probs[0][logitindices[i].item()].item())
-            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+            if string_y.count("Step ") + string_y.count("step ") <= 2 or verify == False:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
@@ -322,7 +322,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = logitz[1:]
             print("STRING: ", string_y)
             print("TOKENS: ", tokens)
-            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+            if string_y.count("Step ") + string_y.count("step ") <= 2 or verify == False:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
@@ -408,7 +408,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             print("TOKENS: ", tokens)
             # print(len(tokens), len(logitz))
             # check if len of tokens and logitz is same
-            if string_y.count("Step") + string_y.count("step") == 1 or verify == False:
+            if string_y.count("Step ") + string_y.count("step ") <= 2 or verify == False:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
