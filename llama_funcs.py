@@ -250,20 +250,23 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         tokenlist.append(tokens)
         responses.append(string_y)
         selected_indices =  [0, 16, 32, 48, 64, 80] # [0, 8, 16, 24, 32]
-        second_last_hs = hidden_states[-2]
-        # print(len(second_last_hs), "SECOND LAST HS")
-        selected_tensors = [second_last_hs[idx] for idx in selected_indices]
-        detensored_hs = [t.tolist() for t in selected_tensors]
-        # detensored_hs = hidden_states[-2][-1].tolist()
-        # for i in range(len(hidden_states[-1])): # remove tensors
-        #     detensored_hs.append(hidden_states[-1][i].tolist())
-        hiddenstates.append(detensored_hs)
-        detensored_hs = []
-        for hiddenstate in hidden_states:
-            hiddenstate = [t.detach().cpu() for t in hiddenstate]
-        selected_tensors = [t.detach().cpu() for t in selected_tensors]
-        hidden_states = []
-        selected_tensors = []
+        if len(hidden_states) > 1:
+            second_last_hs = hidden_states[-2]
+            # print(len(second_last_hs), "SECOND LAST HS")
+            selected_tensors = [second_last_hs[idx] for idx in selected_indices]
+            detensored_hs = [t.tolist() for t in selected_tensors]
+            # detensored_hs = hidden_states[-2][-1].tolist()
+            # for i in range(len(hidden_states[-1])): # remove tensors
+            #     detensored_hs.append(hidden_states[-1][i].tolist())
+            hiddenstates.append(detensored_hs)
+            detensored_hs = []
+            for hiddenstate in hidden_states:
+                hiddenstate = [t.detach().cpu() for t in hiddenstate]
+            selected_tensors = [t.detach().cpu() for t in selected_tensors]
+            hidden_states = []
+            selected_tensors = []
+        else:
+            hiddenstates.append([])
         # hiddenstates.append(hidden_states[-1][-1].tolist())
     # print(responses)
 
