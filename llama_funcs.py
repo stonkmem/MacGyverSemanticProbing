@@ -208,6 +208,8 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         string_y = ''
         logitz = []
         tokens = []
+        max_count = 10
+        counter = 0
         
         while not ans_valid:
             logitz = []
@@ -240,11 +242,12 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
             
+            counter += 1
             for i in range(len(tokens) - 1):
                 probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
 #                 print(probs[0][logitindices[i].item()])
                 logitz.append(probs[0][logitindices[i].item()].item())
-            if string_y.count("Step ") <= 2 or verify == False:
+            if string_y.count("Step ") <= 2 or verify == False or counter > max_count:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
@@ -301,6 +304,8 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer(encodeds, return_tensors="pt", padding=True).to("cuda")
 
+        max_count = 10
+        counter = 0
         while not ans_valid:
             logitz = []
             tokens = []
@@ -341,7 +346,8 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = logitz[1:]
             print("STRING: ", string_y)
             print("TOKENS: ", tokens)
-            if string_y.count("Step ") <= 2 or verify == False:
+            counter += 1
+            if string_y.count("Step ") <= 2 or verify == False or counter > max_count:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
@@ -376,6 +382,8 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
         # tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer([msg], return_tensors="pt", padding=True).to("cuda")
+        max_count = 10
+        counter = 0
         while not ans_valid:
             logitz = []
             tokens = []
@@ -427,7 +435,8 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             print("TOKENS: ", tokens)
             # print(len(tokens), len(logitz))
             # check if len of tokens and logitz is same
-            if string_y.count("Step ") <= 2 or verify == False:
+            counter += 1
+            if string_y.count("Step ") <= 2 or verify == False or counter > max_count:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
