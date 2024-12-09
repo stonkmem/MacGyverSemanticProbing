@@ -360,7 +360,7 @@ def gen_C(x, ls, tokenseq, probsq):
                             c_index = C.index(c)
                             T[c_index].append(tokenseq[ls.index(i)])
                             P[c_index].append(probsq[ls.index(i)])
-                            print("c: ", c)
+                            # print("c: ", c)
                             cl=True;break;
                     else:
                         if (get_entailment_nli(x, c[0], i) == 'entailment' and get_entailment_nli(x, i, c[0]) == 'entailment') or i == c[0]:
@@ -368,7 +368,7 @@ def gen_C(x, ls, tokenseq, probsq):
                             c_index = C.index(c)
                             T[c_index].append(tokenseq[ls.index(i)])
                             P[c_index].append(probsq[ls.index(i)])
-                            print("c: ", c)
+                            # print("c: ", c)
                             cl=True;break;
                 else:
                     if (get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment') or i == c[0]:
@@ -376,7 +376,7 @@ def gen_C(x, ls, tokenseq, probsq):
                         c_index = C.index(c)
                         T[c_index].append(tokenseq[ls.index(i)])
                         P[c_index].append(probsq[ls.index(i)])
-                        print("c: ", c)
+                        # print("c: ", c)
                         cl=True;break;
         elif index != 0 or ls.count(i) > 1:
             C[classindex].append(i);

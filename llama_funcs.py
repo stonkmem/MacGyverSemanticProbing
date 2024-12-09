@@ -29,8 +29,8 @@ TOP_P = 0.9
 NUM_BEAMS = 1
 
 huggingface_token = os.getenv("HF_TOKEN")
-print('HF_TOKEN' in os.environ) # True of False
-print(os.environ['HF_TOKEN']) # Print contents of variable
+# print('HF_TOKEN' in os.environ) # True of False
+# print(os.environ['HF_TOKEN']) # Print contents of variable
 login(token=huggingface_token)
 print(sys.argv, "ARGUMENTS")
 os.environ["HF_HOME"] = "~/scratch/macgyversemanticprobing/cache/"
@@ -237,7 +237,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             for token in tokens:
                 string_y += token
-            print("OUTPUT_STRING", string_y)
+            # print("OUTPUT_STRING", string_y)
             string_y = string_y.replace(tokenizer.eos_token, "")
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
@@ -252,7 +252,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             elif "STOP" in string_y:
                 ans_valid = True
             else:
-                print("REGENERATING, STEP ERROR")
+                print("REGENERATING, STEP ERROR", string_y)
         
         problist.append(logitz)
         tokenlist.append(tokens)
@@ -344,15 +344,15 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
                 logitz.append(probs[0][logitindices[i].item()].item())
             tokens = tokens[1:]
             logitz = logitz[1:]
-            print("STRING: ", string_y)
-            print("TOKENS: ", tokens)
+            # print("STRING: ", string_y)
+            # print("TOKENS: ", tokens)
             counter += 1
             if string_y.count("Step ") <= 2 or verify == False or counter > max_count:
                 ans_valid = True
             elif "STOP" in string_y:
                 ans_valid = True
             else:
-                print("REGENERATING, STEP ERROR")
+                print("REGENERATING, STEP ERROR", string_y)
         
         problist.append(logitz)
         tokenlist.append(tokens)
@@ -431,8 +431,8 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
                 logitz.append(probs[0][logitindices[i].item()].item())
             tokens = tokens[1:]
             logitz = logitz[1:]
-            print("STRING_1: ", string_y)
-            print("TOKENS: ", tokens)
+            # print("STRING_1: ", string_y)
+            # print("TOKENS: ", tokens)
             # print(len(tokens), len(logitz))
             # check if len of tokens and logitz is same
             counter += 1
@@ -441,7 +441,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             elif "STOP" in string_y:
                 ans_valid = True
             else:
-                print("REGENERATING, STEP ERROR")
+                print("REGENERATING, STEP ERROR", string_y)
         
         problist.append(logitz)
         tokenlist.append(tokens)

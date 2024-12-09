@@ -92,8 +92,8 @@ Final remarks."""
 split_strings = split_by_sequence(input_text, "Step 1:")
 
 # Printing each split part
-for i, split_str in enumerate(split_strings, start=1):
-    print(f"--- Split {i} ---\n{split_str}\n")
+# for i, split_str in enumerate(split_strings, start=1):
+#     print(f"--- Split {i} ---\n{split_str}\n")
 
 
  
@@ -116,7 +116,7 @@ def calculate_sequence_probability(probabilities, use_log_prob=False):
         # Calculate the log-probability sum to avoid numerical underflow
 
         log_prob_sum = sum(math.log(p) for p in probabilities if p > 0)
-        print(log_prob_sum)
+        # print(log_prob_sum)
         return math.exp(log_prob_sum)
     else:
         # Direct product of probabilities
@@ -128,11 +128,11 @@ def calculate_sequence_probability(probabilities, use_log_prob=False):
 # Example usage:
 probabilities = [0.9, 0.8, 0.85, 0.95]  # Example token probabilities
 overall_probability = calculate_sequence_probability(probabilities)
-print(f"Overall Probability: {overall_probability}")
+# print(f"Overall Probability: {overall_probability}")
 
 # If you want to avoid numerical underflow with log-probabilities:
 overall_probability_log = calculate_sequence_probability(probabilities, use_log_prob=True)
-print(f"Overall Probability (using log-probs): {overall_probability_log}")
+# print(f"Overall Probability (using log-probs): {overall_probability_log}")
 
 
  
@@ -183,7 +183,7 @@ sequences = [["Step", " ", "1", ":"]]  # The sequences to remove duplicates for
 # Clean the tokens list
 cleaned_tokens = preprocess_token_sequence(tokens, sequences)
 
-print("Cleaned Tokens:", cleaned_tokens)
+# print("Cleaned Tokens:", cleaned_tokens)
 
 
  
@@ -321,9 +321,9 @@ def isolate_sub_responses(tokens, probabilities, sub_response_start):
               representing a sub-response and its corresponding probabilities.
     """
 
-    print("Tokens: ", tokens)
-    print("Probabilities: ", probabilities)
-    print("Sub-response start: ", sub_response_start)
+    # print("Tokens: ", tokens)
+    # print("Probabilities: ", probabilities)
+    # print("Sub-response start: ", sub_response_start)
     # Initialize a list to hold sub-responses
     sub_responses = []
 
@@ -367,7 +367,7 @@ def isolate_sub_responses(tokens, probabilities, sub_response_start):
 
     # After the loop, append the last sub-response if any
     if in_sub_response:
-        print("Appending last sub-response", current_tokens)
+        # print("Appending last sub-response", current_tokens)
         sub_responses.append((current_tokens, current_probabilities))
 
     return sub_responses
@@ -485,11 +485,11 @@ def gen_factuality_score(question, ans, criterialist):
     arr = scores.split("[[")
     feasibility = True
     efficiency = True
-    print(scores)
+    # print(scores)
     for i in range(len(arr)):
         if i >= 1:
             if arr[i][0] == "Y":
-                print("OK")
+                # print("OK")
                 score += 1
             if arr[i][0] == "N":
                 if i == 2:

@@ -82,7 +82,7 @@ for a in range(num_problems): # handles multiple problems.
     Do NOT include explanation or examples or code in your response.
   ''' 
 #     + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
-  print("INPUTSTRING: ", inputstring)
+  # print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
     
@@ -111,9 +111,7 @@ for a in range(num_problems): # handles multiple problems.
     
     step_num = 1 + j
     promptstring = prompt
-    if step_num == 1:
-        print()
-    else: # handles further steps
+    if step_num != 1: # handles further steps
       dictionary = {
           f"Step {2},": f"Step {step_num + 1},",
           f"Step {2 - 1}": f"Step {step_num}",
@@ -161,12 +159,12 @@ for a in range(num_problems): # handles multiple problems.
       try:
           subresponse_index = subresponses[n].index("<|eot_id|>")
           subresponses[n] = subresponses[n][subresponse_index:]
-      except:
-        print()
+      except Exception:
+          pass
       
       if "STOP" in subresponses[n]:
         num_stops += 1
-        print("STOP FOUND")
+        # print("STOP FOUND")
       else:
         # handle exceptions and different answer formats
         try:
@@ -182,8 +180,8 @@ for a in range(num_problems): # handles multiple problems.
               line_index = tokenlist[n].index('\n')
               tokenlist[n] = tokenlist[n][:line_index]
               problist[n] = problist[n][:line_index]
-          except:
-              print()
+          except Exception:
+              pass
         except:
           try:
             subresponse_index = subresponses[n].index(str(step_num) + ":")
@@ -200,9 +198,8 @@ for a in range(num_problems): # handles multiple problems.
         try:
           next_step_index = subresponses[n].index("Step " + str(step_num + 1) + ":")
           subresponses[n] = subresponses[n][:next_step_index]
-        except:
-          print()
-          # continue
+        except Exception:
+          pass
         if subresponses[n].count("Step " + str(step_num) + ":") > 1:
             subresponses[n] = remove_duplicates(subresponses[n], "Step " + str(step_num) + ":")
 
@@ -212,13 +209,13 @@ for a in range(num_problems): # handles multiple problems.
 
         overall_probability = calc_sequence_probability_LOGPROB(problist[n])
         stepscale_stepprobs.append(overall_probability)
-        print(f"Overall Probability for step {step_num}: {overall_probability}")
+        # print(f"Overall Probability for step {step_num}: {overall_probability}")
 
         # appending to step scale
         stepscale_tokenlist.append(tokenlist[n])
         stepscale_problist.append(problist[n])
 
-      print("SUBRESPONSE: ", subresponses[n])
+      # print("SUBRESPONSE: ", subresponses[n])
 
     print("NUM_STOPS: ", num_stops)
     if num_stops >= num_stepvers / 2:
@@ -241,7 +238,7 @@ for a in range(num_problems): # handles multiple problems.
 #     print("PROMPT: ", prompter, "____")
     # shift classification outside of the main generation loop? 
     classified_response, classified_token, classified_prob = gen_C(prompter, stepscale_subresponselist, stepscale_tokenlist, stepscale_problist)
-    print("CLASSIFIED RESPONSE: ")
+    # print("CLASSIFIED RESPONSE: ")
     stepscale_classifiedstepprob = []
     # print("CLASSIFIED RESPONSE: ")
     for m in range(len(classified_response)):

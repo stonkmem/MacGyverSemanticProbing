@@ -68,7 +68,7 @@ for i in range(1): # handles multiple problems.
     Do NOT include explanation or examples or code in your response.
   ''' 
   # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
-  print("INPUTSTRING: ", inputstring)
+  # print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
     

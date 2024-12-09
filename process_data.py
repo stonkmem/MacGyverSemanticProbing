@@ -228,7 +228,7 @@ if judge:
   feasibility_score2 = check_feasibility(feasibility2)
   efficiency_score2 = check_efficiency(efficiency2)
 
-  print("DATA PROCESSED")
+print("DATA PROCESSED")
 
 # import json
 
