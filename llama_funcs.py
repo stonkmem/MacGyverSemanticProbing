@@ -197,6 +197,8 @@ def convert_openai_to_llama_prompt(ls):
 #             C.append([i])
 # #    return C
 
+max_count = 5
+
 def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
     tokenlist = []
@@ -208,7 +210,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         string_y = ''
         logitz = []
         tokens = []
-        max_count = 10
+        # max_count = 10
         counter = 0
         
         while not ans_valid:
@@ -304,7 +306,7 @@ def gen_prob_mistral(problem ,prompt, num=1, verify=False, include_eg = True):
         tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer(encodeds, return_tensors="pt", padding=True).to("cuda")
 
-        max_count = 10
+        # max_count = 10
         counter = 0
         while not ans_valid:
             logitz = []
@@ -382,7 +384,7 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
         # tokenizer.pad_token = tokenizer.eos_token
         inputs = tokenizer([msg], return_tensors="pt", padding=True).to("cuda")
-        max_count = 10
+        # max_count = 10
         counter = 0
         while not ans_valid:
             logitz = []
