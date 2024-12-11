@@ -184,7 +184,7 @@ for a in range(num_problems): # handles multiple problems.
       except Exception:
           pass
       
-      if "STOP" in subresponses[n]:
+      if "STOP" in subresponses[n] or ("stop" in subresponses[n].lower() and len(subresponses[n]) < 10):
         num_stops += 1
         # print("STOP FOUND")
       else:
