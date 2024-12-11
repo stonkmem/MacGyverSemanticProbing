@@ -263,7 +263,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
         selected_indices =  [0, 8, 16, 24, 32] #  # 
         if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF":
             selected_indices = [0, 16, 32, 48, 64, 80]
-        if len(hidden_states) > 1:
+        if len(hidden_states) > 1 and toggle_hs:
             second_last_hs = hidden_states[-2]
             # print(len(second_last_hs), "SECOND LAST HS")
             selected_tensors = [second_last_hs[idx] for idx in selected_indices]
