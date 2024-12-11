@@ -285,6 +285,11 @@ for a in range(num_problems): # handles multiple problems.
   fullscale_classifiedproblist.append(problemscale_classifiedproblist) # needed 
   fullscale_classifiedstepproblist.append(problemscale_classifiedstepprobs)
 
+  now = datetime.now()
+
+  current_time = now.strftime("%H:%M:%S")
+  print("Current Time =", current_time, "problem end")
+
 
  # tokenlist is quad nested:
  # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]
