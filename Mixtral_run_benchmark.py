@@ -41,6 +41,8 @@ fullscale_hslist = []
 max_stepnum = 10
 min_stepnum = 2
 starting_problem = 0
+if len(sys.argv) > 9:
+  starting_problem = int(sys.argv[9])
 num_problems = 1
 if len(sys.argv) > 7:
   num_problems = int(sys.argv[7])
