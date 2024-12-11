@@ -206,6 +206,12 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     problist = []
     max_tokens = 1024
     hiddenstates = []
+    msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
+    #  print("MSG: " + msg)
+    inputs = tokenizer(
+        [
+        msg
+        ], return_tensors = "pt").to("cuda")
     for i in range(num):
         ans_valid = False
         string_y = ''
@@ -218,12 +224,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = []
             tokens = []
             string_y = ''
-            msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-#             print("MSG: " + msg)
-            inputs = tokenizer(
-                [
-                msg
-                ], return_tensors = "pt").to("cuda")
+            
             outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
                                      temperature=temp,
                                 top_p = TOP_P, do_sample = True,
@@ -378,15 +379,15 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
     max_tokens = 1024
 
     # print(prompt, problem, )
-    
+    msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
+    # tokenizer.pad_token = tokenizer.eos_token
+    inputs = tokenizer([msg], return_tensors="pt", padding=True).to("cuda")
     for i in range(num):
         ans_valid = False
         string_y = ''
         logitz = []
         tokens = []
-        msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-        # tokenizer.pad_token = tokenizer.eos_token
-        inputs = tokenizer([msg], return_tensors="pt", padding=True).to("cuda")
+        
         # max_count = 10
         counter = 0
         while not ans_valid:
