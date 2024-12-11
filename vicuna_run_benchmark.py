@@ -67,6 +67,11 @@ for a in range(num_problems): # handles multiple problems.
   max_stepnum = 10
   max_steps = num_to_string[max_stepnum]
 
+  now = datetime.now()
+
+  current_time = now.strftime("%H:%M:%S")
+  print("Current Time =", current_time, "problem start")
+
   inputstring = f'''
   You are Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, generate a multi-step solution considering all the constraints.
