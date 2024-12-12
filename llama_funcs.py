@@ -25,6 +25,9 @@ toggle_hs = False
 if len(sys.argv) > 8:
     if sys.argv[8] == 'hs':
         toggle_hs = True
+        print("HS ACTIVE")
+    else:
+        print("HS INACTIVE")
 TOP_P = 0.9
 NUM_BEAMS = 1
 
