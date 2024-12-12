@@ -50,6 +50,9 @@ elif sys.argv[1] == 'llama30':
 elif sys.argv[1] == 'llama2':
     print('llama2')
     modelpath = "meta-llama/Llama-2-70b-hf" # meta-llama/Llama-2-7b-hf
+elif sys.argv[1] == 'llama3-70b':
+    print('llama3-70b')
+    modelpath = "meta-llama/Meta-Llama-3-70B"
 elif sys.argv[1] == "llama3.2":
     print("llama3.2")
     modelpath = "meta-llama/Llama-3.2-3B-Instruct"
@@ -111,7 +114,7 @@ if modelpath == "meta-llama/Llama-2-70b-hf":
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or modelpath == "meta-llama/Llama-3.3-70B-Instruct" or modelpath == 'meta-llama/Llama-2-70b-hf':
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or modelpath == "meta-llama/Llama-3.3-70B-Instruct" or modelpath == 'meta-llama/Llama-2-70b-hf' or modelpath == 'meta-llama/Meta-Llama-3-70B':
     quantization_config = BitsAndBytesConfig(load_in_8bit=True)
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', torch_dtype=torch.bfloat16, quantization_config=quantization_config)
 elif modelpath != "gpt4":
