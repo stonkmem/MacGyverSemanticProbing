@@ -224,14 +224,22 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             logitz = []
             tokens = []
             string_y = ''
-            
-            outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
-                                     temperature=temp,
-                                top_p = TOP_P, do_sample = True,
-                                output_hidden_states = True,
-                                    num_beams = NUM_BEAMS)
+            if toggle_hs:
+                outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
+                                        temperature=temp,
+                                    top_p = TOP_P, do_sample = True,
+                                    output_hidden_states = True,
+                                        num_beams = NUM_BEAMS)
+            else:
+                outputs = model.generate(**inputs, max_new_tokens=max_tokens, use_cache=True, output_logits = True, return_dict_in_generate = True, 
+                                        temperature=temp,
+                                    top_p = TOP_P, do_sample = True,
+                                        num_beams = NUM_BEAMS)
             output_logits = outputs.logits
-            hidden_states = outputs.hidden_states
+            if toggle_hs:
+                hidden_states = outputs.hidden_states
+            else:
+                hidden_states = []
             # creates token list 
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token
                 item = outputs.sequences[0][i]
