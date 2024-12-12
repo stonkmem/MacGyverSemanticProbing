@@ -106,8 +106,8 @@ else:
     #     n_gpu_layers=-1
     # )
     # wipe_llm_fact = llm_fact.save_state()
-if modelpath == "meta-llama/Llama-3.1-8B-Instruct":
-    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False) 
+if modelpath == "meta-llama/Llama-2-70b-hf":
+    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = True, legacy=True) 
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
