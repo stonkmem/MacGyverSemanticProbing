@@ -52,7 +52,7 @@ elif sys.argv[1] == 'llama2':
     modelpath = "meta-llama/Llama-2-70b-hf" # meta-llama/Llama-2-7b-hf
 elif sys.argv[1] == 'llama3-70b':
     print('llama3-70b')
-    modelpath = "meta-llama/Meta-Llama-3-70B"
+    modelpath = "meta-llama/Meta-Llama-3-70B-Instruct"
 elif sys.argv[1] == "llama3.2":
     print("llama3.2")
     modelpath = "meta-llama/Llama-3.2-3B-Instruct"
@@ -109,12 +109,12 @@ else:
     #     n_gpu_layers=-1
     # )
     # wipe_llm_fact = llm_fact.save_state()
-if modelpath == "meta-llama/Llama-2-70b-hf":
-    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = True, legacy=True) 
+if modelpath == "meta-llama/Llama-2-70b-hf" or modelpath == "meta-llama/Meta-Llama-3-70B-Instruct":
+    tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = True, legacy=False) 
 else:
     tokenizer = AutoTokenizer.from_pretrained(modelpath, use_fast = False, add_bos_token = False, legacy=False)
 
-if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or modelpath == "meta-llama/Llama-3.3-70B-Instruct" or modelpath == 'meta-llama/Llama-2-70b-hf' or modelpath == 'meta-llama/Meta-Llama-3-70B':
+if modelpath == "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" or modelpath == "meta-llama/Llama-3.3-70B-Instruct" or modelpath == 'meta-llama/Llama-2-70b-hf' or modelpath == 'meta-llama/Meta-Llama-3-70B-Instruct':
     quantization_config = BitsAndBytesConfig(load_in_8bit=True)
     model = AutoModelForCausalLM.from_pretrained(modelpath, device_map = 'auto', torch_dtype=torch.bfloat16, quantization_config=quantization_config)
 elif modelpath != "gpt4":
