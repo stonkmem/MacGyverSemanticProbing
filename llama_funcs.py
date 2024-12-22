@@ -56,6 +56,9 @@ elif sys.argv[1] == 'llama3-70b':
 elif sys.argv[1] == "llama3.2":
     print("llama3.2")
     modelpath = "meta-llama/Llama-3.2-3B-Instruct"
+elif sys.argv[1] == 'llama3.21b':
+    print('llama3.2 1b')
+    modelpath = "meta-llama/Llama-3.2-1B-Instruct"
 elif sys.argv[1] == 'vicuna':
     modelpath = "lmsys/vicuna-13b-v1.5"
     print("VICUNA")
