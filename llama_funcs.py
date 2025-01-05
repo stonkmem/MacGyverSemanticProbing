@@ -216,11 +216,11 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     max_tokens = 1024
     hiddenstates = []
     msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-    #  print("MSG: " + msg)
+    print("MSG: " + msg)
     inputs = tokenizer(
-        [
+        
         msg
-        ], return_tensors = "pt").to("cuda")
+        , return_tensors = "pt").to("cuda")
     for i in range(num):
         ans_valid = False
         string_y = ''
@@ -258,7 +258,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             for token in tokens:
                 string_y += token
-            # print("OUTPUT_STRING", string_y)
+            print("OUTPUT_STRING", string_y)
             string_y = string_y.replace(tokenizer.eos_token, "")
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
