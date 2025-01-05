@@ -22,6 +22,7 @@ export HF_HUB_CACHE=~/scratch/macgyversemanticprobing/.cache/huggingface/hub
 echo $HF_HOME
 echo $HF_HUB_CACHE
 
+pip install --upgrade pip
 pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformers openai datasets torch accelerate>=0.26.0 
 pip install openpyxl scikit-learn 
 pip install python-dotenv sentencepiece protobuf google bitsandbytes
