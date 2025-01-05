@@ -32,9 +32,9 @@ TOP_P = 0.9
 NUM_BEAMS = 1
 
 huggingface_token = os.getenv("HF_TOKEN")
-# print('HF_TOKEN' in os.environ) # True of False
+print('HF_TOKEN' in os.environ) # True of False
 # print(os.environ['HF_TOKEN']) # Print contents of variable
-login(token=huggingface_token)
+login(token=huggingface_token, add_to_git_credential=True)
 print(sys.argv, "ARGUMENTS")
 os.environ["HF_HOME"] = "~/scratch/macgyversemanticprobing/.cache/"
 os.environ["TRANSFORMERS_CACHE"] = "~/scratch/macgyversemanticprobing/.cache/"
