@@ -708,19 +708,19 @@ def gen_chat_object(prompt, problem, include_eg = True): # for LLAMA and vicuna
     Response: """
     example_step = "Step 1: Take the fork with the bent prongs and pierce the avocado in an outline around the pit."
     if include_eg:
-        # messages = prompt + '\n For example, an example problem and step could be: \n' + example_problem + '\n' + example_step + '\n\n Now, here is the problem you are given: \n Problem: \n' + problem 
-        messages = [
-            {'role': 'system', 'content': prompt},
-                {'role': 'user', 'content': prompt + example_problem},
-                {'role': 'assistant', 'content': example_step}, # must add \n\n for end of assistant for LLAMA
-                {'role': 'user', 'content': problem}
-        ]
+        messages = prompt + '\n For example, an example problem and step could be: \n' + example_problem + '\n' + example_step + '\n\n Now, here is the problem you are given: \n Problem: \n' + problem 
+        # messages = [
+        #     {'role': 'system', 'content': prompt},
+        #         {'role': 'user', 'content': prompt + example_problem},
+        #         {'role': 'assistant', 'content': example_step}, # must add \n\n for end of assistant for LLAMA
+        #         {'role': 'user', 'content': problem}
+        # ]
     else:
-        # messages = prompt + '\n### Problem: \n' + problem
-        messages = [
-            {'role': 'system', 'content': prompt},
-            {'role': 'user', 'content': problem}
-        ]
+        messages = prompt + '\n### Problem: \n' + problem
+        # messages = [
+        #     {'role': 'system', 'content': prompt},
+        #     {'role': 'user', 'content': problem}
+        # ]
     return messages
 
 def gen_chat_object_mistral(prompt, problem, include_eg = True): # for Mistral and GPT-4o
