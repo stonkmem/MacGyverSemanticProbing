@@ -16,7 +16,7 @@
 # pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
 
 # Install additional Python packages
-cd ~/scratch
+cd ~/scratch/macgyversemanticprobing
 export HF_HOME=~/scratch/macgyversemanticprobing/.cache/huggingface
 export HF_HUB_CACHE=~/scratch/macgyversemanticprobing/.cache/huggingface/hub
 echo $HF_HOME
@@ -27,7 +27,7 @@ pip install numpy tenacity pandas matplotlib seaborn huggingface-hub transformer
 pip install openpyxl scikit-learn 
 pip install python-dotenv sentencepiece protobuf google bitsandbytes
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-
+cd MacGyverSemanticProbing
 # Install dependencies from requirements file
 pip install -r requirements.txt
 
