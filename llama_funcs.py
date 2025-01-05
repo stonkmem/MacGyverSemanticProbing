@@ -216,7 +216,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     max_tokens = 1024
     hiddenstates = []
     msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-    print("MSG: " + msg)
+    print("MSG: " , msg)
     inputs = tokenizer(
         
         msg
