@@ -105,7 +105,8 @@ for a in range(num_problems): # handles multiple problems.
   
   while response[0].count('\n') >= 20 or response.count("Step") >= 15:
       response, token, prob, hs = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
-      print("REGENERATING")
+      print("REGENERATING", response)
+
   response = response[0]
   # try:
   #     response_index = response.index("<|eot_id|>")
