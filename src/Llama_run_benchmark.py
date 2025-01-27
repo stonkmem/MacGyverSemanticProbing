@@ -84,17 +84,17 @@ for a in range(num_problems): # handles multiple problems.
   You are Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, generate a multi-step solution considering all the constraints.
     Solve the problem in the fewest steps possible.
+    The complete solution cannot have more than {max_stepnum} steps.
+    Do NOT include explanation or examples or code in your response.
 
     Be clear, specific and concise, and try to use the items in creative and innovative ways while maintaining practicality.
-    Ensure that each step you generate brings you significantly closer to solving the problem fully.
+    Ensure that each step you generate brings you significantly closer to solving the problem fully, and is one sentence maximum.
 
     Respond STRICTLY in this format, and do not generate anything extra:
     "Step {1}: <generate step {1} here>"
     "Step {2}: <generate step {2} here>"
     ...
-
-    The complete solution cannot have more than {max_stepnum} steps.
-    Do NOT include explanation or examples or code in your response.
+    Again, generate a multi-step solution to solve the problem in the fewest steps possible, considering all the constraints.
   ''' 
   # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
   print("INPUTSTRING: ", inputstring)
@@ -105,7 +105,8 @@ for a in range(num_problems): # handles multiple problems.
   
   while response[0].count('\n') >= 20 or response.count("Step") >= 15:
       response, token, prob, hs = gen_prob(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
-      print("REGENERATING")
+      print("REGENERATING", response)
+
   response = response[0]
   # try:
   #     response_index = response.index("<|eot_id|>")

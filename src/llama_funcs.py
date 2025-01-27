@@ -30,9 +30,9 @@ TOP_P = 0.9
 NUM_BEAMS = 1
 
 huggingface_token = os.getenv("HF_TOKEN")
-# print('HF_TOKEN' in os.environ) # True of False
+print('HF_TOKEN' in os.environ) # True of False
 # print(os.environ['HF_TOKEN']) # Print contents of variable
-login(token=huggingface_token)
+# login(token=huggingface_token, add_to_git_credential=True)
 print(sys.argv, "ARGUMENTS")
 os.environ["HF_HOME"] = "~/scratch/macgyversemanticprobing/.cache/"
 os.environ["TRANSFORMERS_CACHE"] = "~/scratch/macgyversemanticprobing/.cache/"
@@ -201,11 +201,11 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     max_tokens = 1024
     hiddenstates = []
     msg = gen_chat_object(prompt, problem, include_eg=include_eg)  
-    #  print("MSG: " + msg)
+    print("MSG: " , msg)
     inputs = tokenizer(
-        [
+        
         msg
-        ], return_tensors = "pt").to("cuda")
+        , return_tensors = "pt").to("cuda")
     for i in range(num):
         ans_valid = False
         string_y = ''
@@ -243,7 +243,7 @@ def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
             # creates string 
             for token in tokens:
                 string_y += token
-            # print("OUTPUT_STRING", string_y)
+            print("OUTPUT_STRING", string_y)
             string_y = string_y.replace(tokenizer.eos_token, "")
             # gets logits index
             logitindices = outputs.sequences[0][-len(output_logits):]
