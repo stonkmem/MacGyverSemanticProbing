@@ -52,12 +52,8 @@ Contains code to run an automated benchmark on the MacGyver dataset.
 
 ```sh
 └── MacGyverSemanticProbing/
-    ├── env
-    │   └── keys.env
     ├── export_data.py
     ├── install_dependencies.sh
-    ├── jobs
-    │   └── llama_job.pbs
     ├── keys.py
     ├── LICENSE
     ├── llmaaj.py
