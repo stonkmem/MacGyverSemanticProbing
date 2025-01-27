@@ -85,7 +85,7 @@ Contains code to run an automated benchmark on the MacGyver dataset.
 
 ###  Project Index
 <details open>
-	<summary><b><code>C:\USERS\CKCZA\DOCUMENTS\GITHUB\MACGYVERSEMANTICPROBING/</code></b></summary>
+	<summary><b><code>Benchmark</code></b></summary>
 	<details> <!-- __root__ Submodule -->
 		<summary><b>__root__</b></summary>
 		<blockquote>
