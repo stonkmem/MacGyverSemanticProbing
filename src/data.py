@@ -1,19 +1,6 @@
 import pandas as pd
 import numpy as np
-import datasets
-# import matplotlib.pyplot as plt
-# import seaborn as sns
 
-df = pd.read_excel('https://github.com/allenai/MacGyver/raw/refs/heads/main/data/MacGyver/problem_solution_pair.xlsx')
-df_extra = pd.read_excel('https://github.com/allenai/MacGyver/raw/refs/heads/main/data/MacGyver/additional_human_solutions.xlsx')
-df.to_csv('MacGyver.csv')
-df_extra.info()
-
-
- 
-# import pandas as pd
-# import numpy as np
-# import seaborn as sns
 df = pd.read_excel("https://github.com/allenai/MacGyver/blob/main/data/MacGyver/problem_solution_pair.xlsx?raw=true", engine="openpyxl")
 df.head()
 df.to_csv('problem_solution_pair.csv')
@@ -68,20 +55,10 @@ pass
 
 
 
-
- 
 from datasets import load_dataset
 macgyver = load_dataset("csv", data_files="problem_solution_pair.csv", split="train")
 macgyver = macgyver.map(format_macgyver_prompt, batched = True,)
 macgyver = macgyver.filter(lambda example: example["Solvable?"] == "Yes")
-# print(macgyver[0]["text"])
 seed1 = 42 
-# shuffle method 1
 macgyver = macgyver.shuffle(seed = seed1)
 macgyver = macgyver.flatten_indices()
-
-# iterable_m_dataset = macgyver.to_iterable_dataset(num_shards = 128)
-
-# macgyver = iterable_m_dataset.shuffle(seed = seed1, buffer_size = 100)
-
-

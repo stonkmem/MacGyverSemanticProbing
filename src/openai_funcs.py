@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import sys
-from dabertaMNLI import * 
+from src.dabertaMNLI import * 
 # import openai
 # from helper_funcs import *
 

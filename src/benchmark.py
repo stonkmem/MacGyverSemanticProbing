@@ -1,11 +1,31 @@
+from src.llama_funcs import *
 
+LLMGenDict = {
+  "llama": gen_prob,
+  "llama_70b": gen_prob,
+  "llama3.2": gen_prob,
+  "llama30": gen_prob,
+  "llama2": gen_prob,
+  "llama3.3": gen_prob,
+  "llama3-70b": gen_prob,
+  "llama3.21b": gen_prob,
+  "vicuna": gen_prob_vicuna,
+  "vicuna-7b": gen_prob_vicuna,
+  "vicuna-33b": gen_prob_vicuna,
+  "mixtral": gen_prob_mistral,
+  "mistral-nemo": gen_prob_mistral,
+  "mistral-large": gen_prob_mistral,
+  "ministral": gen_prob_mistral,
+  "mistral": gen_prob_mistral,
 
-from llama_funcs import *
-# from helper_funcs import *
-# from data import *
-# from openai_funcs import *
+}
+if len(sys.argv) < 2:
+    print("Please specify the LLM to use.")
+    sys.exit(0)
+LLMGenFunction = LLMGenDict[sys.argv[1]]
 
 step_num = 1
+# max_steps = 'ten'
 prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
     Solve the problem in the fewest steps possible.
@@ -36,10 +56,12 @@ fullscale_prev_steps = []
 fullscale_classifiedsubresponselist = []
 fullscale_classifiedproblist = []
 fullscale_classifiedstepproblist = []
+
 fullscale_hslist = []
 
 max_stepnum = 10
 min_stepnum = 2
+
 starting_problem = 0
 if len(sys.argv) > 9:
   starting_problem = int(sys.argv[9])
@@ -47,7 +69,11 @@ num_problems = 1
 if len(sys.argv) > 7:
   num_problems = int(sys.argv[7])
 
-# responses = []
+toggle_hs = False
+if len(sys.argv) > 8:
+    if sys.argv[8] == 'hs':
+        toggle_hs = True
+
 for a in range(num_problems): # handles multiple problems.
   prev_steps = []
   problemscale_problist = []
@@ -59,7 +85,9 @@ for a in range(num_problems): # handles multiple problems.
   problemscale_classifiedsubresponselist = []
   problemscale_classifiedproblist = []
   problemscale_classifiedstepprobs = []
+
   problemscale_hslist = []
+  problemscale_finalhslist = []
   i = starting_problem + a
 
   max_stepnum = 10
@@ -80,16 +108,15 @@ for a in range(num_problems): # handles multiple problems.
 
     The complete solution cannot have more than {max_stepnum} steps.
     Do NOT include explanation or examples or code in your response.
-  '''
-  # + extract_problem(macgyver[i]["text"] + "\n ### Response: ")
-  # print("INPUTSTRING: ", inputstring)
+  ''' 
+#   print("INPUTSTRING: ", inputstring)
 
   # generates an initial solution to extract step count.
     
-  response, token, prob, hs = gen_prob_mistral(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+  response, token, prob, hs = LLMGenFunction(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
   
   while response[0].count('\n') >= 20 or response.count("Step") >= 15:
-      response, token, prob, hs = gen_prob_mistral(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
+      response, token, prob, hs = LLMGenFunction(extract_problem(macgyver[i]["text"] + "\n ### Response: "), inputstring, include_eg = False)
       print("REGENERATING")
   response = response[0]
   # try:
@@ -98,24 +125,14 @@ for a in range(num_problems): # handles multiple problems.
   # except:
   #   print('INIT:', response)
 
-  # steps = split_by_sequence(response, "Step ")
-#   print("STEPS: ", steps)
-  # num_steps = len(steps)
+  steps = split_by_sequence(response, "Step")
   num_steps = response.count("Step")
-  # print("NUM_STEPVERS: ", num_steps)
-
   num_steps = max(min(max_stepnum, num_steps), min_stepnum)
-#   num_steps = min(10, max_stepnum)
-#   print("MAX_STEPNUM: ", num_steps)
-
   if num_steps <= 10:
     max_steps = num_to_string[num_steps]
     print("MAX_STEPS: ", max_steps)
   problem_break = False
-
-  # num_steps = 2
   for j in range(num_steps): # handles multiple steps for a problem.
-    
     step_num = 1 + j
     promptstring = prompt
     if step_num != 1: # handles further steps
@@ -142,10 +159,13 @@ for a in range(num_problems): # handles multiple problems.
       problemstring = macgyver[i]['Problem'] + '\n' + "Existing steps, if any:\n "
       for k in range(len(prev_steps)):
         problemstring += prev_steps[k]
+
+      problemstring += EOS_TOKEN
       if step_num >= num_steps:
         problemstring += "\n This step must make the solution complete and solve the problem. "
-      problemstring += EOS_TOKEN
       problemstring += f"\n### Response: "
+      if toggle_hs:
+        problemscale_finalhslist.append(problemscale_hslist[step_num - 2][selected_step_index])
 
     stepscale_tokenlist = []
     stepscale_problist = []
@@ -155,11 +175,9 @@ for a in range(num_problems): # handles multiple problems.
     # gets output from LLM
     
     if step_num == 1:
-        problemstring = macgyver[i]["Problem"] + EOS_TOKEN + "\n### Response: "
+        problemstring = macgyver[i]["Problem"] + "\n Existing steps, if any:\n " + EOS_TOKEN + "\n### Response: "
 #     problemstring += EOS_TOKEN
-    # print("INPUT: ", gen_chat_object_mistral(promptstring, problemstring, include_eg = False), )
-    
-    subresponses, tokenlist, problist, hs = gen_prob_mistral(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
+    subresponses, tokenlist, problist, hs = LLMGenFunction(problemstring, promptstring, num_stepvers, include_eg=False, verify=True)
     num_stops = 0
     for n in range(len(subresponses)):
       # removing the prompt from the response
@@ -169,9 +187,8 @@ for a in range(num_problems): # handles multiple problems.
       except Exception:
           pass
       
-      if "STOP" in subresponses[n] or ('stop' in subresponses[n].lower() and len(subresponses[n]) < 10):
+      if "STOP" in subresponses[n] or ("stop" in subresponses[n].lower() and len(subresponses[n]) < 10):
         num_stops += 1
-        # print("STOP FOUND")
       else:
         # handle exceptions and different answer formats
         try:
@@ -199,7 +216,7 @@ for a in range(num_problems): # handles multiple problems.
               subresponses[n] = "Step " + str(step_num) + ": " + subresponses[n][subresponse_index:]
             except:
               print("ERROR: ", subresponses[n])
-              continue
+              
         subresponses[n] = subresponses[n].replace("<|eot_id|>", "")
         subresponses[n] = subresponses[n].replace("Response:", "")
         try:
@@ -224,8 +241,9 @@ for a in range(num_problems): # handles multiple problems.
 
       # print("SUBRESPONSE: ", subresponses[n])
 
-    print("NUM_STOPS: ", num_stops)
+    print("NUM_STOPS: ", num_stops, num_stepvers / 2)
     if num_stops >= num_stepvers / 2:
+      # print("STOPPING, NO MORE STEPS")
       problem_break = True
       break
 
@@ -234,21 +252,14 @@ for a in range(num_problems): # handles multiple problems.
     problemscale_subresponselist.append(stepscale_subresponselist)
     problemscale_stepprobs.append(stepscale_stepprobs)
 
-    problemscale_hslist.append(hs)
+    if toggle_hs:
+      problemscale_hslist.append(hs)  
 
     # classifying responses for SE
 
     prompter = promptstring + 'Problem:\n' + problemstring
-
-#     problem_index = prompter.index("Problem:")
-#     prompter = prompter[:problem_index]
-#     print("PROMPT: ", prompter, "____")
-    # shift classification outside of the main generation loop? 
     classified_response, classified_token, classified_prob = gen_C(prompter, stepscale_subresponselist, stepscale_tokenlist, stepscale_problist)
-    # print("CLASSIFIED RESPONSE: ")
-
     stepscale_classifiedstepprob = []
-    # print("CLASSIFIED RESPONSE: ")
     for m in range(len(classified_response)):
       print(classified_response[m])
       class_stepprob = []
@@ -268,24 +279,18 @@ for a in range(num_problems): # handles multiple problems.
       response += stepscale_subresponselist[m] + '\n'
     # appends the response to the list for the particular problem.
     problemscale_responselist.append(response)
-
-  # appends problem scale lists to full scale lists
-#   fullscale_tokenlist.append(problemscale_tokenlist) # not needed
   fullscale_problist.append(problemscale_problist)
-#   fullscale_responselist.append(problemscale_responselist) # each element is prompt at each step, this is needed? idts
   fullscale_subresponselist.append(problemscale_subresponselist)
   fullscale_classifiedstepproblist.append(problemscale_classifiedstepprobs)
-  fullscale_hslist.append(problemscale_hslist)
-  # fullscale_stepprobs.append(problemscale_stepprobs) # idt needed
-
   if num_stops < num_stepvers and problem_break == False:
-      if len(problemscale_stepprobs[step_num - 1]) > 1:
-        selected_step_index = max(problemscale_stepprobs[step_num - 1])
-        selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
-        # print("SELECTED STEP INDEX: ", selected_step_index, problemscale_stepprobs[step_num - 2])
-        # print(split_by_sequence(problemscale_responselist[step_num - 2], "Step " + str(step_num - 1) + ":"))
-        prev_steps.append(f"\n Step {step_num} of the solution is: " + split_by_sequence(problemscale_responselist[step_num - 1], "Step " + str(step_num) + ":")[selected_step_index].replace("Step " + str(step_num) + ":", ""))
-  
+      if len(problemscale_stepprobs[step_num - 1]) >= 1:
+          selected_step_index = max(problemscale_stepprobs[step_num - 1])
+          selected_step_index = problemscale_stepprobs[step_num - 1].index(selected_step_index)
+          prev_steps.append(f"\n Step {step_num} of the solution is: " + problemscale_subresponselist[step_num - 1][selected_step_index].replace("Step " + str(step_num) + ":", ""))
+      if toggle_hs:
+          problemscale_finalhslist.append(problemscale_hslist[step_num - 1][selected_step_index])
+
+  fullscale_hslist.append(problemscale_finalhslist)
   fullscale_prev_steps.append(prev_steps) # for each problem
   fullscale_promptlist.append(problemscale_promptlist) # needed 
   fullscale_classifiedsubresponselist.append(problemscale_classifiedsubresponselist) # needed
@@ -296,6 +301,3 @@ for a in range(num_problems): # handles multiple problems.
   current_time = now.strftime("%H:%M:%S")
   print("Current Time =", current_time, "problem end")
 
-
- # tokenlist is quad nested:
- # [[problem 1], [[step 1]], [[[sub response 1]]], [[[token 1 in subresponse 1 of step 1 of problem 3]]]]

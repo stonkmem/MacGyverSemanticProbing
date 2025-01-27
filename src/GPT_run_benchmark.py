@@ -1,5 +1,5 @@
 
-from llama_funcs import *
+from src.llama_funcs import *
 # from helper_funcs import *
 # from data import *
 # from openai_funcs import *

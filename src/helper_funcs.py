@@ -1,8 +1,8 @@
  
 
-from openai_funcs import gen_C, gen_chat_object_GPT, generate_data_from_GPT, get_entailment_openai, get_entailment, get_factuality, get_factuality_chateval_binary, get_factuality_chateval_likert, get_factuality_likert, get_corr_feas_eff_openai
+from src.openai_funcs import gen_C, gen_chat_object_GPT, generate_data_from_GPT, get_entailment_openai, get_entailment, get_factuality, get_factuality_chateval_binary, get_factuality_chateval_likert, get_factuality_likert, get_corr_feas_eff_openai
 # from llama_funcs import model, tokenizer
-from data import *
+from src.data import *
 # from process_data import *
 import numpy as np
 import torch
@@ -821,14 +821,6 @@ def calculate_auarc(y_true, y_scores, threshold=0.5):
     # Calculate AUARC using the trapezoidal rule
     auarc = np.trapz(accuracies, rejection_rates)
     return auarc
-
-# # Example usage
-# y_true = np.array([0, 1, 1, 0, 1, 0, 1, 1, 0, 0])
-# y_scores = np.array([0.1, 0.9, 0.8, 0.4, 0.95, 0.35, 0.7, 0.85, 0.2, 0.3])
-
-# # Calculate AUARC
-# auarc_score = calculate_auarc(y_true, y_scores)
-# print("AUARC Score:", auarc_score)
 
 def compute_total_score_2(SE, factuality):
     if len(SE) > 0:

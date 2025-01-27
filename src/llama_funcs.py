@@ -9,9 +9,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoMode
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient, login
 
-# from helper_funcs import *
-# from data import *
-from helper_funcs import *
+from src.helper_funcs import *
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -129,20 +127,7 @@ now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 print("Current Time =", current_time)
 print(torch.cuda.get_device_properties(0).total_memory, "TOTAL MEMORY")
-    # model.to("cuda")
 
-
-    # hfclient = InferenceClient(api_key=huggingface_token)
-    
-
-# def get_entailment_llama(question, a, b):
-#     entailment_llm.reset()
-#     return entailment_llm.create_chat_completion(
-#         messages=[
-#             {'role': 'system', 'content': 'You are a skilled linguist studying semantic entailment. As a task, you will have to determine whether one sentence semantically entails another.'},
-#             {'role': 'user', 'content': f'We are evaluating answers to the question: {question}.\n Here are 2 possible answers:\nSentence A: {a}\nSentence B: {b}\nDoes Sentence A semantically entail Sentence B?\n Respond STRICTLY a one word answer, entailment, or neutral.'}
-#         ]
-#     )
 
 # def get_corr_feas_eff_llama(fraege, antworten):
 #     llm_fact.reset()
@@ -419,12 +404,10 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
                                     num_beams = NUM_BEAMS)
             output_logits = outputs.logits
             # hidden_states = outputs.hidden_states
-            tokens_previous = outputs.sequences[0]
+            # tokens_previous = outputs.sequences[0]
 #             tokens_previous = torch.cat((tokens_previous, input_ids), dim=1) # consider tokens_previous already generated tokens
-            full_token_text = tokenizer.decode(tokens_previous)
-            token_text  =  full_token_text # consider previous_output_length the length of the previous full_token_text
-            
-#             print("????", token_text)
+            # full_token_text = tokenizer.decode(tokens_previous)
+            # token_text  =  full_token_text # consider previous_output_length the length of the previous full_token_text
             # creates token list 
             items = []
             for i in range(len(outputs.sequences[0]) - 1): # leave out EOS token and INST token
@@ -436,10 +419,6 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             items = items[-len(output_logits):]
             
             # creates string 
-            # string_y = ' '.join(tokens)
-            # str_index = token_text.index("Response: ") + 11
-            # string_y = token_text[str_index:]
-            # string_y.replace(tokenizer.eos_token, "")
             string_y = tokenizer.decode(items, skip_special_tokens=True)
             string_y = string_y.replace(tokenizer.eos_token, "")
             string_y = string_y.replace(tokenizer.pad_token, "")
@@ -450,14 +429,9 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
             
             for i in range(len(tokens)):
                 probs = torch.nn.functional.log_softmax(output_logits[i], dim=1)
-#                 print(probs[0][logitindices[i].item()])
                 logitz.append(probs[0][logitindices[i].item()].item())
             tokens = tokens[1:]
             logitz = logitz[1:]
-            # print("STRING_1: ", string_y)
-            # print("TOKENS: ", tokens)
-            # print(len(tokens), len(logitz))
-            # check if len of tokens and logitz is same
             counter += 1
             if string_y.count("Step ") <= 2 or verify == False or counter > max_count:
                 ans_valid = True
@@ -469,10 +443,4 @@ def gen_prob_vicuna(problem ,prompt, num=1, verify=False, include_eg = True):
         problist.append(logitz)
         tokenlist.append(tokens)
         responses.append(string_y)
-        # detensored_hs = []
-        # for i in range(len(hidden_states[-1])):
-        #     detensored_hs.append(hidden_states[-1][i].tolist())
-        # hiddenstates.append(detensored_hs)
-        # hiddenstates.append(hidden_states[-1][-1].tolist())
-    # print(responses)
     return responses, tokenlist, problist, hiddenstates
