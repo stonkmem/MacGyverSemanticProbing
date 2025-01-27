@@ -25,6 +25,8 @@ if len(sys.argv) < 2:
 LLMGenFunction = LLMGenDict[sys.argv[1]]
 
 step_num = 1
+max_stepnum = 10
+min_stepnum = 2
 # max_steps = 'ten'
 prompt = f"""Please act as Macgyver, an intelligent person skilled in using ordinary tools in unconventional ways to solve problems.
     Given the problem below, create ONE possible next step {step_num} to a multi-stage solution considering all the constraints and previous steps, if any.
@@ -59,8 +61,7 @@ fullscale_classifiedstepproblist = []
 
 fullscale_hslist = []
 
-max_stepnum = 10
-min_stepnum = 2
+
 
 starting_problem = 0
 if len(sys.argv) > 9:

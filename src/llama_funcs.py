@@ -28,6 +28,7 @@ if len(sys.argv) > 8:
         print("HS INACTIVE")
 TOP_P = 0.9
 NUM_BEAMS = 1
+max_count = 5
 
 huggingface_token = os.getenv("HF_TOKEN")
 print('HF_TOKEN' in os.environ) # True of False
@@ -179,20 +180,6 @@ def convert_openai_to_llama_prompt(ls):
             pmpt += msg['content'] + '<|eot_id|>'
     pmpt += '<|start_header_id|>assistant<|end_header_id|>\n\n'
     return pmpt
-
-# def gen_C(x, ls):
-#     C = [[ls[0]]]
-#     for i in ls:
-#         cl = False
-#         if i != ls[0]:
-#             for c in C:
-#                 if get_entailment(x, c[0], i) == 'entailment' and get_entailment(x, i, c[0]) == 'entailment':
-#                     c.append(i);cl=True;break;
-#         if cl==False:
-#             C.append([i])
-# #    return C
-
-max_count = 5
 
 def gen_prob(problem ,prompt, num=1, verify=False, include_eg = True):
     responses = []
