@@ -13,6 +13,7 @@ if len(sys.argv) > 2:
 output_file = open(output_filename, "w")
 
 if judge:
+    total_scores = []
     outputdict = {  
         "SE_simple": SE_simple, 
         "SE_complex": SE_complex, 
