@@ -23,6 +23,9 @@ if len(sys.argv) < 2:
     print("Please specify the LLM to use.")
     sys.exit(0)
 LLMGenFunction = LLMGenDict[sys.argv[1]]
+if (!LLMGenFunction){
+  LLMGenFunction = gen_prob
+}
 
 step_num = 1
 max_stepnum = 10
